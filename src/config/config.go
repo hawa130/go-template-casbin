@@ -1,26 +1,44 @@
 package config
 
 import (
-	"os"
+	"github.com/spf13/viper"
 )
 
-type Config struct {
-	ServerPort  string
-	DatabaseURL string
-	JWTSecret   string
-}
-
-func LoadConfig() Config {
-	return Config{
-		ServerPort:  getEnv("SERVER_PORT", "8080"),
-		DatabaseURL: getEnv("DATABASE_URL", "file:test.db?_fk=1"),
-		JWTSecret:   getEnv("JWT_SECRET", "your-secret-key"),
+type GlobalConfig struct {
+	Server struct {
+		Port uint32
+	}
+	Database struct {
+		Url string
+	}
+	JWT struct {
+		PrivateKeyPath string `mapstructure:"private_key_path"`
 	}
 }
 
-func getEnv(key, defaultValue string) string {
-	if value, exists := os.LookupEnv(key); exists {
-		return value
+var config GlobalConfig
+var isLoaded = false
+
+func GetConfig(forceReload ...bool) GlobalConfig {
+	if !isLoaded || len(forceReload) > 0 && forceReload[0] {
+		load()
 	}
-	return defaultValue
+	return config
+}
+
+func load() {
+	viper.SetConfigName("config")
+	viper.AddConfigPath(".")
+	viper.AddConfigPath("..")
+	viper.SetConfigType("toml")
+
+	if err := viper.ReadInConfig(); err != nil {
+		panic("Error reading config file: " + err.Error())
+	}
+
+	if err := viper.Unmarshal(&config); err != nil {
+		panic("Error unmarshalling config: " + err.Error())
+	}
+
+	isLoaded = true
 }

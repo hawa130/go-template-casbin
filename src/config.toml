@@ -1,0 +1,8 @@
+[server]
+port = 8080
+
+[database]
+url = 'file:test.db?_fk=1'
+
+[jwt]
+private_key_path = 'ec-prime256v1-priv-key.pem'

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"entgo.io/ent/dialect"
@@ -18,9 +19,9 @@ import (
 )
 
 func main() {
-	cfg := config.LoadConfig()
+	cfg := config.GetConfig()
 
-	client, err := ent.Open(dialect.SQLite, cfg.DatabaseURL)
+	client, err := ent.Open(dialect.SQLite, cfg.Database.Url)
 	if err != nil {
 		log.Fatal("opening ent client", err)
 	}
@@ -40,7 +41,7 @@ func main() {
 	e.POST("/query", echo.WrapHandler(srv))
 	e.GET("/", echo.WrapHandler(playground.Handler("GraphQL playground", "/query")))
 
-	if err := e.Start(":" + cfg.ServerPort); err != nil {
+	if err := e.Start(fmt.Sprintf(":%d", cfg.Server.Port)); err != nil {
 		e.Logger.Fatal(err)
 	}
 }

@@ -26,7 +26,12 @@ func (r *mutationResolver) Login(ctx context.Context, input model.LoginInput) (*
 	if !result {
 		return nil, errors.New("invalid password")
 	}
-	token := record.ID.String()
+
+	token, err := auth.GenerateToken(record.ID)
+	if err != nil {
+		return nil, err
+	}
+
 	return &model.LoginPayload{
 		Token: &token,
 		User:  record,
