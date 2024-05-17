@@ -1,3 +1,4 @@
 .idea
 /src/*.pem
 /src/test.db
+/src/config.toml

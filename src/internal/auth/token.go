@@ -2,10 +2,7 @@ package auth
 
 import (
 	"crypto/ecdsa"
-	"crypto/x509"
-	"encoding/pem"
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/golang-jwt/jwt"
@@ -68,16 +65,13 @@ func ParseToken(token string) (*JWTClaims, error) {
 func decodePem() (*ecdsa.PrivateKey, error) {
 	filePath := config.GetConfig().JWT.PrivateKeyPath
 	keyPem, err := os.ReadFile(filePath)
-
-	block, _ := pem.Decode(keyPem)
-	if block == nil || block.Type != "EC PRIVATE KEY" {
-		return nil, errors.New("failed to decode PEM block containing private key")
-	}
-
-	privateKey, err := x509.ParseECPrivateKey(block.Bytes)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("failed to parse EC private key: %v", err))
+		return nil, err
 	}
 
-	return privateKey, nil
+	key, err := jwt.ParseECPrivateKeyFromPEM(keyPem)
+	if err != nil {
+		return nil, err
+	}
+	return key, nil
 }
