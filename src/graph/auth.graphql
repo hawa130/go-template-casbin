@@ -1,0 +1,13 @@
+input LoginInput {
+  phone: String!
+  password: String!
+}
+
+type LoginPayload {
+  token: String
+  user: User
+}
+
+extend type Mutation {
+  login(input: LoginInput!): LoginPayload
+}
