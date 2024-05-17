@@ -17,6 +17,11 @@ type GlobalConfig struct {
 	JWT struct {
 		PrivateKeyPath string `mapstructure:"private_key_path"`
 	}
+	GraphQL struct {
+		EndPoint           string `mapstructure:"endpoint"`
+		Playground         bool   `mapstructure:"playground"`
+		PlaygroundEndpoint string `mapstructure:"playground_endpoint"`
+	} `mapstructure:"graphql"`
 }
 
 var config GlobalConfig
@@ -36,7 +41,20 @@ func GetConfig() GlobalConfig {
 	return config
 }
 
+func load() {
+	if err := viper.ReadInConfig(); err != nil {
+		panic("Error reading config file: " + err.Error())
+	}
+
+	if err := viper.Unmarshal(&config); err != nil {
+		panic("Error unmarshalling config: " + err.Error())
+	}
+
+	isLoaded = true
+}
+
 func initViper() {
+	initDefault()
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("..")
@@ -49,14 +67,9 @@ func initViper() {
 	})
 }
 
-func load() {
-	if err := viper.ReadInConfig(); err != nil {
-		panic("Error reading config file: " + err.Error())
-	}
-
-	if err := viper.Unmarshal(&config); err != nil {
-		panic("Error unmarshalling config: " + err.Error())
-	}
-
-	isLoaded = true
+func initDefault() {
+	viper.SetDefault("server.address", ":8080")
+	viper.SetDefault("graphql.playground", true)
+	viper.SetDefault("graphql.playground_endpoint", "/playground")
+	viper.SetDefault("graphql.endpoint", "/graphql")
 }

@@ -36,12 +36,16 @@ func startServer() {
 
 	srv := handler.NewDefaultServer(graph.NewSchema(c))
 
-	e.POST("/query", echo.WrapHandler(srv))
-	e.GET("/", echo.WrapHandler(playground.Handler("GraphQL playground", "/query")))
+	e.POST(cfg.GraphQL.EndPoint, echo.WrapHandler(srv))
+	if cfg.GraphQL.Playground {
+		e.GET(
+			cfg.GraphQL.PlaygroundEndpoint,
+			echo.WrapHandler(playground.Handler("GraphQL playground", cfg.GraphQL.EndPoint)),
+		)
+	}
 
 	go func() {
-		addr := cfg.Server.Address
-		if err := e.Start(addr); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		if err := e.Start(cfg.Server.Address); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("server start failed: %v", err)
 		}
 	}()
