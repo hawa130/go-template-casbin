@@ -6,25 +6,33 @@ package graph
 
 import (
 	"context"
-	"errors"
 
+	"github.com/hawa130/computility-cloud/ent"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/hawa130/computility-cloud/graph/model"
 	"github.com/hawa130/computility-cloud/internal/auth"
+	"github.com/hawa130/computility-cloud/internal/errorx"
 )
 
 // Login is the resolver for the login field.
 func (r *mutationResolver) Login(ctx context.Context, input model.LoginInput) (*model.LoginPayload, error) {
 	record, err := r.client.User.Query().Where(user.PhoneEQ(input.Phone)).Only(ctx)
+	if ent.IsNotFound(err) {
+		if _, err := auth.HashPassword(input.Password); err != nil {
+			return nil, err
+		}
+		return nil, errorx.NewInvalidLoginInputError()
+	}
 	if err != nil {
 		return nil, err
 	}
-	result, err := auth.ComparePasswordAndHash(input.Password, record.Password)
+
+	ok, err := auth.ComparePasswordAndHash(input.Password, record.Password)
 	if err != nil {
 		return nil, err
 	}
-	if !result {
-		return nil, errors.New("invalid password")
+	if !ok {
+		return nil, errorx.NewInvalidLoginInputError()
 	}
 
 	token, err := auth.GenerateToken(record.ID)
