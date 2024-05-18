@@ -26,6 +26,10 @@ func Open(driverName, dataSourceName string) (*ent.Client, error) {
 		return nil, err
 	}
 
+	if err := seedData(context.Background()); err != nil {
+		return nil, err
+	}
+
 	isOpen = true
 	return client, nil
 }

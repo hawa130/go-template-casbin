@@ -146,6 +146,8 @@ type Query {
     """
     ids: [ID!]!
   ): [Node]!
+  permissions: [Permission!]!
+  roles: [Role!]!
   users(
     """
     Returns the elements in the list that come after the specified cursor.

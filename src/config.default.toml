@@ -3,8 +3,9 @@ address = 'localhost:8080'
 
 [database]
 # 数据库驱动，可选 sqlite3, mysql, postgres, gremlin
-driver = 'sqlite3'
-url = 'file:test.db?_fk=1'
+# 建议使用 MySQL/MariaDB（即 mysql）兼容性最好
+driver = 'mysql'
+url = '<user>:<pass>@tcp(localhost:3306)/<database>?parseTime=True'
 
 [jwt]
 private_key_path = 'ec-prime256v1-priv-key.pem'

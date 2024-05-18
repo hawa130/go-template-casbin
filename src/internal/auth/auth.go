@@ -19,11 +19,12 @@ var (
 
 // HashPassword hashes a password and returns the encoded hash
 func HashPassword(password string) (string, error) {
-	return HashPasswordWithParams(password, config.GetConfig().Argon2)
+	cfg := config.GetConfig().Argon2
+	return HashPasswordWithParams(password, &cfg)
 }
 
 // HashPasswordWithParams hashes a password with the given parameters and returns the encoded hash
-func HashPasswordWithParams(password string, params config.PasswordHashParams) (string, error) {
+func HashPasswordWithParams(password string, params *config.PasswordHashParams) (string, error) {
 	p := params
 	salt, err := generateRandomBytes(p.SaltLength)
 	if err != nil {

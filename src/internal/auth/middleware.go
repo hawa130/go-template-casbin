@@ -7,6 +7,7 @@ import (
 
 	"github.com/hawa130/computility-cloud/config"
 	"github.com/hawa130/computility-cloud/ent"
+	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/hawa130/computility-cloud/internal/database"
 	"github.com/labstack/echo/v4"
 )
@@ -30,20 +31,25 @@ func Middleware() echo.MiddlewareFunc {
 				return next(c)
 			}
 
-			user, err := database.Client().User.Get(context.Background(), claims.Uid)
+			requestUser, err := database.Client().User.Query().
+				Where(user.IDEQ(claims.Uid)).
+				WithRoles(func(q *ent.RoleQuery) {
+					q.WithPermissions()
+				}).
+				Only(context.Background())
 			if err != nil {
 				return next(c)
 			}
 
 			if time.Until(time.Unix(claims.ExpiresAt, 0)) < config.GetConfig().JWT.RenewDuration*time.Hour {
-				newToken, err := GenerateToken(user.ID)
+				newToken, err := GenerateToken(requestUser.ID)
 				if err != nil {
 					return next(c)
 				}
 				c.Response().Header().Set("X-Set-Authorization", "Bearer "+newToken)
 			}
 
-			ctx := context.WithValue(c.Request().Context(), "user", user)
+			ctx := context.WithValue(c.Request().Context(), "user", requestUser)
 			c.SetRequest(c.Request().WithContext(ctx))
 
 			return next(c)
@@ -52,6 +58,6 @@ func Middleware() echo.MiddlewareFunc {
 }
 
 func FromContext(c context.Context) (*ent.User, bool) {
-	user, ok := c.Value("user").(*ent.User)
-	return user, ok
+	u, ok := c.Value("user").(*ent.User)
+	return u, ok
 }

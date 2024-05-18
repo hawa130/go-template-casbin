@@ -1,7 +1,9 @@
 package schema
 
 import (
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"github.com/hawa130/computility-cloud/ent/schema/mixinx"
@@ -32,5 +34,12 @@ func (Role) Edges() []ent.Edge {
 func (Role) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixinx.XId{},
+	}
+}
+
+// Annotations of the Role.
+func (Role) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entgql.QueryField(),
 	}
 }
