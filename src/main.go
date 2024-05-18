@@ -9,15 +9,16 @@ import (
 )
 
 func main() {
-	startServer()
+	srv := NewServer()
+	srv.Start()
 
 	config.OnConfigChange(func() {
-		restartServer()
+		srv.Restart()
 	})
 
 	done := make(chan os.Signal)
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
 	<-done // waiting for interrupt or terminate signal
 
-	stopServer()
+	srv.Stop()
 }

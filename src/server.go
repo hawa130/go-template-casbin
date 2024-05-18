@@ -7,57 +7,64 @@ import (
 	"net/http"
 	"time"
 
-	"entgo.io/ent/dialect"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/hawa130/computility-cloud/config"
 	_ "github.com/hawa130/computility-cloud/ent/runtime"
 	"github.com/hawa130/computility-cloud/graph"
+	"github.com/hawa130/computility-cloud/internal/auth"
 	"github.com/hawa130/computility-cloud/internal/database"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-var e *echo.Echo
+type Server struct {
+	echo *echo.Echo
+}
 
-func startServer() {
+func NewServer() *Server {
+	return &Server{}
+}
+
+func (r *Server) Start() {
 	log.Println("starting server")
 
 	cfg := config.GetConfig()
 
-	c, err := database.Client(dialect.SQLite, cfg.Database.Url)
+	c, err := database.Open(cfg.Database.Driver, cfg.Database.Url)
 	if err != nil {
 		log.Fatal("database initialization error: ", err)
 	}
 
-	e = echo.New()
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	r.echo = echo.New()
+	r.echo.Use(middleware.Logger())
+	r.echo.Use(middleware.Recover())
+	r.echo.Use(auth.Middleware())
 
 	srv := handler.NewDefaultServer(graph.NewSchema(c))
 
-	e.POST(cfg.GraphQL.EndPoint, echo.WrapHandler(srv))
+	r.echo.POST(cfg.GraphQL.EndPoint, echo.WrapHandler(srv))
 	if cfg.GraphQL.Playground {
-		e.GET(
+		r.echo.GET(
 			cfg.GraphQL.PlaygroundEndpoint,
 			echo.WrapHandler(playground.Handler("GraphQL playground", cfg.GraphQL.EndPoint)),
 		)
 	}
 
 	go func() {
-		if err := e.Start(cfg.Server.Address); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		if err := r.echo.Start(cfg.Server.Address); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("server start failed: %v", err)
 		}
 	}()
 }
 
-func stopServer() {
+func (r *Server) Stop() {
 	log.Println("stopping server")
 
-	if e != nil {
+	if r.echo != nil {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
-		if err := e.Shutdown(ctx); err != nil {
+		if err := r.echo.Shutdown(ctx); err != nil {
 			log.Fatalf("server shutdown failed: %v", err)
 		}
 	}
@@ -69,8 +76,8 @@ func stopServer() {
 	log.Println("server stopped")
 }
 
-func restartServer() {
+func (r *Server) Restart() {
 	log.Println("restarting server")
-	stopServer()
-	startServer()
+	r.Stop()
+	r.Start()
 }

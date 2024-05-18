@@ -2,12 +2,25 @@
 address = 'localhost:8080'
 
 [database]
+# 数据库驱动，可选 sqlite3, mysql, postgres, gremlin
+driver = 'sqlite3'
 url = 'file:test.db?_fk=1'
 
 [jwt]
 private_key_path = 'ec-prime256v1-priv-key.pem'
+# 有效期（小时）
+duration = 24
+# 距离有效期结束多少小时内自动续期
+renew_duration = 12
 
 [graphql]
 endpoint = '/graphql'
 playground = true
 playground_endpoint = '/playground'
+
+[argon2]
+memory = 65536
+iterations = 3
+parallelism = 2
+salt_length = 16
+key_length = 32

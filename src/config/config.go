@@ -7,23 +7,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-type GlobalConfig struct {
-	Server struct {
-		Address string
-	}
-	Database struct {
-		Url string
-	}
-	JWT struct {
-		PrivateKeyPath string `mapstructure:"private_key_path"`
-	}
-	GraphQL struct {
-		EndPoint           string `mapstructure:"endpoint"`
-		Playground         bool   `mapstructure:"playground"`
-		PlaygroundEndpoint string `mapstructure:"playground_endpoint"`
-	} `mapstructure:"graphql"`
-}
-
 var config GlobalConfig
 var isLoaded = false
 
@@ -59,17 +42,27 @@ func initViper() {
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("..")
 	viper.SetConfigType("toml")
-	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
 		log.Println("config changed:", e.Name)
 		load()
 		onConfigChange()
 	})
+	viper.WatchConfig()
 }
 
 func initDefault() {
 	viper.SetDefault("server.address", ":8080")
+
 	viper.SetDefault("graphql.playground", true)
 	viper.SetDefault("graphql.playground_endpoint", "/playground")
 	viper.SetDefault("graphql.endpoint", "/graphql")
+
+	viper.SetDefault("jwt.duration", 24)
+	viper.SetDefault("jwt.renew_duration", 12)
+
+	viper.SetDefault("argon2.memory", 64*1024)
+	viper.SetDefault("argon2.iterations", 3)
+	viper.SetDefault("argon2.parallelism", 2)
+	viper.SetDefault("argon2.salt_length", 16)
+	viper.SetDefault("argon2.key_length", 32)
 }

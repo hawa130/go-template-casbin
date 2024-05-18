@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jinzhu/copier"
+	"github.com/hawa130/computility-cloud/config"
 	"golang.org/x/crypto/argon2"
 )
 
@@ -17,35 +17,14 @@ var (
 	ErrIncompatibleVersion = errors.New("incompatible version of argon2")
 )
 
-type PasswordHashParams struct {
-	Memory      uint32
-	Iterations  uint32
-	Parallelism uint8
-	SaltLength  uint32
-	KeyLength   uint32
-}
-
 // HashPassword hashes a password and returns the encoded hash
 func HashPassword(password string) (string, error) {
-	return HashPasswordWithParams(password, nil)
+	return HashPasswordWithParams(password, config.GetConfig().Argon2)
 }
 
 // HashPasswordWithParams hashes a password with the given parameters and returns the encoded hash
-func HashPasswordWithParams(password string, params *PasswordHashParams) (string, error) {
-	p := &PasswordHashParams{
-		Memory:      64 * 1024,
-		Iterations:  3,
-		Parallelism: 2,
-		SaltLength:  16,
-		KeyLength:   32,
-	}
-
-	if params != nil {
-		if err := copier.CopyWithOption(p, params, copier.Option{IgnoreEmpty: true}); err != nil {
-			return "", err
-		}
-	}
-
+func HashPasswordWithParams(password string, params config.PasswordHashParams) (string, error) {
+	p := params
 	salt, err := generateRandomBytes(p.SaltLength)
 	if err != nil {
 		return "", err
@@ -84,7 +63,7 @@ func generateRandomBytes(n uint32) ([]byte, error) {
 }
 
 // decodeHash decodes the encoded hash into its parameters, salt and hash
-func decodeHash(encodedHash string) (*PasswordHashParams, []byte, []byte, error) {
+func decodeHash(encodedHash string) (*config.PasswordHashParams, []byte, []byte, error) {
 	vals := strings.Split(encodedHash, "$")
 	if len(vals) != 6 {
 		return nil, nil, nil, ErrInvalidHash
@@ -99,7 +78,7 @@ func decodeHash(encodedHash string) (*PasswordHashParams, []byte, []byte, error)
 		return nil, nil, nil, ErrIncompatibleVersion
 	}
 
-	p := &PasswordHashParams{}
+	p := &config.PasswordHashParams{}
 	_, err = fmt.Sscanf(vals[3], "m=%d,t=%d,p=%d", &p.Memory, &p.Iterations, &p.Parallelism)
 	if err != nil {
 		return nil, nil, nil, err

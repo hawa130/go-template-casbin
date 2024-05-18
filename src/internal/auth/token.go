@@ -4,10 +4,15 @@ import (
 	"crypto/ecdsa"
 	"errors"
 	"os"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/hawa130/computility-cloud/config"
 	"github.com/rs/xid"
+)
+
+var (
+	ErrInvalidToken = errors.New("jwt parse: invalid token")
 )
 
 type JWTClaims struct {
@@ -24,7 +29,9 @@ func GenerateToken(uid xid.ID) (string, error) {
 	t := jwt.NewWithClaims(jwt.SigningMethodES256, JWTClaims{
 		Uid: uid,
 		StandardClaims: jwt.StandardClaims{
-			Id: xid.New().String(),
+			Id:        xid.New().String(),
+			IssuedAt:  jwt.TimeFunc().Unix(),
+			ExpiresAt: jwt.TimeFunc().Add(config.GetConfig().JWT.Duration * time.Hour).Unix(),
 		},
 	})
 
@@ -47,7 +54,7 @@ func ParseToken(token string) (*JWTClaims, error) {
 		return key.Public(), nil
 	})
 	if !t.Valid {
-		return nil, errors.New("invalid token")
+		return nil, ErrInvalidToken
 	}
 	if err != nil {
 		return nil, err
@@ -55,7 +62,7 @@ func ParseToken(token string) (*JWTClaims, error) {
 
 	claims, ok := t.Claims.(*JWTClaims)
 	if !ok {
-		return nil, errors.New("failed to parse claims")
+		return nil, ErrInvalidToken
 	}
 
 	return claims, nil

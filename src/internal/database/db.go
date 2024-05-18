@@ -3,19 +3,17 @@ package database
 import (
 	"context"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/hawa130/computility-cloud/ent"
 	"github.com/hawa130/computility-cloud/ent/migrate"
+	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 var client *ent.Client
 var isOpen = false
 
-func Client(driverName, dataSourceName string) (*ent.Client, error) {
-	if isOpen {
-		return client, nil
-	}
-
+func Open(driverName, dataSourceName string) (*ent.Client, error) {
 	var err error
 	client, err = ent.Open(driverName, dataSourceName)
 	if err != nil {
@@ -40,4 +38,11 @@ func Close() error {
 		isOpen = false
 	}
 	return nil
+}
+
+func Client() *ent.Client {
+	if !isOpen {
+		return nil
+	}
+	return client
 }
