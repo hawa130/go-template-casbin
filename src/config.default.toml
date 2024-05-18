@@ -1,5 +1,5 @@
 [server]
-address = 'localhost:8080'
+address = ':8080'
 
 [database]
 # 数据库驱动，可选 sqlite3, mysql, postgres, gremlin
@@ -20,7 +20,9 @@ playground = true
 playground_endpoint = '/playground'
 
 [argon2]
+# 内存消耗（KB）默认为 64MB，即 64*1024=65536KB
 memory = 65536
+# 迭代次数，默认为 3
 iterations = 3
 parallelism = 2
 salt_length = 16

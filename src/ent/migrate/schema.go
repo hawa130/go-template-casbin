@@ -59,11 +59,6 @@ var (
 				Unique:  false,
 				Columns: []*schema.Column{UsersColumns[2]},
 			},
-			{
-				Name:    "user_username_email_phone",
-				Unique:  true,
-				Columns: []*schema.Column{UsersColumns[4], UsersColumns[5], UsersColumns[6]},
-			},
 		},
 	}
 	// RolePermissionsColumns holds the columns for the "role_permissions" table.

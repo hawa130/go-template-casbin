@@ -33,10 +33,7 @@ func Middleware() echo.MiddlewareFunc {
 
 			requestUser, err := database.Client().User.Query().
 				Where(user.IDEQ(claims.Uid)).
-				WithRoles(func(q *ent.RoleQuery) {
-					q.WithPermissions()
-				}).
-				Only(context.Background())
+				Only(database.AllowContext)
 			if err != nil {
 				return next(c)
 			}

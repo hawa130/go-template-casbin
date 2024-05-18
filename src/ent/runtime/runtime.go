@@ -3,6 +3,7 @@
 package runtime
 
 import (
+	"context"
 	"time"
 
 	"github.com/hawa130/computility-cloud/ent/permission"
@@ -10,6 +11,9 @@ import (
 	"github.com/hawa130/computility-cloud/ent/schema"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/rs/xid"
+
+	"entgo.io/ent"
+	"entgo.io/ent/privacy"
 )
 
 // The init function reads all schema descriptors with runtime code
@@ -35,8 +39,20 @@ func init() {
 	// role.DefaultID holds the default value on creation for the id field.
 	role.DefaultID = roleDescID.Default.(func() xid.ID)
 	userMixin := schema.User{}.Mixin()
+	user.Policy = privacy.NewPolicies(schema.User{})
+	user.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := user.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
 	userHooks := schema.User{}.Hooks()
-	user.Hooks[0] = userHooks[0]
+
+	user.Hooks[1] = userHooks[0]
+
+	user.Hooks[2] = userHooks[1]
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0
 	userMixinFields1 := userMixin[1].Fields()

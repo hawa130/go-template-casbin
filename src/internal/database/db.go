@@ -6,12 +6,14 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/hawa130/computility-cloud/ent"
 	"github.com/hawa130/computility-cloud/ent/migrate"
+	"github.com/hawa130/computility-cloud/ent/privacy"
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 var client *ent.Client
 var isOpen = false
+var AllowContext = privacy.DecisionContext(context.Background(), privacy.Allow)
 
 func Open(driverName, dataSourceName string) (*ent.Client, error) {
 	var err error
@@ -26,7 +28,7 @@ func Open(driverName, dataSourceName string) (*ent.Client, error) {
 		return nil, err
 	}
 
-	if err := seedData(context.Background()); err != nil {
+	if err := seedData(AllowContext); err != nil {
 		return nil, err
 	}
 
