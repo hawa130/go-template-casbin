@@ -10,8 +10,8 @@ import (
 	"github.com/hawa130/computility-cloud/ent"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/hawa130/computility-cloud/graph/model"
+	"github.com/hawa130/computility-cloud/graph/reqerr"
 	"github.com/hawa130/computility-cloud/internal/auth"
-	"github.com/hawa130/computility-cloud/internal/errorx"
 )
 
 // Login is the resolver for the login field.
@@ -21,7 +21,7 @@ func (r *mutationResolver) Login(ctx context.Context, input model.LoginInput) (*
 		if _, err := auth.HashPassword(input.Password); err != nil {
 			return nil, err
 		}
-		return nil, errorx.NewInvalidLoginInputError()
+		return nil, reqerr.ErrInvalidLoginInput
 	}
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func (r *mutationResolver) Login(ctx context.Context, input model.LoginInput) (*
 		return nil, err
 	}
 	if !ok {
-		return nil, errorx.NewInvalidLoginInputError()
+		return nil, reqerr.ErrInvalidLoginInput
 	}
 
 	token, err := auth.GenerateToken(record.ID)
