@@ -43,7 +43,7 @@ func Middleware() echo.MiddlewareFunc {
 				if err != nil {
 					return next(c)
 				}
-				c.Response().Header().Set("X-Set-Authorization", "Bearer "+newToken)
+				c.Response().Header().Set("X-Set-Token", newToken)
 			}
 
 			ctx := context.WithValue(c.Request().Context(), "user", requestUser)
