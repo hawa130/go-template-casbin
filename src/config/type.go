@@ -28,7 +28,7 @@ type JWTConfig struct {
 }
 
 type GraphqlConfig struct {
-	EndPoint           string `mapstructure:"endpoint"`
+	Endpoint           string `mapstructure:"endpoint"`
 	Introspection      bool   `mapstructure:"introspection"`
 	Playground         bool   `mapstructure:"playground"`
 	PlaygroundEndpoint string `mapstructure:"playground_endpoint"`

@@ -70,7 +70,7 @@ func (r *Server) Start() {
 	r.echo.Use(logger.Middleware())
 	r.echo.Use(auth.Middleware())
 
-	r.echo.POST(cfg.GraphQL.EndPoint, func(c echo.Context) error {
+	r.echo.POST(cfg.GraphQL.Endpoint, func(c echo.Context) error {
 		srv := handler.New(graph.NewSchema(client))
 
 		srv.AddTransport(transport.POST{})
@@ -98,7 +98,7 @@ func (r *Server) Start() {
 	if cfg.GraphQL.Playground {
 		r.echo.GET(
 			cfg.GraphQL.PlaygroundEndpoint,
-			echo.WrapHandler(playground.Handler("GraphQL playground", cfg.GraphQL.EndPoint)),
+			echo.WrapHandler(playground.Handler("GraphQL playground", cfg.GraphQL.Endpoint)),
 		)
 	}
 
