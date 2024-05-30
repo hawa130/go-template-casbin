@@ -5,6 +5,7 @@ import "time"
 type GlobalConfig struct {
 	Server   ServerConfig       `mapstructure:"server"`
 	Database DatabaseConfig     `mapstructure:"database"`
+	Casbin   CasbinConfig       `mapstructure:"casbin"`
 	JWT      JWTConfig          `mapstructure:"jwt"`
 	GraphQL  GraphqlConfig      `mapstructure:"graphql"`
 	Argon2   PasswordHashParams `mapstructure:"argon2"`
@@ -37,4 +38,9 @@ type PasswordHashParams struct {
 	Parallelism uint8  `mapstructure:"parallelism"`
 	SaltLength  uint32 `mapstructure:"salt_length"`
 	KeyLength   uint32 `mapstructure:"key_length"`
+}
+
+type CasbinConfig struct {
+	Driver string `mapstructure:"driver"`
+	Url    string `mapstructure:"url"`
 }

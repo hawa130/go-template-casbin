@@ -7,6 +7,11 @@ address = ':8080'
 driver = 'mysql'
 url = '<user>:<pass>@tcp(localhost:3306)/<database>?parseTime=True'
 
+[casbin]
+# 权限系统的数据库配置，同 database 部分
+driver = 'mysql'
+url = '<user>:<pass>@tcp(localhost:3306)/<database-casbin>'
+
 [jwt]
 private_key_path = 'ec-prime256v1-priv-key.pem'
 # 有效期（小时）

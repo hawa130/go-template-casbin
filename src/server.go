@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/hawa130/computility-cloud/config"
@@ -14,8 +15,11 @@ import (
 	"github.com/hawa130/computility-cloud/graph"
 	"github.com/hawa130/computility-cloud/internal/auth"
 	"github.com/hawa130/computility-cloud/internal/database"
+	"github.com/hawa130/computility-cloud/internal/logger"
+	"github.com/hawa130/computility-cloud/internal/perm"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/rs/xid"
 )
 
 type Server struct {
@@ -31,19 +35,40 @@ func (r *Server) Start() {
 
 	cfg := config.Config()
 
-	c, err := database.Open(cfg.Database.Driver, cfg.Database.Url)
+	client, err := database.Open(cfg.Database.Driver, cfg.Database.Url)
 	if err != nil {
 		log.Fatal("database initialization error: ", err)
 	}
 
+	err = logger.Init()
+	if err != nil {
+		log.Fatal("logger initialization error: ", err)
+	}
+
+	err = perm.Init(cfg.Casbin.Driver, cfg.Casbin.Url)
+	if err != nil {
+		log.Fatal("casbin initialization error: ", err)
+	}
+
 	r.echo = echo.New()
-	r.echo.Use(middleware.Logger())
 	r.echo.Use(middleware.Recover())
+	r.echo.Use(middleware.RequestIDWithConfig(middleware.RequestIDConfig{
+		Generator: func() string {
+			return xid.New().String()
+		},
+	}))
+	r.echo.Use(logger.Middleware())
 	r.echo.Use(auth.Middleware())
 
-	srv := handler.NewDefaultServer(graph.NewSchema(c))
-
-	r.echo.POST(cfg.GraphQL.EndPoint, echo.WrapHandler(srv))
+	r.echo.POST(cfg.GraphQL.EndPoint, func(c echo.Context) error {
+		srv := handler.NewDefaultServer(graph.NewSchema(client))
+		srv.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
+			c.Set("operation_context", graphql.GetOperationContext(ctx))
+			return next(ctx)
+		})
+		srv.ServeHTTP(c.Response(), c.Request())
+		return nil
+	})
 	if cfg.GraphQL.Playground {
 		r.echo.GET(
 			cfg.GraphQL.PlaygroundEndpoint,
@@ -73,6 +98,7 @@ func (r *Server) Stop() {
 		log.Fatalf("database close failed: %v", err)
 	}
 
+	logger.Sync()
 	log.Println("server stopped")
 }
 
