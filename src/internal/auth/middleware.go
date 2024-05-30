@@ -5,12 +5,29 @@ import (
 	"strings"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/hawa130/computility-cloud/config"
 	"github.com/hawa130/computility-cloud/ent"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/hawa130/computility-cloud/internal/database"
 	"github.com/labstack/echo/v4"
 )
+
+func getUserFromToken(token string) (*ent.User, *JWTClaims, error) {
+	claims, err := ParseToken(token)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	requestUser, err := database.Client().User.Query().
+		Where(user.IDEQ(claims.Uid)).
+		Only(database.AllowContext)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return requestUser, claims, nil
+}
 
 // Middleware is a middleware for renewing JWT tokens and setting user in context
 func Middleware() echo.MiddlewareFunc {
@@ -26,14 +43,7 @@ func Middleware() echo.MiddlewareFunc {
 				return next(c)
 			}
 
-			claims, err := ParseToken(tokenString)
-			if err != nil {
-				return next(c)
-			}
-
-			requestUser, err := database.Client().User.Query().
-				Where(user.IDEQ(claims.Uid)).
-				Only(database.AllowContext)
+			requestUser, claims, err := getUserFromToken(tokenString)
 			if err != nil {
 				return next(c)
 			}
@@ -57,4 +67,19 @@ func Middleware() echo.MiddlewareFunc {
 func FromContext(c context.Context) (*ent.User, bool) {
 	u, ok := c.Value("user").(*ent.User)
 	return u, ok
+}
+
+func WebsocketInit(ctx context.Context, initPayload *transport.InitPayload) (context.Context, *transport.InitPayload, error) {
+	token := initPayload.GetString("token")
+	if token == "" {
+		return ctx, initPayload, nil
+	}
+
+	requestUser, _, err := getUserFromToken(token)
+	if err != nil {
+		return ctx, initPayload, nil
+	}
+
+	ctx = context.WithValue(ctx, "user", requestUser)
+	return ctx, initPayload, nil
 }

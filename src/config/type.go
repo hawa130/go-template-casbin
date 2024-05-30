@@ -12,7 +12,8 @@ type GlobalConfig struct {
 }
 
 type ServerConfig struct {
-	Address string `mapstructure:"address"`
+	Address string     `mapstructure:"address"`
+	CORS    CORSConfig `mapstructure:"cors"`
 }
 
 type DatabaseConfig struct {
@@ -28,6 +29,7 @@ type JWTConfig struct {
 
 type GraphqlConfig struct {
 	EndPoint           string `mapstructure:"endpoint"`
+	Introspection      bool   `mapstructure:"introspection"`
 	Playground         bool   `mapstructure:"playground"`
 	PlaygroundEndpoint string `mapstructure:"playground_endpoint"`
 }
@@ -43,4 +45,13 @@ type PasswordHashParams struct {
 type CasbinConfig struct {
 	Driver string `mapstructure:"driver"`
 	Url    string `mapstructure:"url"`
+}
+
+type CORSConfig struct {
+	AllowedOrigins   []string `mapstructure:"allowed_origins"`
+	AllowedMethods   []string `mapstructure:"allowed_methods"`
+	AllowedHeaders   []string `mapstructure:"allowed_headers"`
+	ExposedHeaders   []string `mapstructure:"exposed_headers"`
+	AllowCredentials bool     `mapstructure:"allow_credentials"`
+	MaxAge           int      `mapstructure:"max_age"`
 }

@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
@@ -56,6 +57,7 @@ func initDefault() {
 
 	viper.SetDefault("graphql.playground", true)
 	viper.SetDefault("graphql.playground_endpoint", "/playground")
+	viper.SetDefault("graphql.introspection", true)
 	viper.SetDefault("graphql.endpoint", "/graphql")
 
 	viper.SetDefault("jwt.duration", 24)
@@ -66,4 +68,11 @@ func initDefault() {
 	viper.SetDefault("argon2.parallelism", 2)
 	viper.SetDefault("argon2.salt_length", 16)
 	viper.SetDefault("argon2.key_length", 32)
+
+	viper.SetDefault("server.cors.allowed_origins", []string{"*"})
+	viper.SetDefault("server.cors.allowed_methods", []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete})
+	viper.SetDefault("server.cors.allowed_headers", []string{})
+	viper.SetDefault("server.cors.exposed_headers", []string{})
+	viper.SetDefault("server.cors.allow_credentials", false)
+	viper.SetDefault("server.cors.max_age", 0)
 }

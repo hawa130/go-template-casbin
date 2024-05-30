@@ -9,6 +9,8 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/hawa130/computility-cloud/config"
 	_ "github.com/hawa130/computility-cloud/ent/runtime"
@@ -51,6 +53,14 @@ func (r *Server) Start() {
 	}
 
 	r.echo = echo.New()
+	r.echo.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     cfg.Server.CORS.AllowedOrigins,
+		AllowMethods:     cfg.Server.CORS.AllowedMethods,
+		AllowHeaders:     cfg.Server.CORS.AllowedHeaders,
+		ExposeHeaders:    cfg.Server.CORS.ExposedHeaders,
+		AllowCredentials: cfg.Server.CORS.AllowCredentials,
+		MaxAge:           cfg.Server.CORS.MaxAge,
+	}))
 	r.echo.Use(middleware.Recover())
 	r.echo.Use(middleware.RequestIDWithConfig(middleware.RequestIDConfig{
 		Generator: func() string {
@@ -61,14 +71,30 @@ func (r *Server) Start() {
 	r.echo.Use(auth.Middleware())
 
 	r.echo.POST(cfg.GraphQL.EndPoint, func(c echo.Context) error {
-		srv := handler.NewDefaultServer(graph.NewSchema(client))
+		srv := handler.New(graph.NewSchema(client))
+
+		srv.AddTransport(transport.POST{})
+		srv.AddTransport(transport.Websocket{
+			KeepAlivePingInterval: 10 * time.Second,
+			InitFunc: func(ctx context.Context, initPayload transport.InitPayload) (context.Context, *transport.InitPayload, error) {
+				return auth.WebsocketInit(ctx, &initPayload)
+			},
+		})
+
+		if cfg.GraphQL.Introspection {
+			srv.Use(extension.Introspection{})
+		}
+
 		srv.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
 			c.Set("operation_context", graphql.GetOperationContext(ctx))
 			return next(ctx)
 		})
+
 		srv.ServeHTTP(c.Response(), c.Request())
+
 		return nil
 	})
+
 	if cfg.GraphQL.Playground {
 		r.echo.GET(
 			cfg.GraphQL.PlaygroundEndpoint,
