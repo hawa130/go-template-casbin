@@ -27,6 +27,9 @@ func seedData(ctx context.Context) error {
 }
 
 func seedPermissions(ctx context.Context) error {
+	if err := deleteNotExistsPermissions(ctx, constant.AllPermissions); err != nil {
+		return err
+	}
 	for _, p := range constant.AllPermissions {
 		if err := upsertPermission(ctx, p); err != nil {
 			return err
@@ -57,6 +60,10 @@ func seedRoles(ctx context.Context) error {
 			Description: "用户",
 			Edges:       ent.RoleEdges{Permissions: []*ent.Permission{userReadSummary}},
 		},
+	}
+
+	if err := deleteNotExistsRoles(ctx, roles); err != nil {
+		return err
 	}
 
 	for _, r := range roles {
@@ -94,17 +101,40 @@ func seedUser(ctx context.Context) error {
 }
 
 func upsertPermission(ctx context.Context, p *ent.Permission) error {
-	exists, err := client.Permission.Query().Where(permission.NameEQ(p.Name)).Exist(ctx)
-	if err != nil {
+	existingPerm, err := client.Permission.Query().Where(permission.NameEQ(p.Name)).Only(ctx)
+	if err != nil && !ent.IsNotFound(err) {
 		return err
 	}
-	if exists {
-		return nil
+
+	// Create permission if not exists
+	if existingPerm == nil || ent.IsNotFound(err) {
+		if err := client.Permission.Create().
+			SetName(p.Name).
+			SetDescription(p.Description).
+			Exec(ctx); err != nil {
+			return err
+		}
 	}
 
-	if err := client.Permission.Create().
-		SetName(p.Name).
+	// Update permission if exists
+	if err := client.Permission.UpdateOne(existingPerm).
 		SetDescription(p.Description).
+		Exec(ctx); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// deleteNotExistsPermissions deletes permissions that are not in the given list
+func deleteNotExistsPermissions(ctx context.Context, permissions []*ent.Permission) error {
+	permissionNames := make([]string, len(permissions))
+	for i, p := range permissions {
+		permissionNames[i] = p.Name
+	}
+
+	if _, err := client.Permission.Delete().
+		Where(permission.Not(permission.NameIn(permissionNames...))).
 		Exec(ctx); err != nil {
 		return err
 	}
@@ -124,7 +154,7 @@ func upsertRole(ctx context.Context, r *ent.Role) error {
 	}
 
 	// Create role if not exists
-	if ent.IsNotFound(err) {
+	if existingRole == nil || ent.IsNotFound(err) {
 		if err := client.Role.Create().
 			SetName(r.Name).
 			SetDescription(r.Description).
@@ -143,5 +173,21 @@ func upsertRole(ctx context.Context, r *ent.Role) error {
 		Exec(ctx); err != nil {
 		return err
 	}
+	return nil
+}
+
+// deleteNotExistsRoles deletes roles that are not in the given list
+func deleteNotExistsRoles(ctx context.Context, roles []*ent.Role) error {
+	roleNames := make([]string, len(roles))
+	for i, r := range roles {
+		roleNames[i] = r.Name
+	}
+
+	if _, err := client.Role.Delete().
+		Where(role.Not(role.NameIn(roleNames...))).
+		Exec(ctx); err != nil {
+		return err
+	}
+
 	return nil
 }
