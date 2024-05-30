@@ -31,7 +31,7 @@ func GenerateToken(uid xid.ID) (string, error) {
 		StandardClaims: jwt.StandardClaims{
 			Id:        xid.New().String(),
 			IssuedAt:  jwt.TimeFunc().Unix(),
-			ExpiresAt: jwt.TimeFunc().Add(config.GetConfig().JWT.Duration * time.Hour).Unix(),
+			ExpiresAt: jwt.TimeFunc().Add(config.Config().JWT.Duration * time.Hour).Unix(),
 		},
 	})
 
@@ -70,7 +70,7 @@ func ParseToken(token string) (*JWTClaims, error) {
 }
 
 func decodePem() (*ecdsa.PrivateKey, error) {
-	filePath := config.GetConfig().JWT.PrivateKeyPath
+	filePath := config.Config().JWT.PrivateKeyPath
 	keyPem, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err

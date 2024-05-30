@@ -7,21 +7,22 @@ import (
 	"github.com/spf13/viper"
 )
 
-var config GlobalConfig
-var isLoaded = false
-
-var onConfigChange func()
+var (
+	config         GlobalConfig
+	isLoaded       = false
+	onConfigChange func()
+)
 
 func OnConfigChange(run func()) {
 	onConfigChange = run
 }
 
-func GetConfig() GlobalConfig {
+func Config() *GlobalConfig {
 	if !isLoaded {
 		initViper()
 		load()
 	}
-	return config
+	return &config
 }
 
 func load() {

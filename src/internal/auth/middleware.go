@@ -38,7 +38,7 @@ func Middleware() echo.MiddlewareFunc {
 				return next(c)
 			}
 
-			if time.Until(time.Unix(claims.ExpiresAt, 0)) < config.GetConfig().JWT.RenewDuration*time.Hour {
+			if time.Until(time.Unix(claims.ExpiresAt, 0)) < config.Config().JWT.RenewDuration*time.Hour {
 				newToken, err := GenerateToken(requestUser.ID)
 				if err != nil {
 					return next(c)

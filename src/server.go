@@ -29,7 +29,7 @@ func NewServer() *Server {
 func (r *Server) Start() {
 	log.Println("starting server")
 
-	cfg := config.GetConfig()
+	cfg := config.Config()
 
 	c, err := database.Open(cfg.Database.Driver, cfg.Database.Url)
 	if err != nil {

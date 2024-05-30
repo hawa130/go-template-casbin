@@ -19,7 +19,7 @@ var (
 
 // HashPassword hashes a password and returns the encoded hash
 func HashPassword(password string) (string, error) {
-	cfg := config.GetConfig().Argon2
+	cfg := config.Config().Argon2
 	return HashPasswordWithParams(password, &cfg)
 }
 
