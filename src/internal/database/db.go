@@ -11,7 +11,6 @@ import (
 )
 
 var client *ent.Client
-var isOpen = false
 var AllowContext = privacy.DecisionContext(context.Background(), privacy.Allow)
 
 func Open(driverName, dataSourceName string) (*ent.Client, error) {
@@ -31,7 +30,6 @@ func Open(driverName, dataSourceName string) (*ent.Client, error) {
 		return nil, err
 	}
 
-	isOpen = true
 	return client, nil
 }
 
@@ -40,14 +38,11 @@ func Close() error {
 		if err := client.Close(); err != nil {
 			return err
 		}
-		isOpen = false
+		client = nil
 	}
 	return nil
 }
 
 func Client() *ent.Client {
-	if !isOpen {
-		return nil
-	}
 	return client
 }

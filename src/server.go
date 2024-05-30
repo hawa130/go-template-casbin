@@ -32,43 +32,9 @@ func NewServer() *Server {
 	return &Server{}
 }
 
-func (r *Server) Start() {
-	log.Println("starting server")
-
+func (r *Server) HandleGraphql() {
+	client := database.Client()
 	cfg := config.Config()
-
-	client, err := database.Open(cfg.Database.Driver, cfg.Database.Url)
-	if err != nil {
-		log.Fatal("database initialization error: ", err)
-	}
-
-	err = logger.Init()
-	if err != nil {
-		log.Fatal("logger initialization error: ", err)
-	}
-
-	err = perm.Init(cfg.Casbin.Driver, cfg.Casbin.Url)
-	if err != nil {
-		log.Fatal("casbin initialization error: ", err)
-	}
-
-	r.echo = echo.New()
-	r.echo.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     cfg.Server.CORS.AllowedOrigins,
-		AllowMethods:     cfg.Server.CORS.AllowedMethods,
-		AllowHeaders:     cfg.Server.CORS.AllowedHeaders,
-		ExposeHeaders:    cfg.Server.CORS.ExposedHeaders,
-		AllowCredentials: cfg.Server.CORS.AllowCredentials,
-		MaxAge:           cfg.Server.CORS.MaxAge,
-	}))
-	r.echo.Use(middleware.Recover())
-	r.echo.Use(middleware.RequestIDWithConfig(middleware.RequestIDConfig{
-		Generator: func() string {
-			return xid.New().String()
-		},
-	}))
-	r.echo.Use(logger.Middleware())
-	r.echo.Use(auth.Middleware())
 
 	r.echo.POST(cfg.GraphQL.Endpoint, func(c echo.Context) error {
 		srv := handler.New(graph.NewSchema(client))
@@ -101,6 +67,47 @@ func (r *Server) Start() {
 			echo.WrapHandler(playground.Handler("GraphQL playground", cfg.GraphQL.Endpoint)),
 		)
 	}
+}
+
+func (r *Server) Start() {
+	log.Println("starting server")
+
+	cfg := config.Config()
+
+	_, err := database.Open(cfg.Database.Driver, cfg.Database.Url)
+	if err != nil {
+		log.Fatal("database initialization error: ", err)
+	}
+
+	err = logger.Init()
+	if err != nil {
+		log.Fatal("logger initialization error: ", err)
+	}
+
+	err = perm.Init(cfg.Casbin.Driver, cfg.Casbin.Url)
+	if err != nil {
+		log.Fatal("casbin initialization error: ", err)
+	}
+
+	r.echo = echo.New()
+	r.echo.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     cfg.Server.CORS.AllowedOrigins,
+		AllowMethods:     cfg.Server.CORS.AllowedMethods,
+		AllowHeaders:     cfg.Server.CORS.AllowedHeaders,
+		ExposeHeaders:    cfg.Server.CORS.ExposedHeaders,
+		AllowCredentials: cfg.Server.CORS.AllowCredentials,
+		MaxAge:           cfg.Server.CORS.MaxAge,
+	}))
+	r.echo.Use(middleware.Recover())
+	r.echo.Use(middleware.RequestIDWithConfig(middleware.RequestIDConfig{
+		Generator: func() string {
+			return xid.New().String()
+		},
+	}))
+	r.echo.Use(logger.Middleware())
+	r.echo.Use(auth.Middleware())
+
+	r.HandleGraphql()
 
 	go func() {
 		if err := r.echo.Start(cfg.Server.Address); err != nil && !errors.Is(err, http.ErrServerClosed) {
