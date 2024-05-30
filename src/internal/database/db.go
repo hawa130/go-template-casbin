@@ -8,7 +8,6 @@ import (
 	"github.com/hawa130/computility-cloud/ent/migrate"
 	"github.com/hawa130/computility-cloud/ent/privacy"
 	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 var client *ent.Client
