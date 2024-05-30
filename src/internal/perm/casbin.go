@@ -45,14 +45,11 @@ func initEnforcer(logger *zap.Logger) error {
 		return errors.New("adapter is not initialized")
 	}
 
-	e, err := casbin.NewEnforcer("perm-model.conf", adapter)
+	eLogger := zaplogger.NewLoggerByZap(logger, true)
+	e, err := casbin.NewEnforcer("perm-model.conf", adapter, eLogger)
 	if err != nil {
 		return err
 	}
-
-	eLogger := zaplogger.NewLoggerByZap(logger, true)
-	e.EnableLog(true)
-	e.SetLogger(eLogger)
 
 	enforcer = e
 	return nil

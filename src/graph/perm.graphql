@@ -1,0 +1,84 @@
+# Policy
+
+type CPolicy {
+  sub: String!
+  obj: String!
+  act: String!
+}
+
+type CPolicyResult {
+  sub: String!
+  obj: String!
+  act: String!
+  ok: Boolean!
+}
+
+type UpdateCPolicy {
+  new: CPolicy!
+  old: CPolicy!
+  ok: Boolean!
+}
+
+input CRequestInput {
+  sub: String!
+  obj: String!
+  act: String!
+}
+
+type BatchCPolicy {
+  data: [CPolicy!]
+  ok: Boolean!
+}
+
+# Grouping Policy
+
+type CGroup {
+  sub: String!
+  obj: String!
+}
+
+type CGroupResult {
+  sub: String!
+  obj: String!
+  ok: Boolean!
+}
+
+type UpdateCGroup {
+  new: CGroup!
+  old: CGroup!
+  ok: Boolean!
+}
+
+input CGroupInput {
+  sub: String!
+  obj: String!
+}
+
+type BatchCGroup {
+  data: [CGroup!]
+  ok: Boolean!
+}
+
+extend type Query {
+  enforce(input: CRequestInput!): CPolicyResult!
+  policy(name: String): [CPolicy!]
+  groupingPolicy(name: String): [CGroup!]
+}
+
+extend type Mutation {
+  # Policy
+  addPolicy(input: CRequestInput!): CPolicyResult!
+  addPolicies(input: [CRequestInput!]!): BatchCPolicy!
+  addNamedPolicy(pType: String!, input: CRequestInput!): CPolicyResult!
+  addNamedPolicies(pType: String!, input: [CRequestInput!]!): BatchCPolicy!
+  deletePolicy(input: CRequestInput!): CPolicyResult!
+  updatePolicy(new: CRequestInput!, old: CRequestInput!): UpdateCPolicy!
+
+  # Grouping Policy
+  addGroupingPolicy(input: CGroupInput!): CGroupResult!
+  addGroupingPolicies(input: [CGroupInput!]!): BatchCGroup!
+  addNamedGroupingPolicy(pType: String!, input: CGroupInput!): CGroupResult!
+  addNamedGroupingPolicies(pType: String!, input: [CGroupInput!]!): BatchCGroup!
+  deleteGroupingPolicy(input: CGroupInput!): CGroupResult!
+  updateGroupingPolicy(new: CGroupInput!, old: CGroupInput!): UpdateCGroup!
+}

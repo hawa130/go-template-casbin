@@ -52,16 +52,62 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	BatchCGroup struct {
+		Data func(childComplexity int) int
+		Ok   func(childComplexity int) int
+	}
+
+	BatchCPolicy struct {
+		Data func(childComplexity int) int
+		Ok   func(childComplexity int) int
+	}
+
+	CGroup struct {
+		Obj func(childComplexity int) int
+		Sub func(childComplexity int) int
+	}
+
+	CGroupResult struct {
+		Obj func(childComplexity int) int
+		Ok  func(childComplexity int) int
+		Sub func(childComplexity int) int
+	}
+
+	CPolicy struct {
+		Act func(childComplexity int) int
+		Obj func(childComplexity int) int
+		Sub func(childComplexity int) int
+	}
+
+	CPolicyResult struct {
+		Act func(childComplexity int) int
+		Obj func(childComplexity int) int
+		Ok  func(childComplexity int) int
+		Sub func(childComplexity int) int
+	}
+
 	LoginPayload struct {
 		Token func(childComplexity int) int
 		User  func(childComplexity int) int
 	}
 
 	Mutation struct {
-		CreateUser func(childComplexity int, input ent.CreateUserInput) int
-		DeleteUser func(childComplexity int, id xid.ID) int
-		Login      func(childComplexity int, input model.LoginInput) int
-		UpdateUser func(childComplexity int, id xid.ID, input ent.UpdateUserInput) int
+		AddGroupingPolicies      func(childComplexity int, input []*model.CGroupInput) int
+		AddGroupingPolicy        func(childComplexity int, input model.CGroupInput) int
+		AddNamedGroupingPolicies func(childComplexity int, pType string, input []*model.CGroupInput) int
+		AddNamedGroupingPolicy   func(childComplexity int, pType string, input model.CGroupInput) int
+		AddNamedPolicies         func(childComplexity int, pType string, input []*model.CRequestInput) int
+		AddNamedPolicy           func(childComplexity int, pType string, input model.CRequestInput) int
+		AddPolicies              func(childComplexity int, input []*model.CRequestInput) int
+		AddPolicy                func(childComplexity int, input model.CRequestInput) int
+		CreateUser               func(childComplexity int, input ent.CreateUserInput) int
+		DeleteGroupingPolicy     func(childComplexity int, input model.CGroupInput) int
+		DeletePolicy             func(childComplexity int, input model.CRequestInput) int
+		DeleteUser               func(childComplexity int, id xid.ID) int
+		Login                    func(childComplexity int, input model.LoginInput) int
+		UpdateGroupingPolicy     func(childComplexity int, new model.CGroupInput, old model.CGroupInput) int
+		UpdatePolicy             func(childComplexity int, new model.CRequestInput, old model.CRequestInput) int
+		UpdateUser               func(childComplexity int, id xid.ID, input ent.UpdateUserInput) int
 	}
 
 	PageInfo struct {
@@ -79,11 +125,14 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Node        func(childComplexity int, id xid.ID) int
-		Nodes       func(childComplexity int, ids []xid.ID) int
-		Permissions func(childComplexity int) int
-		Roles       func(childComplexity int) int
-		Users       func(childComplexity int, after *entgql.Cursor[xid.ID], first *int, before *entgql.Cursor[xid.ID], last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) int
+		Enforce        func(childComplexity int, input model.CRequestInput) int
+		GroupingPolicy func(childComplexity int, name *string) int
+		Node           func(childComplexity int, id xid.ID) int
+		Nodes          func(childComplexity int, ids []xid.ID) int
+		Permissions    func(childComplexity int) int
+		Policy         func(childComplexity int, name *string) int
+		Roles          func(childComplexity int) int
+		Users          func(childComplexity int, after *entgql.Cursor[xid.ID], first *int, before *entgql.Cursor[xid.ID], last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) int
 	}
 
 	Role struct {
@@ -92,6 +141,18 @@ type ComplexityRoot struct {
 		Name        func(childComplexity int) int
 		Permissions func(childComplexity int) int
 		Users       func(childComplexity int) int
+	}
+
+	UpdateCGroup struct {
+		New func(childComplexity int) int
+		Ok  func(childComplexity int) int
+		Old func(childComplexity int) int
+	}
+
+	UpdateCPolicy struct {
+		New func(childComplexity int) int
+		Ok  func(childComplexity int) int
+		Old func(childComplexity int) int
 	}
 
 	User struct {
@@ -122,6 +183,18 @@ type MutationResolver interface {
 	UpdateUser(ctx context.Context, id xid.ID, input ent.UpdateUserInput) (*ent.User, error)
 	DeleteUser(ctx context.Context, id xid.ID) (bool, error)
 	Login(ctx context.Context, input model.LoginInput) (*model.LoginPayload, error)
+	AddPolicy(ctx context.Context, input model.CRequestInput) (*model.CPolicyResult, error)
+	AddPolicies(ctx context.Context, input []*model.CRequestInput) (*model.BatchCPolicy, error)
+	AddNamedPolicy(ctx context.Context, pType string, input model.CRequestInput) (*model.CPolicyResult, error)
+	AddNamedPolicies(ctx context.Context, pType string, input []*model.CRequestInput) (*model.BatchCPolicy, error)
+	DeletePolicy(ctx context.Context, input model.CRequestInput) (*model.CPolicyResult, error)
+	UpdatePolicy(ctx context.Context, new model.CRequestInput, old model.CRequestInput) (*model.UpdateCPolicy, error)
+	AddGroupingPolicy(ctx context.Context, input model.CGroupInput) (*model.CGroupResult, error)
+	AddGroupingPolicies(ctx context.Context, input []*model.CGroupInput) (*model.BatchCGroup, error)
+	AddNamedGroupingPolicy(ctx context.Context, pType string, input model.CGroupInput) (*model.CGroupResult, error)
+	AddNamedGroupingPolicies(ctx context.Context, pType string, input []*model.CGroupInput) (*model.BatchCGroup, error)
+	DeleteGroupingPolicy(ctx context.Context, input model.CGroupInput) (*model.CGroupResult, error)
+	UpdateGroupingPolicy(ctx context.Context, new model.CGroupInput, old model.CGroupInput) (*model.UpdateCGroup, error)
 }
 type QueryResolver interface {
 	Node(ctx context.Context, id xid.ID) (ent.Noder, error)
@@ -129,6 +202,9 @@ type QueryResolver interface {
 	Permissions(ctx context.Context) ([]*ent.Permission, error)
 	Roles(ctx context.Context) ([]*ent.Role, error)
 	Users(ctx context.Context, after *entgql.Cursor[xid.ID], first *int, before *entgql.Cursor[xid.ID], last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) (*ent.UserConnection, error)
+	Enforce(ctx context.Context, input model.CRequestInput) (*model.CPolicyResult, error)
+	Policy(ctx context.Context, name *string) ([]*model.CPolicy, error)
+	GroupingPolicy(ctx context.Context, name *string) ([]*model.CGroup, error)
 }
 
 type executableSchema struct {
@@ -150,6 +226,118 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
+	case "BatchCGroup.data":
+		if e.complexity.BatchCGroup.Data == nil {
+			break
+		}
+
+		return e.complexity.BatchCGroup.Data(childComplexity), true
+
+	case "BatchCGroup.ok":
+		if e.complexity.BatchCGroup.Ok == nil {
+			break
+		}
+
+		return e.complexity.BatchCGroup.Ok(childComplexity), true
+
+	case "BatchCPolicy.data":
+		if e.complexity.BatchCPolicy.Data == nil {
+			break
+		}
+
+		return e.complexity.BatchCPolicy.Data(childComplexity), true
+
+	case "BatchCPolicy.ok":
+		if e.complexity.BatchCPolicy.Ok == nil {
+			break
+		}
+
+		return e.complexity.BatchCPolicy.Ok(childComplexity), true
+
+	case "CGroup.obj":
+		if e.complexity.CGroup.Obj == nil {
+			break
+		}
+
+		return e.complexity.CGroup.Obj(childComplexity), true
+
+	case "CGroup.sub":
+		if e.complexity.CGroup.Sub == nil {
+			break
+		}
+
+		return e.complexity.CGroup.Sub(childComplexity), true
+
+	case "CGroupResult.obj":
+		if e.complexity.CGroupResult.Obj == nil {
+			break
+		}
+
+		return e.complexity.CGroupResult.Obj(childComplexity), true
+
+	case "CGroupResult.ok":
+		if e.complexity.CGroupResult.Ok == nil {
+			break
+		}
+
+		return e.complexity.CGroupResult.Ok(childComplexity), true
+
+	case "CGroupResult.sub":
+		if e.complexity.CGroupResult.Sub == nil {
+			break
+		}
+
+		return e.complexity.CGroupResult.Sub(childComplexity), true
+
+	case "CPolicy.act":
+		if e.complexity.CPolicy.Act == nil {
+			break
+		}
+
+		return e.complexity.CPolicy.Act(childComplexity), true
+
+	case "CPolicy.obj":
+		if e.complexity.CPolicy.Obj == nil {
+			break
+		}
+
+		return e.complexity.CPolicy.Obj(childComplexity), true
+
+	case "CPolicy.sub":
+		if e.complexity.CPolicy.Sub == nil {
+			break
+		}
+
+		return e.complexity.CPolicy.Sub(childComplexity), true
+
+	case "CPolicyResult.act":
+		if e.complexity.CPolicyResult.Act == nil {
+			break
+		}
+
+		return e.complexity.CPolicyResult.Act(childComplexity), true
+
+	case "CPolicyResult.obj":
+		if e.complexity.CPolicyResult.Obj == nil {
+			break
+		}
+
+		return e.complexity.CPolicyResult.Obj(childComplexity), true
+
+	case "CPolicyResult.ok":
+		if e.complexity.CPolicyResult.Ok == nil {
+			break
+		}
+
+		return e.complexity.CPolicyResult.Ok(childComplexity), true
+
+	case "CPolicyResult.sub":
+		if e.complexity.CPolicyResult.Sub == nil {
+			break
+		}
+
+		return e.complexity.CPolicyResult.Sub(childComplexity), true
+
 	case "LoginPayload.token":
 		if e.complexity.LoginPayload.Token == nil {
 			break
@@ -164,6 +352,102 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.LoginPayload.User(childComplexity), true
 
+	case "Mutation.addGroupingPolicies":
+		if e.complexity.Mutation.AddGroupingPolicies == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addGroupingPolicies_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddGroupingPolicies(childComplexity, args["input"].([]*model.CGroupInput)), true
+
+	case "Mutation.addGroupingPolicy":
+		if e.complexity.Mutation.AddGroupingPolicy == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addGroupingPolicy_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddGroupingPolicy(childComplexity, args["input"].(model.CGroupInput)), true
+
+	case "Mutation.addNamedGroupingPolicies":
+		if e.complexity.Mutation.AddNamedGroupingPolicies == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addNamedGroupingPolicies_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddNamedGroupingPolicies(childComplexity, args["pType"].(string), args["input"].([]*model.CGroupInput)), true
+
+	case "Mutation.addNamedGroupingPolicy":
+		if e.complexity.Mutation.AddNamedGroupingPolicy == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addNamedGroupingPolicy_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddNamedGroupingPolicy(childComplexity, args["pType"].(string), args["input"].(model.CGroupInput)), true
+
+	case "Mutation.addNamedPolicies":
+		if e.complexity.Mutation.AddNamedPolicies == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addNamedPolicies_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddNamedPolicies(childComplexity, args["pType"].(string), args["input"].([]*model.CRequestInput)), true
+
+	case "Mutation.addNamedPolicy":
+		if e.complexity.Mutation.AddNamedPolicy == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addNamedPolicy_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddNamedPolicy(childComplexity, args["pType"].(string), args["input"].(model.CRequestInput)), true
+
+	case "Mutation.addPolicies":
+		if e.complexity.Mutation.AddPolicies == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addPolicies_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddPolicies(childComplexity, args["input"].([]*model.CRequestInput)), true
+
+	case "Mutation.addPolicy":
+		if e.complexity.Mutation.AddPolicy == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addPolicy_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddPolicy(childComplexity, args["input"].(model.CRequestInput)), true
+
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
 			break
@@ -175,6 +459,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(ent.CreateUserInput)), true
+
+	case "Mutation.deleteGroupingPolicy":
+		if e.complexity.Mutation.DeleteGroupingPolicy == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteGroupingPolicy_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteGroupingPolicy(childComplexity, args["input"].(model.CGroupInput)), true
+
+	case "Mutation.deletePolicy":
+		if e.complexity.Mutation.DeletePolicy == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deletePolicy_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeletePolicy(childComplexity, args["input"].(model.CRequestInput)), true
 
 	case "Mutation.deleteUser":
 		if e.complexity.Mutation.DeleteUser == nil {
@@ -199,6 +507,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Login(childComplexity, args["input"].(model.LoginInput)), true
+
+	case "Mutation.updateGroupingPolicy":
+		if e.complexity.Mutation.UpdateGroupingPolicy == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateGroupingPolicy_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateGroupingPolicy(childComplexity, args["new"].(model.CGroupInput), args["old"].(model.CGroupInput)), true
+
+	case "Mutation.updatePolicy":
+		if e.complexity.Mutation.UpdatePolicy == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePolicy_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePolicy(childComplexity, args["new"].(model.CRequestInput), args["old"].(model.CRequestInput)), true
 
 	case "Mutation.updateUser":
 		if e.complexity.Mutation.UpdateUser == nil {
@@ -268,6 +600,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Permission.Roles(childComplexity), true
 
+	case "Query.enforce":
+		if e.complexity.Query.Enforce == nil {
+			break
+		}
+
+		args, err := ec.field_Query_enforce_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Enforce(childComplexity, args["input"].(model.CRequestInput)), true
+
+	case "Query.groupingPolicy":
+		if e.complexity.Query.GroupingPolicy == nil {
+			break
+		}
+
+		args, err := ec.field_Query_groupingPolicy_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GroupingPolicy(childComplexity, args["name"].(*string)), true
+
 	case "Query.node":
 		if e.complexity.Query.Node == nil {
 			break
@@ -298,6 +654,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Permissions(childComplexity), true
+
+	case "Query.policy":
+		if e.complexity.Query.Policy == nil {
+			break
+		}
+
+		args, err := ec.field_Query_policy_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Policy(childComplexity, args["name"].(*string)), true
 
 	case "Query.roles":
 		if e.complexity.Query.Roles == nil {
@@ -352,6 +720,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Role.Users(childComplexity), true
+
+	case "UpdateCGroup.new":
+		if e.complexity.UpdateCGroup.New == nil {
+			break
+		}
+
+		return e.complexity.UpdateCGroup.New(childComplexity), true
+
+	case "UpdateCGroup.ok":
+		if e.complexity.UpdateCGroup.Ok == nil {
+			break
+		}
+
+		return e.complexity.UpdateCGroup.Ok(childComplexity), true
+
+	case "UpdateCGroup.old":
+		if e.complexity.UpdateCGroup.Old == nil {
+			break
+		}
+
+		return e.complexity.UpdateCGroup.Old(childComplexity), true
+
+	case "UpdateCPolicy.new":
+		if e.complexity.UpdateCPolicy.New == nil {
+			break
+		}
+
+		return e.complexity.UpdateCPolicy.New(childComplexity), true
+
+	case "UpdateCPolicy.ok":
+		if e.complexity.UpdateCPolicy.Ok == nil {
+			break
+		}
+
+		return e.complexity.UpdateCPolicy.Ok(childComplexity), true
+
+	case "UpdateCPolicy.old":
+		if e.complexity.UpdateCPolicy.Old == nil {
+			break
+		}
+
+		return e.complexity.UpdateCPolicy.Old(childComplexity), true
 
 	case "User.createdAt":
 		if e.complexity.User.CreatedAt == nil {
@@ -452,6 +862,8 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputCGroupInput,
+		ec.unmarshalInputCRequestInput,
 		ec.unmarshalInputCreateUserInput,
 		ec.unmarshalInputLoginInput,
 		ec.unmarshalInputPermissionWhereInput,
@@ -555,7 +967,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(ec.Schema(), ec.Schema().Types[name]), nil
 }
 
-//go:embed "auth.graphql" "ent.graphql" "schema.graphql" "user.graphql"
+//go:embed "auth.graphql" "ent.graphql" "perm.graphql" "schema.graphql" "user.graphql"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -569,6 +981,7 @@ func sourceData(filename string) string {
 var sources = []*ast.Source{
 	{Name: "auth.graphql", Input: sourceData("auth.graphql"), BuiltIn: false},
 	{Name: "ent.graphql", Input: sourceData("ent.graphql"), BuiltIn: false},
+	{Name: "perm.graphql", Input: sourceData("perm.graphql"), BuiltIn: false},
 	{Name: "schema.graphql", Input: sourceData("schema.graphql"), BuiltIn: false},
 	{Name: "user.graphql", Input: sourceData("user.graphql"), BuiltIn: false},
 }
@@ -578,6 +991,162 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
+func (ec *executionContext) field_Mutation_addGroupingPolicies_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 []*model.CGroupInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCGroupInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInputᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addGroupingPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CGroupInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addNamedGroupingPolicies_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["pType"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["pType"] = arg0
+	var arg1 []*model.CGroupInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg1, err = ec.unmarshalNCGroupInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInputᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addNamedGroupingPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["pType"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["pType"] = arg0
+	var arg1 model.CGroupInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg1, err = ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addNamedPolicies_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["pType"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["pType"] = arg0
+	var arg1 []*model.CRequestInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg1, err = ec.unmarshalNCRequestInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInputᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addNamedPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["pType"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["pType"] = arg0
+	var arg1 model.CRequestInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg1, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addPolicies_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 []*model.CRequestInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCRequestInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInputᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CRequestInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -585,6 +1154,36 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNCreateUserInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteGroupingPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CGroupInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deletePolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CRequestInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -620,6 +1219,54 @@ func (ec *executionContext) field_Mutation_login_args(ctx context.Context, rawAr
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateGroupingPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CGroupInput
+	if tmp, ok := rawArgs["new"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("new"))
+		arg0, err = ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["new"] = arg0
+	var arg1 model.CGroupInput
+	if tmp, ok := rawArgs["old"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("old"))
+		arg1, err = ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["old"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CRequestInput
+	if tmp, ok := rawArgs["new"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("new"))
+		arg0, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["new"] = arg0
+	var arg1 model.CRequestInput
+	if tmp, ok := rawArgs["old"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("old"))
+		arg1, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["old"] = arg1
 	return args, nil
 }
 
@@ -662,6 +1309,36 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_enforce_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CRequestInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_groupingPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_node_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -689,6 +1366,21 @@ func (ec *executionContext) field_Query_nodes_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["ids"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_policy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg0
 	return args, nil
 }
 
@@ -789,6 +1481,718 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _BatchCGroup_data(ctx context.Context, field graphql.CollectedField, obj *model.BatchCGroup) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BatchCGroup_data(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.CGroup)
+	fc.Result = res
+	return ec.marshalOCGroup2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BatchCGroup_data(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BatchCGroup",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CGroup_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CGroup_obj(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CGroup", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BatchCGroup_ok(ctx context.Context, field graphql.CollectedField, obj *model.BatchCGroup) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BatchCGroup_ok(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Ok, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BatchCGroup_ok(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BatchCGroup",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BatchCPolicy_data(ctx context.Context, field graphql.CollectedField, obj *model.BatchCPolicy) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BatchCPolicy_data(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.CPolicy)
+	fc.Result = res
+	return ec.marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BatchCPolicy_data(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BatchCPolicy",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CPolicy_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CPolicy_obj(ctx, field)
+			case "act":
+				return ec.fieldContext_CPolicy_act(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CPolicy", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BatchCPolicy_ok(ctx context.Context, field graphql.CollectedField, obj *model.BatchCPolicy) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BatchCPolicy_ok(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Ok, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BatchCPolicy_ok(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BatchCPolicy",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CGroup_sub(ctx context.Context, field graphql.CollectedField, obj *model.CGroup) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CGroup_sub(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Sub, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CGroup_sub(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CGroup",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CGroup_obj(ctx context.Context, field graphql.CollectedField, obj *model.CGroup) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CGroup_obj(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Obj, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CGroup_obj(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CGroup",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CGroupResult_sub(ctx context.Context, field graphql.CollectedField, obj *model.CGroupResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CGroupResult_sub(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Sub, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CGroupResult_sub(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CGroupResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CGroupResult_obj(ctx context.Context, field graphql.CollectedField, obj *model.CGroupResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CGroupResult_obj(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Obj, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CGroupResult_obj(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CGroupResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CGroupResult_ok(ctx context.Context, field graphql.CollectedField, obj *model.CGroupResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CGroupResult_ok(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Ok, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CGroupResult_ok(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CGroupResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CPolicy_sub(ctx context.Context, field graphql.CollectedField, obj *model.CPolicy) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CPolicy_sub(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Sub, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CPolicy_sub(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CPolicy",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CPolicy_obj(ctx context.Context, field graphql.CollectedField, obj *model.CPolicy) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CPolicy_obj(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Obj, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CPolicy_obj(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CPolicy",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CPolicy_act(ctx context.Context, field graphql.CollectedField, obj *model.CPolicy) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CPolicy_act(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Act, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CPolicy_act(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CPolicy",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CPolicyResult_sub(ctx context.Context, field graphql.CollectedField, obj *model.CPolicyResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CPolicyResult_sub(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Sub, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CPolicyResult_sub(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CPolicyResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CPolicyResult_obj(ctx context.Context, field graphql.CollectedField, obj *model.CPolicyResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CPolicyResult_obj(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Obj, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CPolicyResult_obj(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CPolicyResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CPolicyResult_act(ctx context.Context, field graphql.CollectedField, obj *model.CPolicyResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CPolicyResult_act(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Act, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CPolicyResult_act(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CPolicyResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CPolicyResult_ok(ctx context.Context, field graphql.CollectedField, obj *model.CPolicyResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CPolicyResult_ok(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Ok, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CPolicyResult_ok(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CPolicyResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
 
 func (ec *executionContext) _LoginPayload_token(ctx context.Context, field graphql.CollectedField, obj *model.LoginPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_LoginPayload_token(ctx, field)
@@ -1143,6 +2547,760 @@ func (ec *executionContext) fieldContext_Mutation_login(ctx context.Context, fie
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_login_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addPolicy(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addPolicy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddPolicy(rctx, fc.Args["input"].(model.CRequestInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CPolicyResult)
+	fc.Result = res
+	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CPolicyResult_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CPolicyResult_obj(ctx, field)
+			case "act":
+				return ec.fieldContext_CPolicyResult_act(ctx, field)
+			case "ok":
+				return ec.fieldContext_CPolicyResult_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CPolicyResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addPolicy_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addPolicies(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addPolicies(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddPolicies(rctx, fc.Args["input"].([]*model.CRequestInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.BatchCPolicy)
+	fc.Result = res
+	return ec.marshalNBatchCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCPolicy(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addPolicies(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "data":
+				return ec.fieldContext_BatchCPolicy_data(ctx, field)
+			case "ok":
+				return ec.fieldContext_BatchCPolicy_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type BatchCPolicy", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addPolicies_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addNamedPolicy(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addNamedPolicy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddNamedPolicy(rctx, fc.Args["pType"].(string), fc.Args["input"].(model.CRequestInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CPolicyResult)
+	fc.Result = res
+	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addNamedPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CPolicyResult_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CPolicyResult_obj(ctx, field)
+			case "act":
+				return ec.fieldContext_CPolicyResult_act(ctx, field)
+			case "ok":
+				return ec.fieldContext_CPolicyResult_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CPolicyResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addNamedPolicy_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addNamedPolicies(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addNamedPolicies(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddNamedPolicies(rctx, fc.Args["pType"].(string), fc.Args["input"].([]*model.CRequestInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.BatchCPolicy)
+	fc.Result = res
+	return ec.marshalNBatchCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCPolicy(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addNamedPolicies(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "data":
+				return ec.fieldContext_BatchCPolicy_data(ctx, field)
+			case "ok":
+				return ec.fieldContext_BatchCPolicy_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type BatchCPolicy", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addNamedPolicies_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deletePolicy(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deletePolicy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeletePolicy(rctx, fc.Args["input"].(model.CRequestInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CPolicyResult)
+	fc.Result = res
+	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deletePolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CPolicyResult_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CPolicyResult_obj(ctx, field)
+			case "act":
+				return ec.fieldContext_CPolicyResult_act(ctx, field)
+			case "ok":
+				return ec.fieldContext_CPolicyResult_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CPolicyResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deletePolicy_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updatePolicy(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updatePolicy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePolicy(rctx, fc.Args["new"].(model.CRequestInput), fc.Args["old"].(model.CRequestInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateCPolicy)
+	fc.Result = res
+	return ec.marshalNUpdateCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCPolicy(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updatePolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "new":
+				return ec.fieldContext_UpdateCPolicy_new(ctx, field)
+			case "old":
+				return ec.fieldContext_UpdateCPolicy_old(ctx, field)
+			case "ok":
+				return ec.fieldContext_UpdateCPolicy_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateCPolicy", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updatePolicy_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addGroupingPolicy(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addGroupingPolicy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddGroupingPolicy(rctx, fc.Args["input"].(model.CGroupInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CGroupResult)
+	fc.Result = res
+	return ec.marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupResult(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addGroupingPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CGroupResult_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CGroupResult_obj(ctx, field)
+			case "ok":
+				return ec.fieldContext_CGroupResult_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CGroupResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addGroupingPolicy_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addGroupingPolicies(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addGroupingPolicies(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddGroupingPolicies(rctx, fc.Args["input"].([]*model.CGroupInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.BatchCGroup)
+	fc.Result = res
+	return ec.marshalNBatchCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCGroup(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addGroupingPolicies(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "data":
+				return ec.fieldContext_BatchCGroup_data(ctx, field)
+			case "ok":
+				return ec.fieldContext_BatchCGroup_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type BatchCGroup", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addGroupingPolicies_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addNamedGroupingPolicy(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addNamedGroupingPolicy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddNamedGroupingPolicy(rctx, fc.Args["pType"].(string), fc.Args["input"].(model.CGroupInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CGroupResult)
+	fc.Result = res
+	return ec.marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupResult(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addNamedGroupingPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CGroupResult_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CGroupResult_obj(ctx, field)
+			case "ok":
+				return ec.fieldContext_CGroupResult_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CGroupResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addNamedGroupingPolicy_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addNamedGroupingPolicies(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addNamedGroupingPolicies(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddNamedGroupingPolicies(rctx, fc.Args["pType"].(string), fc.Args["input"].([]*model.CGroupInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.BatchCGroup)
+	fc.Result = res
+	return ec.marshalNBatchCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCGroup(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addNamedGroupingPolicies(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "data":
+				return ec.fieldContext_BatchCGroup_data(ctx, field)
+			case "ok":
+				return ec.fieldContext_BatchCGroup_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type BatchCGroup", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addNamedGroupingPolicies_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteGroupingPolicy(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteGroupingPolicy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteGroupingPolicy(rctx, fc.Args["input"].(model.CGroupInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CGroupResult)
+	fc.Result = res
+	return ec.marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupResult(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteGroupingPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CGroupResult_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CGroupResult_obj(ctx, field)
+			case "ok":
+				return ec.fieldContext_CGroupResult_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CGroupResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteGroupingPolicy_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateGroupingPolicy(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateGroupingPolicy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateGroupingPolicy(rctx, fc.Args["new"].(model.CGroupInput), fc.Args["old"].(model.CGroupInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateCGroup)
+	fc.Result = res
+	return ec.marshalNUpdateCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCGroup(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateGroupingPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "new":
+				return ec.fieldContext_UpdateCGroup_new(ctx, field)
+			case "old":
+				return ec.fieldContext_UpdateCGroup_old(ctx, field)
+			case "ok":
+				return ec.fieldContext_UpdateCGroup_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateCGroup", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateGroupingPolicy_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -1781,6 +3939,189 @@ func (ec *executionContext) fieldContext_Query_users(ctx context.Context, field 
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_enforce(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_enforce(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Enforce(rctx, fc.Args["input"].(model.CRequestInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CPolicyResult)
+	fc.Result = res
+	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_enforce(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CPolicyResult_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CPolicyResult_obj(ctx, field)
+			case "act":
+				return ec.fieldContext_CPolicyResult_act(ctx, field)
+			case "ok":
+				return ec.fieldContext_CPolicyResult_ok(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CPolicyResult", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_enforce_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_policy(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_policy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Policy(rctx, fc.Args["name"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.CPolicy)
+	fc.Result = res
+	return ec.marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_policy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CPolicy_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CPolicy_obj(ctx, field)
+			case "act":
+				return ec.fieldContext_CPolicy_act(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CPolicy", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_policy_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_groupingPolicy(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_groupingPolicy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GroupingPolicy(rctx, fc.Args["name"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.CGroup)
+	fc.Result = res
+	return ec.marshalOCGroup2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_groupingPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CGroup_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CGroup_obj(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CGroup", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_groupingPolicy_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query___type(ctx, field)
 	if err != nil {
@@ -2144,6 +4485,298 @@ func (ec *executionContext) fieldContext_Role_users(_ context.Context, field gra
 				return ec.fieldContext_User_roles(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateCGroup_new(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCGroup) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateCGroup_new(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.New, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CGroup)
+	fc.Result = res
+	return ec.marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroup(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateCGroup_new(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateCGroup",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CGroup_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CGroup_obj(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CGroup", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateCGroup_old(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCGroup) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateCGroup_old(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Old, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CGroup)
+	fc.Result = res
+	return ec.marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroup(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateCGroup_old(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateCGroup",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CGroup_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CGroup_obj(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CGroup", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateCGroup_ok(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCGroup) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateCGroup_ok(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Ok, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateCGroup_ok(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateCGroup",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateCPolicy_new(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCPolicy) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateCPolicy_new(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.New, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CPolicy)
+	fc.Result = res
+	return ec.marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicy(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateCPolicy_new(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateCPolicy",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CPolicy_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CPolicy_obj(ctx, field)
+			case "act":
+				return ec.fieldContext_CPolicy_act(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CPolicy", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateCPolicy_old(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCPolicy) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateCPolicy_old(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Old, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CPolicy)
+	fc.Result = res
+	return ec.marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicy(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateCPolicy_old(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateCPolicy",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sub":
+				return ec.fieldContext_CPolicy_sub(ctx, field)
+			case "obj":
+				return ec.fieldContext_CPolicy_obj(ctx, field)
+			case "act":
+				return ec.fieldContext_CPolicy_act(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CPolicy", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateCPolicy_ok(ctx context.Context, field graphql.CollectedField, obj *model.UpdateCPolicy) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateCPolicy_ok(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Ok, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateCPolicy_ok(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateCPolicy",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -4522,6 +7155,81 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(_ context.Context
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputCGroupInput(ctx context.Context, obj interface{}) (model.CGroupInput, error) {
+	var it model.CGroupInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"sub", "obj"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "sub":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sub"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Sub = data
+		case "obj":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("obj"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Obj = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCRequestInput(ctx context.Context, obj interface{}) (model.CRequestInput, error) {
+	var it model.CRequestInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"sub", "obj", "act"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "sub":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sub"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Sub = data
+		case "obj":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("obj"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Obj = data
+		case "act":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("act"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Act = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, obj interface{}) (ent.CreateUserInput, error) {
 	var it ent.CreateUserInput
 	asMap := map[string]interface{}{}
@@ -6042,6 +8750,284 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 
 // region    **************************** object.gotpl ****************************
 
+var batchCGroupImplementors = []string{"BatchCGroup"}
+
+func (ec *executionContext) _BatchCGroup(ctx context.Context, sel ast.SelectionSet, obj *model.BatchCGroup) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, batchCGroupImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BatchCGroup")
+		case "data":
+			out.Values[i] = ec._BatchCGroup_data(ctx, field, obj)
+		case "ok":
+			out.Values[i] = ec._BatchCGroup_ok(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var batchCPolicyImplementors = []string{"BatchCPolicy"}
+
+func (ec *executionContext) _BatchCPolicy(ctx context.Context, sel ast.SelectionSet, obj *model.BatchCPolicy) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, batchCPolicyImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BatchCPolicy")
+		case "data":
+			out.Values[i] = ec._BatchCPolicy_data(ctx, field, obj)
+		case "ok":
+			out.Values[i] = ec._BatchCPolicy_ok(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var cGroupImplementors = []string{"CGroup"}
+
+func (ec *executionContext) _CGroup(ctx context.Context, sel ast.SelectionSet, obj *model.CGroup) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cGroupImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CGroup")
+		case "sub":
+			out.Values[i] = ec._CGroup_sub(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "obj":
+			out.Values[i] = ec._CGroup_obj(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var cGroupResultImplementors = []string{"CGroupResult"}
+
+func (ec *executionContext) _CGroupResult(ctx context.Context, sel ast.SelectionSet, obj *model.CGroupResult) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cGroupResultImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CGroupResult")
+		case "sub":
+			out.Values[i] = ec._CGroupResult_sub(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "obj":
+			out.Values[i] = ec._CGroupResult_obj(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "ok":
+			out.Values[i] = ec._CGroupResult_ok(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var cPolicyImplementors = []string{"CPolicy"}
+
+func (ec *executionContext) _CPolicy(ctx context.Context, sel ast.SelectionSet, obj *model.CPolicy) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cPolicyImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CPolicy")
+		case "sub":
+			out.Values[i] = ec._CPolicy_sub(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "obj":
+			out.Values[i] = ec._CPolicy_obj(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "act":
+			out.Values[i] = ec._CPolicy_act(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var cPolicyResultImplementors = []string{"CPolicyResult"}
+
+func (ec *executionContext) _CPolicyResult(ctx context.Context, sel ast.SelectionSet, obj *model.CPolicyResult) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cPolicyResultImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CPolicyResult")
+		case "sub":
+			out.Values[i] = ec._CPolicyResult_sub(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "obj":
+			out.Values[i] = ec._CPolicyResult_obj(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "act":
+			out.Values[i] = ec._CPolicyResult_act(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "ok":
+			out.Values[i] = ec._CPolicyResult_ok(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var loginPayloadImplementors = []string{"LoginPayload"}
 
 func (ec *executionContext) _LoginPayload(ctx context.Context, sel ast.SelectionSet, obj *model.LoginPayload) graphql.Marshaler {
@@ -6124,6 +9110,90 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_login(ctx, field)
 			})
+		case "addPolicy":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addPolicy(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "addPolicies":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addPolicies(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "addNamedPolicy":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addNamedPolicy(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "addNamedPolicies":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addNamedPolicies(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "deletePolicy":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deletePolicy(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updatePolicy":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePolicy(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "addGroupingPolicy":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addGroupingPolicy(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "addGroupingPolicies":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addGroupingPolicies(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "addNamedGroupingPolicy":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addNamedGroupingPolicy(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "addNamedGroupingPolicies":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addNamedGroupingPolicies(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "deleteGroupingPolicy":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteGroupingPolicy(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updateGroupingPolicy":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateGroupingPolicy(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -6400,6 +9470,66 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "enforce":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_enforce(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "policy":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_policy(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "groupingPolicy":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_groupingPolicy(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "__type":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___type(ctx, field)
@@ -6520,6 +9650,104 @@ func (ec *executionContext) _Role(ctx context.Context, sel ast.SelectionSet, obj
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var updateCGroupImplementors = []string{"UpdateCGroup"}
+
+func (ec *executionContext) _UpdateCGroup(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateCGroup) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateCGroupImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateCGroup")
+		case "new":
+			out.Values[i] = ec._UpdateCGroup_new(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "old":
+			out.Values[i] = ec._UpdateCGroup_old(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "ok":
+			out.Values[i] = ec._UpdateCGroup_ok(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var updateCPolicyImplementors = []string{"UpdateCPolicy"}
+
+func (ec *executionContext) _UpdateCPolicy(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateCPolicy) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateCPolicyImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateCPolicy")
+		case "new":
+			out.Values[i] = ec._UpdateCPolicy_new(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "old":
+			out.Values[i] = ec._UpdateCPolicy_old(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "ok":
+			out.Values[i] = ec._UpdateCPolicy_ok(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -7049,6 +10277,34 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) marshalNBatchCGroup2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCGroup(ctx context.Context, sel ast.SelectionSet, v model.BatchCGroup) graphql.Marshaler {
+	return ec._BatchCGroup(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNBatchCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCGroup(ctx context.Context, sel ast.SelectionSet, v *model.BatchCGroup) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._BatchCGroup(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNBatchCPolicy2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCPolicy(ctx context.Context, sel ast.SelectionSet, v model.BatchCPolicy) graphql.Marshaler {
+	return ec._BatchCPolicy(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNBatchCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCPolicy(ctx context.Context, sel ast.SelectionSet, v *model.BatchCPolicy) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._BatchCPolicy(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -7062,6 +10318,108 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroup(ctx context.Context, sel ast.SelectionSet, v *model.CGroup) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CGroup(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx context.Context, v interface{}) (model.CGroupInput, error) {
+	res, err := ec.unmarshalInputCGroupInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCGroupInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInputᚄ(ctx context.Context, v interface{}) ([]*model.CGroupInput, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*model.CGroupInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNCGroupInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNCGroupInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx context.Context, v interface{}) (*model.CGroupInput, error) {
+	res, err := ec.unmarshalInputCGroupInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNCGroupResult2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupResult(ctx context.Context, sel ast.SelectionSet, v model.CGroupResult) graphql.Marshaler {
+	return ec._CGroupResult(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupResult(ctx context.Context, sel ast.SelectionSet, v *model.CGroupResult) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CGroupResult(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicy(ctx context.Context, sel ast.SelectionSet, v *model.CPolicy) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CPolicy(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCPolicyResult2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx context.Context, sel ast.SelectionSet, v model.CPolicyResult) graphql.Marshaler {
+	return ec._CPolicyResult(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx context.Context, sel ast.SelectionSet, v *model.CPolicyResult) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CPolicyResult(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx context.Context, v interface{}) (model.CRequestInput, error) {
+	res, err := ec.unmarshalInputCRequestInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCRequestInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInputᚄ(ctx context.Context, v interface{}) ([]*model.CRequestInput, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*model.CRequestInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNCRequestInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNCRequestInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx context.Context, v interface{}) (*model.CRequestInput, error) {
+	res, err := ec.unmarshalInputCRequestInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInput(ctx context.Context, v interface{}) (ent.CreateUserInput, error) {
@@ -7344,6 +10702,34 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNUpdateCGroup2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCGroup(ctx context.Context, sel ast.SelectionSet, v model.UpdateCGroup) graphql.Marshaler {
+	return ec._UpdateCGroup(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNUpdateCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCGroup(ctx context.Context, sel ast.SelectionSet, v *model.UpdateCGroup) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._UpdateCGroup(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNUpdateCPolicy2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCPolicy(ctx context.Context, sel ast.SelectionSet, v model.UpdateCPolicy) graphql.Marshaler {
+	return ec._UpdateCPolicy(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNUpdateCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCPolicy(ctx context.Context, sel ast.SelectionSet, v *model.UpdateCPolicy) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._UpdateCPolicy(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNUpdateUserInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUpdateUserInput(ctx context.Context, v interface{}) (ent.UpdateUserInput, error) {
@@ -7677,6 +11063,100 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOCGroup2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CGroup) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroup(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CPolicy) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicy(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx context.Context, v interface{}) (*entgql.Cursor[xid.ID], error) {
