@@ -74,12 +74,7 @@ func (r *Server) Start() {
 
 	cfg := config.Config()
 
-	_, err := database.Open(cfg.Database.Driver, cfg.Database.Url)
-	if err != nil {
-		log.Fatal("database initialization error: ", err)
-	}
-
-	err = logger.Init()
+	err := logger.Init()
 	if err != nil {
 		log.Fatal("logger initialization error: ", err)
 	}
@@ -87,6 +82,11 @@ func (r *Server) Start() {
 	err = perm.Init(cfg.Database.Driver, cfg.Database.Url)
 	if err != nil {
 		log.Fatal("casbin initialization error: ", err)
+	}
+
+	_, err = database.Open(cfg.Database.Driver, cfg.Database.Url)
+	if err != nil {
+		log.Fatal("database initialization error: ", err)
 	}
 
 	r.echo = echo.New()

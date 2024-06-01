@@ -2,10 +2,6 @@
 
 package ent
 
-import (
-	"github.com/rs/xid"
-)
-
 // CreateUserInput represents a mutation input for creating users.
 type CreateUserInput struct {
 	Nickname *string
@@ -13,7 +9,6 @@ type CreateUserInput struct {
 	Email    *string
 	Phone    string
 	Password string
-	RoleIDs  []xid.ID
 }
 
 // Mutate applies the CreateUserInput on the UserMutation builder.
@@ -29,9 +24,6 @@ func (i *CreateUserInput) Mutate(m *UserMutation) {
 	}
 	m.SetPhone(i.Phone)
 	m.SetPassword(i.Password)
-	if v := i.RoleIDs; len(v) > 0 {
-		m.AddRoleIDs(v...)
-	}
 }
 
 // SetInput applies the change-set in the CreateUserInput on the UserCreate builder.
@@ -50,9 +42,6 @@ type UpdateUserInput struct {
 	Email         *string
 	Phone         *string
 	Password      *string
-	ClearRoles    bool
-	AddRoleIDs    []xid.ID
-	RemoveRoleIDs []xid.ID
 }
 
 // Mutate applies the UpdateUserInput on the UserMutation builder.
@@ -80,15 +69,6 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	}
 	if v := i.Password; v != nil {
 		m.SetPassword(*v)
-	}
-	if i.ClearRoles {
-		m.ClearRoles()
-	}
-	if v := i.AddRoleIDs; len(v) > 0 {
-		m.AddRoleIDs(v...)
-	}
-	if v := i.RemoveRoleIDs; len(v) > 0 {
-		m.RemoveRoleIDs(v...)
 	}
 }
 

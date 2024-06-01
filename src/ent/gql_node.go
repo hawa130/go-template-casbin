@@ -9,8 +9,6 @@ import (
 	"entgo.io/contrib/entgql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/hashicorp/go-multierror"
-	"github.com/hawa130/computility-cloud/ent/permission"
-	"github.com/hawa130/computility-cloud/ent/role"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/rs/xid"
 )
@@ -19,16 +17,6 @@ import (
 type Noder interface {
 	IsNode()
 }
-
-var permissionImplementors = []string{"Permission", "Node"}
-
-// IsNode implements the Node interface check for GQLGen.
-func (*Permission) IsNode() {}
-
-var roleImplementors = []string{"Role", "Node"}
-
-// IsNode implements the Node interface check for GQLGen.
-func (*Role) IsNode() {}
 
 var userImplementors = []string{"User", "Node"}
 
@@ -93,24 +81,6 @@ func (c *Client) Noder(ctx context.Context, id xid.ID, opts ...NodeOption) (_ No
 
 func (c *Client) noder(ctx context.Context, table string, id xid.ID) (Noder, error) {
 	switch table {
-	case permission.Table:
-		query := c.Permission.Query().
-			Where(permission.ID(id))
-		if fc := graphql.GetFieldContext(ctx); fc != nil {
-			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, permissionImplementors...); err != nil {
-				return nil, err
-			}
-		}
-		return query.Only(ctx)
-	case role.Table:
-		query := c.Role.Query().
-			Where(role.ID(id))
-		if fc := graphql.GetFieldContext(ctx); fc != nil {
-			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, roleImplementors...); err != nil {
-				return nil, err
-			}
-		}
-		return query.Only(ctx)
 	case user.Table:
 		query := c.User.Query().
 			Where(user.ID(id))
@@ -193,38 +163,6 @@ func (c *Client) noders(ctx context.Context, table string, ids []xid.ID) ([]Node
 		idmap[id] = append(idmap[id], &noders[i])
 	}
 	switch table {
-	case permission.Table:
-		query := c.Permission.Query().
-			Where(permission.IDIn(ids...))
-		query, err := query.CollectFields(ctx, permissionImplementors...)
-		if err != nil {
-			return nil, err
-		}
-		nodes, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, node := range nodes {
-			for _, noder := range idmap[node.ID] {
-				*noder = node
-			}
-		}
-	case role.Table:
-		query := c.Role.Query().
-			Where(role.IDIn(ids...))
-		query, err := query.CollectFields(ctx, roleImplementors...)
-		if err != nil {
-			return nil, err
-		}
-		nodes, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, node := range nodes {
-			for _, noder := range idmap[node.ID] {
-				*noder = node
-			}
-		}
 	case user.Table:
 		query := c.User.Query().
 			Where(user.IDIn(ids...))

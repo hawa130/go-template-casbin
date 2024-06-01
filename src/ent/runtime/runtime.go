@@ -6,8 +6,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/hawa130/computility-cloud/ent/permission"
-	"github.com/hawa130/computility-cloud/ent/role"
 	"github.com/hawa130/computility-cloud/ent/schema"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/rs/xid"
@@ -20,24 +18,6 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
-	permissionMixin := schema.Permission{}.Mixin()
-	permissionMixinFields0 := permissionMixin[0].Fields()
-	_ = permissionMixinFields0
-	permissionFields := schema.Permission{}.Fields()
-	_ = permissionFields
-	// permissionDescID is the schema descriptor for id field.
-	permissionDescID := permissionMixinFields0[0].Descriptor()
-	// permission.DefaultID holds the default value on creation for the id field.
-	permission.DefaultID = permissionDescID.Default.(func() xid.ID)
-	roleMixin := schema.Role{}.Mixin()
-	roleMixinFields0 := roleMixin[0].Fields()
-	_ = roleMixinFields0
-	roleFields := schema.Role{}.Fields()
-	_ = roleFields
-	// roleDescID is the schema descriptor for id field.
-	roleDescID := roleMixinFields0[0].Descriptor()
-	// role.DefaultID holds the default value on creation for the id field.
-	role.DefaultID = roleDescID.Default.(func() xid.ID)
 	userMixin := schema.User{}.Mixin()
 	user.Policy = privacy.NewPolicies(schema.User{})
 	user.Hooks[0] = func(next ent.Mutator) ent.Mutator {

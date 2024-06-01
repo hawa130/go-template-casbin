@@ -6,16 +6,12 @@ import (
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema"
-	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	gen "github.com/hawa130/computility-cloud/ent"
 	"github.com/hawa130/computility-cloud/ent/hook"
 	"github.com/hawa130/computility-cloud/ent/privacy"
-	"github.com/hawa130/computility-cloud/ent/role"
 	"github.com/hawa130/computility-cloud/ent/schema/mixinx"
 	"github.com/hawa130/computility-cloud/internal/auth"
-	"github.com/hawa130/computility-cloud/internal/database"
-	"github.com/hawa130/computility-cloud/internal/rule"
 )
 
 // User holds the schema definition for the User entity.
@@ -36,9 +32,7 @@ func (User) Fields() []ent.Field {
 
 // Edges of the User.
 func (User) Edges() []ent.Edge {
-	return []ent.Edge{
-		edge.To("roles", Role.Type),
-	}
+	return []ent.Edge{}
 }
 
 // Mixin of the User.
@@ -82,16 +76,6 @@ func (User) Hooks() []ent.Hook {
 		hook.On(
 			func(next ent.Mutator) ent.Mutator {
 				return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (gen.Value, error) {
-					// If the user has no roles, add the user role
-					if len(m.RolesIDs()) == 0 {
-						userRole, err := database.Client().Role.Query().Where(role.NameEQ("user")).Only(ctx)
-						if err != nil && !gen.IsNotFound(err) {
-							return nil, err
-						}
-						if userRole != nil {
-							m.AddRoleIDs(userRole.ID)
-						}
-					}
 					return next.Mutate(ctx, m)
 				})
 			},
@@ -104,8 +88,6 @@ func (User) Hooks() []ent.Hook {
 func (User) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
-			rule.AllowHasPermission("user:mutate"),
-			rule.AllowMutateSelf(),
 			privacy.AlwaysDenyRule(),
 		},
 		Query: privacy.QueryPolicy{

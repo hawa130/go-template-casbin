@@ -22,16 +22,6 @@ func (r *queryResolver) Nodes(ctx context.Context, ids []xid.ID) ([]ent.Noder, e
 	return r.client.Noders(ctx, ids)
 }
 
-// Permissions is the resolver for the permissions field.
-func (r *queryResolver) Permissions(ctx context.Context) ([]*ent.Permission, error) {
-	return r.client.Permission.Query().All(ctx)
-}
-
-// Roles is the resolver for the roles field.
-func (r *queryResolver) Roles(ctx context.Context) ([]*ent.Role, error) {
-	return r.client.Role.Query().All(ctx)
-}
-
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, after *entgql.Cursor[xid.ID], first *int, before *entgql.Cursor[xid.ID], last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) (*ent.UserConnection, error) {
 	return r.client.User.Query().

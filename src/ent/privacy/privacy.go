@@ -111,54 +111,6 @@ func DenyMutationOperationRule(op ent.Op) MutationRule {
 	return OnMutationOperation(rule, op)
 }
 
-// The PermissionQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type PermissionQueryRuleFunc func(context.Context, *ent.PermissionQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f PermissionQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.PermissionQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.PermissionQuery", q)
-}
-
-// The PermissionMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type PermissionMutationRuleFunc func(context.Context, *ent.PermissionMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f PermissionMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.PermissionMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PermissionMutation", m)
-}
-
-// The RoleQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type RoleQueryRuleFunc func(context.Context, *ent.RoleQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f RoleQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.RoleQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.RoleQuery", q)
-}
-
-// The RoleMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type RoleMutationRuleFunc func(context.Context, *ent.RoleMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f RoleMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.RoleMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.RoleMutation", m)
-}
-
 // The UserQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type UserQueryRuleFunc func(context.Context, *ent.UserQuery) error
@@ -218,10 +170,6 @@ var _ QueryMutationRule = FilterFunc(nil)
 
 func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
-	case *ent.PermissionQuery:
-		return q.Filter(), nil
-	case *ent.RoleQuery:
-		return q.Filter(), nil
 	case *ent.UserQuery:
 		return q.Filter(), nil
 	default:
@@ -231,10 +179,6 @@ func queryFilter(q ent.Query) (Filter, error) {
 
 func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
-	case *ent.PermissionMutation:
-		return m.Filter(), nil
-	case *ent.RoleMutation:
-		return m.Filter(), nil
 	case *ent.UserMutation:
 		return m.Filter(), nil
 	default:

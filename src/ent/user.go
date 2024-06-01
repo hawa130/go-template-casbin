@@ -31,33 +31,8 @@ type User struct {
 	// Phone holds the value of the "phone" field.
 	Phone string `json:"phone,omitempty"`
 	// Password holds the value of the "password" field.
-	Password string `json:"-"`
-	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the UserQuery when eager-loading is set.
-	Edges        UserEdges `json:"edges"`
+	Password     string `json:"-"`
 	selectValues sql.SelectValues
-}
-
-// UserEdges holds the relations/edges for other nodes in the graph.
-type UserEdges struct {
-	// Roles holds the value of the roles edge.
-	Roles []*Role `json:"roles,omitempty"`
-	// loadedTypes holds the information for reporting if a
-	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
-	// totalCount holds the count of the edges above.
-	totalCount [1]map[string]int
-
-	namedRoles map[string][]*Role
-}
-
-// RolesOrErr returns the Roles value or an error if the edge
-// was not loaded in eager-loading.
-func (e UserEdges) RolesOrErr() ([]*Role, error) {
-	if e.loadedTypes[0] {
-		return e.Roles, nil
-	}
-	return nil, &NotLoadedError{edge: "roles"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -147,11 +122,6 @@ func (u *User) Value(name string) (ent.Value, error) {
 	return u.selectValues.Get(name)
 }
 
-// QueryRoles queries the "roles" edge of the User entity.
-func (u *User) QueryRoles() *RoleQuery {
-	return NewUserClient(u.config).QueryRoles(u)
-}
-
 // Update returns a builder for updating this User.
 // Note that you need to call User.Unwrap() before calling this method if this User
 // was returned from a transaction, and the transaction was committed or rolled back.
@@ -196,30 +166,6 @@ func (u *User) String() string {
 	builder.WriteString("password=<sensitive>")
 	builder.WriteByte(')')
 	return builder.String()
-}
-
-// NamedRoles returns the Roles named value or an error if the edge was not
-// loaded in eager-loading with this name.
-func (u *User) NamedRoles(name string) ([]*Role, error) {
-	if u.Edges.namedRoles == nil {
-		return nil, &NotLoadedError{edge: name}
-	}
-	nodes, ok := u.Edges.namedRoles[name]
-	if !ok {
-		return nil, &NotLoadedError{edge: name}
-	}
-	return nodes, nil
-}
-
-func (u *User) appendNamedRoles(name string, edges ...*Role) {
-	if u.Edges.namedRoles == nil {
-		u.Edges.namedRoles = make(map[string][]*Role)
-	}
-	if len(edges) == 0 {
-		u.Edges.namedRoles[name] = []*Role{}
-	} else {
-		u.Edges.namedRoles[name] = append(u.Edges.namedRoles[name], edges...)
-	}
 }
 
 // Users is a parsable slice of User.
