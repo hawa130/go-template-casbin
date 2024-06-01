@@ -84,7 +84,7 @@ func (r *Server) Start() {
 		log.Fatal("logger initialization error: ", err)
 	}
 
-	err = perm.Init(cfg.Casbin.Driver, cfg.Casbin.Url)
+	err = perm.Init(cfg.Database.Driver, cfg.Database.Url)
 	if err != nil {
 		log.Fatal("casbin initialization error: ", err)
 	}
