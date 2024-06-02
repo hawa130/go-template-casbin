@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hawa130/computility-cloud/graph/reqerr"
 	"github.com/hawa130/computility-cloud/internal/perm"
 )
 
@@ -29,4 +30,15 @@ func IsAdmin(ctx context.Context) (bool, error) {
 		return false, nil
 	}
 	return perm.Enforcer().HasRoleForUser(user.ID.String(), "root")
+}
+
+func IsAdminReq(ctx context.Context) error {
+	allow, err := IsAdmin(ctx)
+	if err != nil {
+		return err
+	}
+	if !allow {
+		return reqerr.ErrForbidden
+	}
+	return nil
 }
