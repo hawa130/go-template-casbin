@@ -52,11 +52,6 @@ func RemoveSubjectRoleX(sub, role fmt.Stringer) (bool, error) {
 	return enforcer.RemoveNamedGroupingPolicy("g", sub.String(), role.String())
 }
 
-// RemoveAllSubjectRoles 移除用户的所有角色
-func RemoveAllSubjectRoles(sub string) (bool, error) {
-	return enforcer.RemoveFilteredNamedGroupingPolicy("g", 0, sub)
-}
-
 // RemoveAllSubjectRolesX 移除用户的所有角色
 func RemoveAllSubjectRolesX(sub fmt.Stringer) (bool, error) {
 	return enforcer.RemoveFilteredNamedGroupingPolicy("g", 0, sub.String())

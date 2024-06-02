@@ -150,6 +150,11 @@ func (User) Hooks() []ent.Hook {
 					if err != nil {
 						return nil, err
 					}
+					// 删除用户所有权限
+					_, err = perm.RevokeAllPermissionsX(id)
+					if err != nil {
+						return nil, err
+					}
 					return next.Mutate(ctx, m)
 				})
 			},
