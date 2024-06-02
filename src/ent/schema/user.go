@@ -12,10 +12,11 @@ import (
 	"github.com/hawa130/computility-cloud/ent/hook"
 	"github.com/hawa130/computility-cloud/ent/privacy"
 	"github.com/hawa130/computility-cloud/ent/schema/mixinx"
+	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/hawa130/computility-cloud/internal/auth"
+	"github.com/hawa130/computility-cloud/internal/hookx"
 	"github.com/hawa130/computility-cloud/internal/perm"
 	"github.com/hawa130/computility-cloud/internal/rule"
-	userrule "github.com/hawa130/computility-cloud/internal/rule/user-rule"
 )
 
 // User holds the schema definition for the User entity.
@@ -64,6 +65,8 @@ func (User) Annotations() []schema.Annotation {
 // Hooks of the User.
 func (User) Hooks() []ent.Hook {
 	return []ent.Hook{
+		hookx.AddObjectGroup(user.Table),
+		hookx.RemoveObjectGroup(),
 		hook.On(
 			func(next ent.Mutator) ent.Mutator {
 				return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (gen.Value, error) {
@@ -90,7 +93,16 @@ func (User) Hooks() []ent.Hook {
 						return next.Mutate(ctx, m)
 					}
 					// 更新用户权限组，拥有自己的权限
-					_, err := perm.Enforcer().AddGroupingPolicy(id, id)
+					err := perm.GrantObjectPermissionX(id, id)
+					if err != nil {
+						return nil, err
+					}
+					// 如果有主用户则添加对应资源组
+					parId, exists := m.ParentID()
+					if !exists {
+						return next.Mutate(ctx, m)
+					}
+					_, err = perm.AddObjectGroupX(id, parId)
 					if err != nil {
 						return nil, err
 					}
@@ -109,14 +121,14 @@ func (User) Hooks() []ent.Hook {
 					// 更新子用户资源组，隶属于主用户
 					ids := m.ChildrenIDs()
 					for _, subId := range ids {
-						_, err := perm.Enforcer().AddNamedGroupingPolicy("g2", subId, id)
+						_, err := perm.AddObjectGroupX(subId, id)
 						if err != nil {
 							return nil, err
 						}
 					}
 					removedIds := m.RemovedChildrenIDs()
 					for _, subId := range removedIds {
-						_, err := perm.Enforcer().RemoveNamedGroupingPolicy("g2", subId, id)
+						_, err := perm.RemoveObjectGroupX(subId, id)
 						if err != nil {
 							return nil, err
 						}
@@ -134,16 +146,7 @@ func (User) Hooks() []ent.Hook {
 						return next.Mutate(ctx, m)
 					}
 					// 删除用户权限组
-					_, err := perm.Enforcer().RemoveGroupingPolicy(id, id)
-					if err != nil {
-						return nil, err
-					}
-					parId, exists := m.ParentID()
-					if !exists {
-						return next.Mutate(ctx, m)
-					}
-					// 删除子用户资源组
-					_, err = perm.Enforcer().RemoveNamedGroupingPolicy("g2", id, parId)
+					_, err := perm.RemoveAllSubjectRolesX(id)
 					if err != nil {
 						return nil, err
 					}
@@ -160,7 +163,7 @@ func (User) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
 			rule.AllowAdmin(),
-			userrule.AllowAuthorizedMutation(),
+			rule.AllowAuthorizedMutation(user.Table),
 			privacy.AlwaysDenyRule(),
 		},
 		Query: privacy.QueryPolicy{

@@ -37,6 +37,10 @@ func init() {
 	user.Hooks[3] = userHooks[2]
 
 	user.Hooks[4] = userHooks[3]
+
+	user.Hooks[5] = userHooks[4]
+
+	user.Hooks[6] = userHooks[5]
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0
 	userMixinFields1 := userMixin[1].Fields()

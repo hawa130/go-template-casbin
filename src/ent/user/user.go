@@ -85,7 +85,7 @@ func ValidColumn(column string) bool {
 //
 //	import _ "github.com/hawa130/computility-cloud/ent/runtime"
 var (
-	Hooks  [5]ent.Hook
+	Hooks  [7]ent.Hook
 	Policy ent.Policy
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time

@@ -42,3 +42,19 @@ func IsAdminReq(ctx context.Context) error {
 	}
 	return nil
 }
+
+func GrantObjectPermission(ctx context.Context, obj string) error {
+	user, ok := FromContext(ctx)
+	if !ok {
+		return nil
+	}
+	return perm.GrantObjectPermission(user.ID.String(), obj)
+}
+
+func GrantObjectPermissionX(ctx context.Context, obj fmt.Stringer) error {
+	user, ok := FromContext(ctx)
+	if !ok {
+		return nil
+	}
+	return perm.GrantObjectPermissionX(user.ID, obj)
+}
