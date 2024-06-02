@@ -165,7 +165,6 @@ func (User) Policy() ent.Policy {
 		},
 		Query: privacy.QueryPolicy{
 			rule.AllowAdmin(),
-			userrule.FilterUserQuery(),
 			privacy.AlwaysAllowRule(),
 		},
 	}

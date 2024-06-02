@@ -27,7 +27,7 @@ func FilterUserQuery() privacy.QueryRule {
 			return privacy.Skipf("unexpected filter type %T", f)
 		}
 
-		// 只允许查询自己和自己的子用户
+		// 只允许查询自己和自己的子用户（最好可以改成权限实现）
 		filter.Where(entql.Or(
 			entql.FieldEQ(user.FieldID, u.ID.String()),
 			entql.HasEdgeWith(user.EdgeParent, entql.FieldEQ(user.FieldID, u.ID.String())),
