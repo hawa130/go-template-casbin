@@ -65,8 +65,8 @@ func (User) Annotations() []schema.Annotation {
 // Hooks of the User.
 func (User) Hooks() []ent.Hook {
 	return []ent.Hook{
-		hookx.AddObjectGroup(user.Table),
-		hookx.RemoveObjectGroup(),
+		hookx.OnCreate.AddObjectGroup(user.Table),
+		hookx.OnRemove.RemoveObjectGroupsAndPolicies(),
 		hook.On(
 			func(next ent.Mutator) ent.Mutator {
 				return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (gen.Value, error) {
@@ -93,7 +93,7 @@ func (User) Hooks() []ent.Hook {
 						return next.Mutate(ctx, m)
 					}
 					// 更新用户权限组，拥有自己的权限
-					err := perm.GrantObjectPermissionX(id, id)
+					_, err := perm.GrantObjectPermissionX(id, id)
 					if err != nil {
 						return nil, err
 					}
@@ -128,7 +128,11 @@ func (User) Hooks() []ent.Hook {
 					}
 					removedIds := m.RemovedChildrenIDs()
 					for _, subId := range removedIds {
-						_, err := perm.RemoveObjectGroupX(subId, id)
+						_, err := perm.RemoveSubjectRoleX(subId, id)
+						if err != nil {
+							return nil, err
+						}
+						_, err = perm.RemoveObjectGroupX(subId, id)
 						if err != nil {
 							return nil, err
 						}
