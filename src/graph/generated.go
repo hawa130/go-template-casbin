@@ -100,14 +100,16 @@ type ComplexityRoot struct {
 		AddNamedPolicy           func(childComplexity int, pType string, input model.CRequestInput) int
 		AddPolicies              func(childComplexity int, input []*model.CRequestInput) int
 		AddPolicy                func(childComplexity int, input model.CRequestInput) int
+		CreateChildren           func(childComplexity int, id *xid.ID, children []*ent.CreateUserInput) int
 		CreateUser               func(childComplexity int, input ent.CreateUserInput) int
 		DeleteGroupingPolicy     func(childComplexity int, input model.CGroupInput) int
 		DeletePolicy             func(childComplexity int, input model.CRequestInput) int
-		DeleteUser               func(childComplexity int, id xid.ID) int
+		DeleteUser               func(childComplexity int, id *xid.ID) int
 		Login                    func(childComplexity int, input model.LoginInput) int
+		RemoveChildren           func(childComplexity int, id *xid.ID, child xid.ID) int
 		UpdateGroupingPolicy     func(childComplexity int, new model.CGroupInput, old model.CGroupInput) int
 		UpdatePolicy             func(childComplexity int, new model.CRequestInput, old model.CRequestInput) int
-		UpdateUser               func(childComplexity int, id xid.ID, input ent.UpdateUserInput) int
+		UpdateUser               func(childComplexity int, id *xid.ID, input ent.UpdateUserInput) int
 	}
 
 	PageInfo struct {
@@ -164,8 +166,8 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateUser(ctx context.Context, input ent.CreateUserInput) (*ent.User, error)
-	UpdateUser(ctx context.Context, id xid.ID, input ent.UpdateUserInput) (*ent.User, error)
-	DeleteUser(ctx context.Context, id xid.ID) (bool, error)
+	UpdateUser(ctx context.Context, id *xid.ID, input ent.UpdateUserInput) (*ent.User, error)
+	DeleteUser(ctx context.Context, id *xid.ID) (bool, error)
 	Login(ctx context.Context, input model.LoginInput) (*model.LoginPayload, error)
 	AddPolicy(ctx context.Context, input model.CRequestInput) (*model.CPolicyResult, error)
 	AddPolicies(ctx context.Context, input []*model.CRequestInput) (*model.BatchCPolicy, error)
@@ -179,6 +181,8 @@ type MutationResolver interface {
 	AddNamedGroupingPolicies(ctx context.Context, pType string, input []*model.CGroupInput) (*model.BatchCGroup, error)
 	DeleteGroupingPolicy(ctx context.Context, input model.CGroupInput) (*model.CGroupResult, error)
 	UpdateGroupingPolicy(ctx context.Context, new model.CGroupInput, old model.CGroupInput) (*model.UpdateCGroup, error)
+	CreateChildren(ctx context.Context, id *xid.ID, children []*ent.CreateUserInput) (*ent.User, error)
+	RemoveChildren(ctx context.Context, id *xid.ID, child xid.ID) (*ent.User, error)
 }
 type QueryResolver interface {
 	Node(ctx context.Context, id xid.ID) (ent.Noder, error)
@@ -430,6 +434,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AddPolicy(childComplexity, args["input"].(model.CRequestInput)), true
 
+	case "Mutation.createChildren":
+		if e.complexity.Mutation.CreateChildren == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createChildren_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateChildren(childComplexity, args["id"].(*xid.ID), args["children"].([]*ent.CreateUserInput)), true
+
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
 			break
@@ -476,7 +492,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteUser(childComplexity, args["id"].(xid.ID)), true
+		return e.complexity.Mutation.DeleteUser(childComplexity, args["id"].(*xid.ID)), true
 
 	case "Mutation.login":
 		if e.complexity.Mutation.Login == nil {
@@ -489,6 +505,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Login(childComplexity, args["input"].(model.LoginInput)), true
+
+	case "Mutation.removeChildren":
+		if e.complexity.Mutation.RemoveChildren == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_removeChildren_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RemoveChildren(childComplexity, args["id"].(*xid.ID), args["child"].(xid.ID)), true
 
 	case "Mutation.updateGroupingPolicy":
 		if e.complexity.Mutation.UpdateGroupingPolicy == nil {
@@ -524,7 +552,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateUser(childComplexity, args["id"].(xid.ID), args["input"].(ent.UpdateUserInput)), true
+		return e.complexity.Mutation.UpdateUser(childComplexity, args["id"].(*xid.ID), args["input"].(ent.UpdateUserInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -1057,6 +1085,30 @@ func (ec *executionContext) field_Mutation_addPolicy_args(ctx context.Context, r
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createChildren_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *xid.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 []*ent.CreateUserInput
+	if tmp, ok := rawArgs["children"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("children"))
+		arg1, err = ec.unmarshalOCreateUserInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInputᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["children"] = arg1
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1105,10 +1157,10 @@ func (ec *executionContext) field_Mutation_deletePolicy_args(ctx context.Context
 func (ec *executionContext) field_Mutation_deleteUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 xid.ID
+	var arg0 *xid.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1129,6 +1181,30 @@ func (ec *executionContext) field_Mutation_login_args(ctx context.Context, rawAr
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_removeChildren_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *xid.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 xid.ID
+	if tmp, ok := rawArgs["child"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("child"))
+		arg1, err = ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["child"] = arg1
 	return args, nil
 }
 
@@ -1183,10 +1259,10 @@ func (ec *executionContext) field_Mutation_updatePolicy_args(ctx context.Context
 func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 xid.ID
+	var arg0 *xid.ID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2295,7 +2371,7 @@ func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateUser(rctx, fc.Args["id"].(xid.ID), fc.Args["input"].(ent.UpdateUserInput))
+		return ec.resolvers.Mutation().UpdateUser(rctx, fc.Args["id"].(*xid.ID), fc.Args["input"].(ent.UpdateUserInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2370,7 +2446,7 @@ func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteUser(rctx, fc.Args["id"].(xid.ID))
+		return ec.resolvers.Mutation().DeleteUser(rctx, fc.Args["id"].(*xid.ID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3217,6 +3293,150 @@ func (ec *executionContext) fieldContext_Mutation_updateGroupingPolicy(ctx conte
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateGroupingPolicy_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createChildren(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createChildren(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateChildren(rctx, fc.Args["id"].(*xid.ID), fc.Args["children"].([]*ent.CreateUserInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*ent.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createChildren(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_User_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_User_updatedAt(ctx, field)
+			case "nickname":
+				return ec.fieldContext_User_nickname(ctx, field)
+			case "username":
+				return ec.fieldContext_User_username(ctx, field)
+			case "email":
+				return ec.fieldContext_User_email(ctx, field)
+			case "phone":
+				return ec.fieldContext_User_phone(ctx, field)
+			case "children":
+				return ec.fieldContext_User_children(ctx, field)
+			case "parent":
+				return ec.fieldContext_User_parent(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createChildren_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_removeChildren(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_removeChildren(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RemoveChildren(rctx, fc.Args["id"].(*xid.ID), fc.Args["child"].(xid.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*ent.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_removeChildren(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_User_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_User_updatedAt(ctx, field)
+			case "nickname":
+				return ec.fieldContext_User_nickname(ctx, field)
+			case "username":
+				return ec.fieldContext_User_username(ctx, field)
+			case "email":
+				return ec.fieldContext_User_email(ctx, field)
+			case "phone":
+				return ec.fieldContext_User_phone(ctx, field)
+			case "children":
+				return ec.fieldContext_User_children(ctx, field)
+			case "parent":
+				return ec.fieldContext_User_parent(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_removeChildren_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -6693,7 +6913,7 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"nickname", "username", "email", "phone", "password", "childIDs", "parentID"}
+	fieldsInOrder := [...]string{"nickname", "username", "email", "phone", "password", "parentID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -6735,13 +6955,6 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 				return it, err
 			}
 			it.Password = data
-		case "childIDs":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("childIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋrsᚋxidᚐIDᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ChildIDs = data
 		case "parentID":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentID"))
 			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, v)
@@ -6796,7 +7009,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"nickname", "clearNickname", "username", "clearUsername", "email", "clearEmail", "phone", "password", "addChildIDs", "removeChildIDs", "clearChildren"}
+	fieldsInOrder := [...]string{"nickname", "clearNickname", "username", "clearUsername", "email", "clearEmail", "phone", "password"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -6859,27 +7072,6 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 				return it, err
 			}
 			it.Password = data
-		case "addChildIDs":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addChildIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋrsᚋxidᚐIDᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.AddChildIDs = data
-		case "removeChildIDs":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("removeChildIDs"))
-			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋrsᚋxidᚐIDᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RemoveChildIDs = data
-		case "clearChildren":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clearChildren"))
-			data, err := ec.unmarshalOBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ClearChildren = data
 		}
 	}
 
@@ -8033,6 +8225,14 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "createChildren":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createChildren(ctx, field)
+			})
+		case "removeChildren":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_removeChildren(ctx, field)
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -9064,6 +9264,11 @@ func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋhawa130ᚋc
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateUserInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInput(ctx context.Context, v interface{}) (*ent.CreateUserInput, error) {
+	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCursor(ctx context.Context, v interface{}) (entgql.Cursor[xid.ID], error) {
 	var res entgql.Cursor[xid.ID]
 	err := res.UnmarshalGQL(v)
@@ -9676,6 +9881,26 @@ func (ec *executionContext) marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋcompu
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalOCreateUserInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInputᚄ(ctx context.Context, v interface{}) ([]*ent.CreateUserInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*ent.CreateUserInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNCreateUserInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
 }
 
 func (ec *executionContext) unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx context.Context, v interface{}) (*entgql.Cursor[xid.ID], error) {

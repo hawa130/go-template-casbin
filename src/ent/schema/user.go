@@ -41,7 +41,10 @@ func (User) Edges() []ent.Edge {
 		edge.To("parent", User.Type).
 			Unique().
 			Immutable().
-			From("children"),
+			From("children").
+			Annotations(
+				entgql.Skip(entgql.SkipMutationUpdateInput | entgql.SkipMutationCreateInput),
+			),
 	}
 }
 

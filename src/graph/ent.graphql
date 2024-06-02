@@ -10,7 +10,6 @@ input CreateUserInput {
   email: String
   phone: String!
   password: String!
-  childIDs: [ID!]
   parentID: ID
 }
 """
@@ -131,9 +130,6 @@ input UpdateUserInput {
   clearEmail: Boolean
   phone: String
   password: String
-  addChildIDs: [ID!]
-  removeChildIDs: [ID!]
-  clearChildren: Boolean
 }
 type User implements Node {
   id: ID!

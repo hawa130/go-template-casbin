@@ -17,7 +17,8 @@ import (
 
 // Login is the resolver for the login field.
 func (r *mutationResolver) Login(ctx context.Context, input model.LoginInput) (*model.LoginPayload, error) {
-	record, err := r.client.User.Query().Where(user.PhoneEQ(input.Phone)).Only(database.WrapAllowContext(ctx))
+	c := ent.FromContext(ctx)
+	record, err := c.User.Query().Where(user.PhoneEQ(input.Phone)).Only(database.WrapAllowContext(ctx))
 	if ent.IsNotFound(err) {
 		if _, err := auth.HashPassword(input.Password); err != nil {
 			return nil, err

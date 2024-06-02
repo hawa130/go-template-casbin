@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"entgo.io/contrib/entgql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
@@ -38,6 +39,7 @@ func (r *Server) HandleGraphql() {
 
 	r.echo.POST(cfg.GraphQL.Endpoint, func(c echo.Context) error {
 		srv := handler.New(graph.NewSchema(client))
+		srv.Use(entgql.Transactioner{TxOpener: client})
 
 		srv.AddTransport(transport.POST{})
 		srv.AddTransport(transport.Websocket{

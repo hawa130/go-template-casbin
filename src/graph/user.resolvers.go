@@ -8,25 +8,75 @@ import (
 	"context"
 
 	"github.com/hawa130/computility-cloud/ent"
+	"github.com/hawa130/computility-cloud/internal/auth"
+	"github.com/hawa130/computility-cloud/internal/database"
+	"github.com/hawa130/computility-cloud/internal/perm"
 	"github.com/rs/xid"
 )
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserInput) (*ent.User, error) {
-	return r.client.User.Create().SetInput(input).Save(ctx)
+	return ent.FromContext(ctx).User.Create().SetInput(input).Save(ctx)
 }
 
 // UpdateUser is the resolver for the updateUser field.
-func (r *mutationResolver) UpdateUser(ctx context.Context, id xid.ID, input ent.UpdateUserInput) (*ent.User, error) {
-	return r.client.User.UpdateOneID(id).SetInput(input).Save(ctx)
+func (r *mutationResolver) UpdateUser(ctx context.Context, id *xid.ID, input ent.UpdateUserInput) (*ent.User, error) {
+	id, err := auth.SelfOrAuthenticated(ctx, id, perm.OpUpdate)
+	if err != nil {
+		return nil, err
+	}
+	return ent.FromContext(ctx).User.UpdateOneID(*id).SetInput(input).Save(ctx)
 }
 
 // DeleteUser is the resolver for the deleteUser field.
-func (r *mutationResolver) DeleteUser(ctx context.Context, id xid.ID) (bool, error) {
-	if err := r.client.User.DeleteOneID(id).Exec(ctx); err != nil {
+func (r *mutationResolver) DeleteUser(ctx context.Context, id *xid.ID) (bool, error) {
+	id, err := auth.SelfOrAuthenticated(ctx, id, perm.OpUpdate)
+	if err != nil {
+		return false, err
+	}
+	if err := ent.FromContext(ctx).User.DeleteOneID(*id).Exec(ctx); err != nil {
 		return false, err
 	}
 	return true, nil
+}
+
+// CreateChildren is the resolver for the createChildren field.
+func (r *mutationResolver) CreateChildren(ctx context.Context, id *xid.ID, children []*ent.CreateUserInput) (*ent.User, error) {
+	id, err := auth.SelfOrAuthenticated(ctx, id, perm.OpUpdate)
+	if err != nil {
+		return nil, err
+	}
+
+	c := ent.FromContext(ctx)
+	builders := make([]*ent.UserCreate, len(children))
+	for i, d := range children {
+		builders[i] = c.User.Create().SetInput(*d)
+	}
+	subs, err := c.User.CreateBulk(builders...).Save(database.WrapAllowContext(ctx))
+	if err != nil {
+		return nil, err
+	}
+
+	ids := make([]xid.ID, len(subs))
+	for i, sub := range subs {
+		ids[i] = sub.ID
+	}
+	return c.User.UpdateOneID(*id).AddChildIDs(ids...).Save(database.WrapAllowContext(ctx))
+}
+
+// RemoveChildren is the resolver for the removeChildren field.
+func (r *mutationResolver) RemoveChildren(ctx context.Context, id *xid.ID, child xid.ID) (*ent.User, error) {
+	id, err := auth.SelfOrAuthenticated(ctx, id, perm.OpUpdate)
+	if err != nil {
+		return nil, err
+	}
+
+	c := ent.FromContext(ctx)
+	err = c.User.DeleteOneID(child).Exec(database.WrapAllowContext(ctx))
+	if err != nil {
+		return nil, err
+	}
+	return c.User.UpdateOneID(*id).RemoveChildIDs(child).Save(database.WrapAllowContext(ctx))
 }
 
 // Mutation returns MutationResolver implementation.

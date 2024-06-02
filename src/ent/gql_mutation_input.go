@@ -13,7 +13,6 @@ type CreateUserInput struct {
 	Email    *string
 	Phone    string
 	Password string
-	ChildIDs []xid.ID
 	ParentID *xid.ID
 }
 
@@ -30,9 +29,6 @@ func (i *CreateUserInput) Mutate(m *UserMutation) {
 	}
 	m.SetPhone(i.Phone)
 	m.SetPassword(i.Password)
-	if v := i.ChildIDs; len(v) > 0 {
-		m.AddChildIDs(v...)
-	}
 	if v := i.ParentID; v != nil {
 		m.SetParentID(*v)
 	}
@@ -46,17 +42,14 @@ func (c *UserCreate) SetInput(i CreateUserInput) *UserCreate {
 
 // UpdateUserInput represents a mutation input for updating users.
 type UpdateUserInput struct {
-	ClearNickname  bool
-	Nickname       *string
-	ClearUsername  bool
-	Username       *string
-	ClearEmail     bool
-	Email          *string
-	Phone          *string
-	Password       *string
-	ClearChildren  bool
-	AddChildIDs    []xid.ID
-	RemoveChildIDs []xid.ID
+	ClearNickname bool
+	Nickname      *string
+	ClearUsername bool
+	Username      *string
+	ClearEmail    bool
+	Email         *string
+	Phone         *string
+	Password      *string
 }
 
 // Mutate applies the UpdateUserInput on the UserMutation builder.
@@ -84,15 +77,6 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	}
 	if v := i.Password; v != nil {
 		m.SetPassword(*v)
-	}
-	if i.ClearChildren {
-		m.ClearChildren()
-	}
-	if v := i.AddChildIDs; len(v) > 0 {
-		m.AddChildIDs(v...)
-	}
-	if v := i.RemoveChildIDs; len(v) > 0 {
-		m.RemoveChildIDs(v...)
 	}
 }
 
