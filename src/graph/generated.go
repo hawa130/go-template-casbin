@@ -6796,7 +6796,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"nickname", "clearNickname", "username", "clearUsername", "email", "clearEmail", "phone", "password", "addChildIDs", "removeChildIDs", "clearChildren", "parentID", "clearParent"}
+	fieldsInOrder := [...]string{"nickname", "clearNickname", "username", "clearUsername", "email", "clearEmail", "phone", "password", "addChildIDs", "removeChildIDs", "clearChildren"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -6880,20 +6880,6 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 				return it, err
 			}
 			it.ClearChildren = data
-		case "parentID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("parentID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ParentID = data
-		case "clearParent":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clearParent"))
-			data, err := ec.unmarshalOBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ClearParent = data
 		}
 	}
 

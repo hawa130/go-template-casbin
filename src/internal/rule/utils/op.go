@@ -1,19 +1,22 @@
 package utils
 
-import "github.com/hawa130/computility-cloud/ent"
+import (
+	"github.com/hawa130/computility-cloud/ent"
+	"github.com/hawa130/computility-cloud/internal/perm"
+)
 
-func OpToString(op ent.Op) string {
+func ToPermOp(op ent.Op) string {
 	switch op {
 	case ent.OpCreate:
-		return "create"
+		return perm.OpCreate
 	case ent.OpUpdate:
-		return "update"
+		return perm.OpUpdate
 	case ent.OpUpdateOne:
-		return "update"
+		return perm.OpUpdate
 	case ent.OpDelete:
-		return "delete"
+		return perm.OpDelete
 	case ent.OpDeleteOne:
-		return "delete"
+		return perm.OpDelete
 	}
-	return ""
+	return perm.OpRead
 }

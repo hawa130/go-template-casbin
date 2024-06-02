@@ -51,9 +51,9 @@ func AllowAuthorizedMutation() privacy.MutationRule {
 
 		var allow bool
 		if m.Op() == ent.OpCreate {
-			allow, err = perm.Enforce(u.ID.String(), "user", "create")
+			allow, err = perm.Enforce(u.ID.String(), user.Table, "create")
 		} else {
-			allow, err = perm.EnforceX(u.ID, id, utils.OpToString(m.Op()))
+			allow, err = perm.EnforceX(u.ID, id, utils.ToPermOp(m.Op()))
 		}
 		if err != nil {
 			return privacy.Skipf("unexpected error %v", err)

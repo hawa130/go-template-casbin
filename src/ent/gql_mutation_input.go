@@ -57,8 +57,6 @@ type UpdateUserInput struct {
 	ClearChildren  bool
 	AddChildIDs    []xid.ID
 	RemoveChildIDs []xid.ID
-	ClearParent    bool
-	ParentID       *xid.ID
 }
 
 // Mutate applies the UpdateUserInput on the UserMutation builder.
@@ -95,12 +93,6 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	}
 	if v := i.RemoveChildIDs; len(v) > 0 {
 		m.RemoveChildIDs(v...)
-	}
-	if i.ClearParent {
-		m.ClearParent()
-	}
-	if v := i.ParentID; v != nil {
-		m.SetParentID(*v)
 	}
 }
 

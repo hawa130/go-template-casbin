@@ -2,6 +2,7 @@ package perm
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/casbin/casbin/v2"
 	entadapter "github.com/casbin/ent-adapter"
@@ -64,10 +65,6 @@ func Enforce(sub, obj, act string) (bool, error) {
 	return enforcer.Enforce(sub, obj, act)
 }
 
-type Stringer interface {
-	String() string
-}
-
-func EnforceX(sub, obj Stringer, act string) (bool, error) {
+func EnforceX(sub, obj fmt.Stringer, act string) (bool, error) {
 	return enforcer.Enforce(sub.String(), obj.String(), act)
 }

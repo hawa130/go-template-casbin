@@ -138,25 +138,6 @@ func (uu *UserUpdate) AddChildren(u ...*User) *UserUpdate {
 	return uu.AddChildIDs(ids...)
 }
 
-// SetParentID sets the "parent" edge to the User entity by ID.
-func (uu *UserUpdate) SetParentID(id xid.ID) *UserUpdate {
-	uu.mutation.SetParentID(id)
-	return uu
-}
-
-// SetNillableParentID sets the "parent" edge to the User entity by ID if the given value is not nil.
-func (uu *UserUpdate) SetNillableParentID(id *xid.ID) *UserUpdate {
-	if id != nil {
-		uu = uu.SetParentID(*id)
-	}
-	return uu
-}
-
-// SetParent sets the "parent" edge to the User entity.
-func (uu *UserUpdate) SetParent(u *User) *UserUpdate {
-	return uu.SetParentID(u.ID)
-}
-
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
@@ -181,12 +162,6 @@ func (uu *UserUpdate) RemoveChildren(u ...*User) *UserUpdate {
 		ids[i] = u[i].ID
 	}
 	return uu.RemoveChildIDs(ids...)
-}
-
-// ClearParent clears the "parent" edge to the User entity.
-func (uu *UserUpdate) ClearParent() *UserUpdate {
-	uu.mutation.ClearParent()
-	return uu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -302,35 +277,6 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Inverse: true,
 			Table:   user.ChildrenTable,
 			Columns: []string{user.ChildrenColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if uu.mutation.ParentCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: false,
-			Table:   user.ParentTable,
-			Columns: []string{user.ParentColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uu.mutation.ParentIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: false,
-			Table:   user.ParentTable,
-			Columns: []string{user.ParentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
@@ -470,25 +416,6 @@ func (uuo *UserUpdateOne) AddChildren(u ...*User) *UserUpdateOne {
 	return uuo.AddChildIDs(ids...)
 }
 
-// SetParentID sets the "parent" edge to the User entity by ID.
-func (uuo *UserUpdateOne) SetParentID(id xid.ID) *UserUpdateOne {
-	uuo.mutation.SetParentID(id)
-	return uuo
-}
-
-// SetNillableParentID sets the "parent" edge to the User entity by ID if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableParentID(id *xid.ID) *UserUpdateOne {
-	if id != nil {
-		uuo = uuo.SetParentID(*id)
-	}
-	return uuo
-}
-
-// SetParent sets the "parent" edge to the User entity.
-func (uuo *UserUpdateOne) SetParent(u *User) *UserUpdateOne {
-	return uuo.SetParentID(u.ID)
-}
-
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
@@ -513,12 +440,6 @@ func (uuo *UserUpdateOne) RemoveChildren(u ...*User) *UserUpdateOne {
 		ids[i] = u[i].ID
 	}
 	return uuo.RemoveChildIDs(ids...)
-}
-
-// ClearParent clears the "parent" edge to the User entity.
-func (uuo *UserUpdateOne) ClearParent() *UserUpdateOne {
-	uuo.mutation.ClearParent()
-	return uuo
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -664,35 +585,6 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Inverse: true,
 			Table:   user.ChildrenTable,
 			Columns: []string{user.ChildrenColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if uuo.mutation.ParentCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: false,
-			Table:   user.ParentTable,
-			Columns: []string{user.ParentColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uuo.mutation.ParentIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: false,
-			Table:   user.ParentTable,
-			Columns: []string{user.ParentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
