@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"github.com/hawa130/computility-cloud/ent/predicate"
 	"github.com/hawa130/computility-cloud/ent/user"
 
 	"entgo.io/ent/dialect/sql"
@@ -34,6 +35,30 @@ var schemaGraph = func() *sqlgraph.Schema {
 			user.FieldPassword:  {Type: field.TypeString, Column: user.FieldPassword},
 		},
 	}
+	graph.MustAddE(
+		"children",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.ChildrenTable,
+			Columns: []string{user.ChildrenColumn},
+			Bidi:    false,
+		},
+		"User",
+		"User",
+	)
+	graph.MustAddE(
+		"parent",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   user.ParentTable,
+			Columns: []string{user.ParentColumn},
+			Bidi:    false,
+		},
+		"User",
+		"User",
+	)
 	return graph
 }()
 
@@ -116,4 +141,32 @@ func (f *UserFilter) WherePhone(p entql.StringP) {
 // WherePassword applies the entql string predicate on the password field.
 func (f *UserFilter) WherePassword(p entql.StringP) {
 	f.Where(p.Field(user.FieldPassword))
+}
+
+// WhereHasChildren applies a predicate to check if query has an edge children.
+func (f *UserFilter) WhereHasChildren() {
+	f.Where(entql.HasEdge("children"))
+}
+
+// WhereHasChildrenWith applies a predicate to check if query has an edge children with a given conditions (other predicates).
+func (f *UserFilter) WhereHasChildrenWith(preds ...predicate.User) {
+	f.Where(entql.HasEdgeWith("children", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
+// WhereHasParent applies a predicate to check if query has an edge parent.
+func (f *UserFilter) WhereHasParent() {
+	f.Where(entql.HasEdge("parent"))
+}
+
+// WhereHasParentWith applies a predicate to check if query has an edge parent with a given conditions (other predicates).
+func (f *UserFilter) WhereHasParentWith(preds ...predicate.User) {
+	f.Where(entql.HasEdgeWith("parent", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
 }

@@ -2,6 +2,10 @@
 
 package ent
 
+import (
+	"github.com/rs/xid"
+)
+
 // CreateUserInput represents a mutation input for creating users.
 type CreateUserInput struct {
 	Nickname *string
@@ -9,6 +13,8 @@ type CreateUserInput struct {
 	Email    *string
 	Phone    string
 	Password string
+	ChildIDs []xid.ID
+	ParentID *xid.ID
 }
 
 // Mutate applies the CreateUserInput on the UserMutation builder.
@@ -24,6 +30,12 @@ func (i *CreateUserInput) Mutate(m *UserMutation) {
 	}
 	m.SetPhone(i.Phone)
 	m.SetPassword(i.Password)
+	if v := i.ChildIDs; len(v) > 0 {
+		m.AddChildIDs(v...)
+	}
+	if v := i.ParentID; v != nil {
+		m.SetParentID(*v)
+	}
 }
 
 // SetInput applies the change-set in the CreateUserInput on the UserCreate builder.
@@ -34,14 +46,19 @@ func (c *UserCreate) SetInput(i CreateUserInput) *UserCreate {
 
 // UpdateUserInput represents a mutation input for updating users.
 type UpdateUserInput struct {
-	ClearNickname bool
-	Nickname      *string
-	ClearUsername bool
-	Username      *string
-	ClearEmail    bool
-	Email         *string
-	Phone         *string
-	Password      *string
+	ClearNickname  bool
+	Nickname       *string
+	ClearUsername  bool
+	Username       *string
+	ClearEmail     bool
+	Email          *string
+	Phone          *string
+	Password       *string
+	ClearChildren  bool
+	AddChildIDs    []xid.ID
+	RemoveChildIDs []xid.ID
+	ClearParent    bool
+	ParentID       *xid.ID
 }
 
 // Mutate applies the UpdateUserInput on the UserMutation builder.
@@ -69,6 +86,21 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	}
 	if v := i.Password; v != nil {
 		m.SetPassword(*v)
+	}
+	if i.ClearChildren {
+		m.ClearChildren()
+	}
+	if v := i.AddChildIDs; len(v) > 0 {
+		m.AddChildIDs(v...)
+	}
+	if v := i.RemoveChildIDs; len(v) > 0 {
+		m.RemoveChildIDs(v...)
+	}
+	if i.ClearParent {
+		m.ClearParent()
+	}
+	if v := i.ParentID; v != nil {
+		m.SetParentID(*v)
 	}
 }
 

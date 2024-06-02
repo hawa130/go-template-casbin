@@ -12,11 +12,12 @@ import (
 	"github.com/hawa130/computility-cloud/graph/model"
 	"github.com/hawa130/computility-cloud/graph/reqerr"
 	"github.com/hawa130/computility-cloud/internal/auth"
+	"github.com/hawa130/computility-cloud/internal/database"
 )
 
 // Login is the resolver for the login field.
 func (r *mutationResolver) Login(ctx context.Context, input model.LoginInput) (*model.LoginPayload, error) {
-	record, err := r.client.User.Query().Where(user.PhoneEQ(input.Phone)).Only(ctx)
+	record, err := r.client.User.Query().Where(user.PhoneEQ(input.Phone)).Only(database.WrapAllowContext(ctx))
 	if ent.IsNotFound(err) {
 		if _, err := auth.HashPassword(input.Password); err != nil {
 			return nil, err

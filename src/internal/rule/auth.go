@@ -7,7 +7,8 @@ import (
 	"github.com/hawa130/computility-cloud/internal/auth"
 )
 
-func DenyUnauthorized() privacy.QueryMutationRule {
+// DenyAuthenticated 拒绝未登录用户访问
+func DenyAuthenticated() privacy.QueryMutationRule {
 	return privacy.ContextQueryMutationRule(func(ctx context.Context) error {
 		user, ok := auth.FromContext(ctx)
 		if !ok || user == nil {

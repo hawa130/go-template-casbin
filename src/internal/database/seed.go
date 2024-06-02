@@ -41,7 +41,7 @@ func seedUser(ctx context.Context) error {
 		return err
 	}
 
-	_, err = perm.Enforcer().AddGroupingPolicy(user.ID.String(), "root")
+	_, err = perm.Enforcer().AddGroupingPolicy("root", user.ID.String())
 	if err != nil {
 		return err
 	}

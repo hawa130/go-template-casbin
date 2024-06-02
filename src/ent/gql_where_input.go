@@ -129,6 +129,14 @@ type UserWhereInput struct {
 	PasswordHasSuffix    *string  `json:"passwordHasSuffix,omitempty"`
 	PasswordEqualFold    *string  `json:"passwordEqualFold,omitempty"`
 	PasswordContainsFold *string  `json:"passwordContainsFold,omitempty"`
+
+	// "children" edge predicates.
+	HasChildren     *bool             `json:"hasChildren,omitempty"`
+	HasChildrenWith []*UserWhereInput `json:"hasChildrenWith,omitempty"`
+
+	// "parent" edge predicates.
+	HasParent     *bool             `json:"hasParent,omitempty"`
+	HasParentWith []*UserWhereInput `json:"hasParentWith,omitempty"`
 }
 
 // AddPredicates adds custom predicates to the where input to be used during the filtering phase.
@@ -488,6 +496,42 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 		predicates = append(predicates, user.PasswordContainsFold(*i.PasswordContainsFold))
 	}
 
+	if i.HasChildren != nil {
+		p := user.HasChildren()
+		if !*i.HasChildren {
+			p = user.Not(p)
+		}
+		predicates = append(predicates, p)
+	}
+	if len(i.HasChildrenWith) > 0 {
+		with := make([]predicate.User, 0, len(i.HasChildrenWith))
+		for _, w := range i.HasChildrenWith {
+			p, err := w.P()
+			if err != nil {
+				return nil, fmt.Errorf("%w: field 'HasChildrenWith'", err)
+			}
+			with = append(with, p)
+		}
+		predicates = append(predicates, user.HasChildrenWith(with...))
+	}
+	if i.HasParent != nil {
+		p := user.HasParent()
+		if !*i.HasParent {
+			p = user.Not(p)
+		}
+		predicates = append(predicates, p)
+	}
+	if len(i.HasParentWith) > 0 {
+		with := make([]predicate.User, 0, len(i.HasParentWith))
+		for _, w := range i.HasParentWith {
+			p, err := w.P()
+			if err != nil {
+				return nil, fmt.Errorf("%w: field 'HasParentWith'", err)
+			}
+			with = append(with, p)
+		}
+		predicates = append(predicates, user.HasParentWith(with...))
+	}
 	switch len(predicates) {
 	case 0:
 		return nil, ErrEmptyUserWhereInput

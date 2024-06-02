@@ -31,8 +31,47 @@ type User struct {
 	// Phone holds the value of the "phone" field.
 	Phone string `json:"phone,omitempty"`
 	// Password holds the value of the "password" field.
-	Password     string `json:"-"`
+	Password string `json:"-"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the UserQuery when eager-loading is set.
+	Edges        UserEdges `json:"edges"`
+	user_parent  *xid.ID
 	selectValues sql.SelectValues
+}
+
+// UserEdges holds the relations/edges for other nodes in the graph.
+type UserEdges struct {
+	// Children holds the value of the children edge.
+	Children []*User `json:"children,omitempty"`
+	// Parent holds the value of the parent edge.
+	Parent *User `json:"parent,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [2]bool
+	// totalCount holds the count of the edges above.
+	totalCount [2]map[string]int
+
+	namedChildren map[string][]*User
+}
+
+// ChildrenOrErr returns the Children value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ChildrenOrErr() ([]*User, error) {
+	if e.loadedTypes[0] {
+		return e.Children, nil
+	}
+	return nil, &NotLoadedError{edge: "children"}
+}
+
+// ParentOrErr returns the Parent value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e UserEdges) ParentOrErr() (*User, error) {
+	if e.Parent != nil {
+		return e.Parent, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: user.Label}
+	}
+	return nil, &NotLoadedError{edge: "parent"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -46,6 +85,8 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullTime)
 		case user.FieldID:
 			values[i] = new(xid.ID)
+		case user.ForeignKeys[0]: // user_parent
+			values[i] = &sql.NullScanner{S: new(xid.ID)}
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -109,6 +150,13 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.Password = value.String
 			}
+		case user.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullScanner); !ok {
+				return fmt.Errorf("unexpected type %T for field user_parent", values[i])
+			} else if value.Valid {
+				u.user_parent = new(xid.ID)
+				*u.user_parent = *value.S.(*xid.ID)
+			}
 		default:
 			u.selectValues.Set(columns[i], values[i])
 		}
@@ -120,6 +168,16 @@ func (u *User) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (u *User) Value(name string) (ent.Value, error) {
 	return u.selectValues.Get(name)
+}
+
+// QueryChildren queries the "children" edge of the User entity.
+func (u *User) QueryChildren() *UserQuery {
+	return NewUserClient(u.config).QueryChildren(u)
+}
+
+// QueryParent queries the "parent" edge of the User entity.
+func (u *User) QueryParent() *UserQuery {
+	return NewUserClient(u.config).QueryParent(u)
 }
 
 // Update returns a builder for updating this User.
@@ -166,6 +224,30 @@ func (u *User) String() string {
 	builder.WriteString("password=<sensitive>")
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedChildren returns the Children named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (u *User) NamedChildren(name string) ([]*User, error) {
+	if u.Edges.namedChildren == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := u.Edges.namedChildren[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (u *User) appendNamedChildren(name string, edges ...*User) {
+	if u.Edges.namedChildren == nil {
+		u.Edges.namedChildren = make(map[string][]*User)
+	}
+	if len(edges) == 0 {
+		u.Edges.namedChildren[name] = []*User{}
+	} else {
+		u.Edges.namedChildren[name] = append(u.Edges.namedChildren[name], edges...)
+	}
 }
 
 // Users is a parsable slice of User.

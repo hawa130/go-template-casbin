@@ -6,12 +6,15 @@ import (
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	gen "github.com/hawa130/computility-cloud/ent"
 	"github.com/hawa130/computility-cloud/ent/hook"
 	"github.com/hawa130/computility-cloud/ent/privacy"
 	"github.com/hawa130/computility-cloud/ent/schema/mixinx"
 	"github.com/hawa130/computility-cloud/internal/auth"
+	"github.com/hawa130/computility-cloud/internal/rule"
+	userrule "github.com/hawa130/computility-cloud/internal/rule/user-rule"
 )
 
 // User holds the schema definition for the User entity.
@@ -32,7 +35,9 @@ func (User) Fields() []ent.Field {
 
 // Edges of the User.
 func (User) Edges() []ent.Edge {
-	return []ent.Edge{}
+	return []ent.Edge{
+		edge.To("parent", User.Type).Unique().From("children"),
+	}
 }
 
 // Mixin of the User.
@@ -88,9 +93,13 @@ func (User) Hooks() []ent.Hook {
 func (User) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
+			rule.AllowAdmin(),
+			userrule.AllowAuthorizedMutation(),
 			privacy.AlwaysDenyRule(),
 		},
 		Query: privacy.QueryPolicy{
+			rule.AllowAdmin(),
+			userrule.FilterUserQuery(),
 			privacy.AlwaysAllowRule(),
 		},
 	}

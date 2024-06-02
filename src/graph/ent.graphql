@@ -10,6 +10,8 @@ input CreateUserInput {
   email: String
   phone: String!
   password: String!
+  childIDs: [ID!]
+  parentID: ID
 }
 """
 Define a Relay Cursor type:
@@ -129,6 +131,11 @@ input UpdateUserInput {
   clearEmail: Boolean
   phone: String
   password: String
+  addChildIDs: [ID!]
+  removeChildIDs: [ID!]
+  clearChildren: Boolean
+  parentID: ID
+  clearParent: Boolean
 }
 type User implements Node {
   id: ID!
@@ -138,6 +145,8 @@ type User implements Node {
   username: String
   email: String
   phone: String!
+  children: [User!]
+  parent: User
 }
 """
 A connection to a list of items.
@@ -300,4 +309,14 @@ input UserWhereInput {
   phoneHasSuffix: String
   phoneEqualFold: String
   phoneContainsFold: String
+  """
+  children edge predicates
+  """
+  hasChildren: Boolean
+  hasChildrenWith: [UserWhereInput!]
+  """
+  parent edge predicates
+  """
+  hasParent: Boolean
+  hasParentWith: [UserWhereInput!]
 }

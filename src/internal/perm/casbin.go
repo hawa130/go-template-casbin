@@ -51,10 +51,23 @@ func initEnforcer(logger *zap.Logger) error {
 		return err
 	}
 
+	e.AddFunction("checkAdmin", CheckAdmin)
 	enforcer = e
 	return nil
 }
 
 func Enforcer() *casbin.Enforcer {
 	return enforcer
+}
+
+func Enforce(sub, obj, act string) (bool, error) {
+	return enforcer.Enforce(sub, obj, act)
+}
+
+type Stringer interface {
+	String() string
+}
+
+func EnforceX(sub, obj Stringer, act string) (bool, error) {
+	return enforcer.Enforce(sub.String(), obj.String(), act)
 }
