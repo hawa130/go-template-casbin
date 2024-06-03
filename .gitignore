@@ -1,5 +1,5 @@
 .idea
-/src/*.pem
-/src/test.db
-/src/config.toml
-/src/bin
+/backend/*.pem
+/backend/test.db
+/backend/config.toml
+/backend/bin

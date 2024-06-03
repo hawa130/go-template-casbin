@@ -1254,6 +1254,9 @@ var sources = []*ast.Source{
 directive @permission(object: String!, action: String!) on FIELD_DEFINITION
 
 extend type Mutation {
+  """
+  重置用户密码
+  """
   resetPassword(id: ID!, password: String!): User! @permission(object: "user", action: "update")
 }`, BuiltIn: false},
 	{Name: "../../graphql/auth.graphql", Input: `input LoginInput {
@@ -1272,7 +1275,14 @@ input RegisterInput {
 }
 
 extend type Mutation {
+  """
+  登录
+  """
   login(input: LoginInput!): LoginPayload!
+
+  """
+  注册
+  """
   register(input: RegisterInput!): User!
 }`, BuiltIn: false},
 	{Name: "../../graphql/ent.graphql", Input: `directive @goField(forceResolver: Boolean, name: String, omittable: Boolean) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
@@ -2088,23 +2098,55 @@ extend type Mutation {
   updateGroupingPolicy(new: CGroupInput!, old: CGroupInput!): UpdateCGroup! @admin
 }`, BuiltIn: false},
 	{Name: "../../graphql/publickey.graphql", Input: `extend type Query {
+  """
+  获取指定用户或自己（uid 留空）的公钥列表
+  """
   publicKey(uid: ID): [PublicKey!]
 }
 
 extend type Mutation {
+  """
+  为指定用户或自己（uid 留空）创建公钥
+  """
   createPublicKey(uid: ID, input: CreatePublicKeyInput!): PublicKey!
+
+  """
+  更新公钥
+  """
   updatePublicKey(id: ID!, input: UpdatePublicKeyInput!): PublicKey!
+
+  """
+  删除公钥
+  """
   deletePublicKey(id: ID!): Boolean!
 }`, BuiltIn: false},
 	{Name: "../../graphql/schema.graphql", Input: ``, BuiltIn: false},
 	{Name: "../../graphql/user.graphql", Input: `type Mutation {
+    """
+    创建用户
+    """
     createUser(input: CreateUserInput!): User!
+
+    """
+    更新指定用户或自己（id 留空）
+    """
     updateUser(id: ID, input: UpdateUserInput!): User!
+
+    """
+    删除指定用户或自己（id 留空）
+    """
     deleteUser(id: ID): Boolean!
 }
 
 extend type Mutation {
+    """
+    为指定用户或自己（id 留空）创建子用户
+    """
     createChildren(id: ID, children: [CreateUserInput!]): User!
+
+    """
+    为指定用户或自己（id 留空）删除子用户
+    """
     removeChildren(id: ID, child: ID!): User!
 }
 
@@ -2114,11 +2156,21 @@ input UpdatePasswordInput {
 }
 
 extend type Mutation {
+    """
+    更新指定用户或自己（id 留空）的密码
+    """
     updatePassword(id: ID, input: UpdatePasswordInput!): User!
 }
 
 extend type Query {
+    """
+    获取指定用户或自己（id 留空）的信息
+    """
     user(id: ID): User!
+
+    """
+    获取指定用户或自己（id 留空）的子用户列表
+    """
     children(id: ID): [User!]!
 }`, BuiltIn: false},
 }
