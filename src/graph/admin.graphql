@@ -1,0 +1,5 @@
+directive @admin on FIELD_DEFINITION
+
+extend type Mutation {
+  resetPassword(id: ID!, password: String!): User! @admin
+}

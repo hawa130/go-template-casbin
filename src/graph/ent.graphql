@@ -129,7 +129,6 @@ input UpdateUserInput {
   email: String
   clearEmail: Boolean
   phone: String
-  password: String
 }
 type User implements Node {
   id: ID!

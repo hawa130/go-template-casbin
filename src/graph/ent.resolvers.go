@@ -15,8 +15,7 @@ import (
 
 // Node is the resolver for the node field.
 func (r *queryResolver) Node(ctx context.Context, id xid.ID) (ent.Noder, error) {
-	err := auth.IsAdminReq(ctx)
-	if err != nil {
+	if err := auth.IsAdminReq(ctx); err != nil {
 		return nil, err
 	}
 	return r.client.Noder(ctx, id)
@@ -24,8 +23,7 @@ func (r *queryResolver) Node(ctx context.Context, id xid.ID) (ent.Noder, error) 
 
 // Nodes is the resolver for the nodes field.
 func (r *queryResolver) Nodes(ctx context.Context, ids []xid.ID) ([]ent.Noder, error) {
-	err := auth.IsAdminReq(ctx)
-	if err != nil {
+	if err := auth.IsAdminReq(ctx); err != nil {
 		return nil, err
 	}
 	return r.client.Noders(ctx, ids)
@@ -33,8 +31,7 @@ func (r *queryResolver) Nodes(ctx context.Context, ids []xid.ID) ([]ent.Noder, e
 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, after *entgql.Cursor[xid.ID], first *int, before *entgql.Cursor[xid.ID], last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) (*ent.UserConnection, error) {
-	err := auth.IsAdminReq(ctx)
-	if err != nil {
+	if err := auth.IsAdminReq(ctx); err != nil {
 		return nil, err
 	}
 	return r.client.User.Query().

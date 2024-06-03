@@ -8,3 +8,12 @@ extend type Mutation {
     createChildren(id: ID, children: [CreateUserInput!]): User!
     removeChildren(id: ID, child: ID!): User!
 }
+
+input UpdatePasswordInput {
+    oldPassword: String!
+    newPassword: String!
+}
+
+extend type Mutation {
+    updatePassword(id: ID, input: UpdatePasswordInput!): User!
+}

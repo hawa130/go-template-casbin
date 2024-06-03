@@ -49,7 +49,6 @@ type UpdateUserInput struct {
 	ClearEmail    bool
 	Email         *string
 	Phone         *string
-	Password      *string
 }
 
 // Mutate applies the UpdateUserInput on the UserMutation builder.
@@ -74,9 +73,6 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	}
 	if v := i.Phone; v != nil {
 		m.SetPhone(*v)
-	}
-	if v := i.Password; v != nil {
-		m.SetPassword(*v)
 	}
 }
 

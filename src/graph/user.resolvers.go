@@ -8,6 +8,8 @@ import (
 	"context"
 
 	"github.com/hawa130/computility-cloud/ent"
+	"github.com/hawa130/computility-cloud/graph/model"
+	"github.com/hawa130/computility-cloud/graph/reqerr"
 	"github.com/hawa130/computility-cloud/internal/auth"
 	"github.com/hawa130/computility-cloud/internal/database"
 	"github.com/hawa130/computility-cloud/internal/perm"
@@ -77,6 +79,29 @@ func (r *mutationResolver) RemoveChildren(ctx context.Context, id *xid.ID, child
 		return nil, err
 	}
 	return c.User.UpdateOneID(*id).RemoveChildIDs(child).Save(database.WrapAllowContext(ctx))
+}
+
+// UpdatePassword is the resolver for the updatePassword field.
+func (r *mutationResolver) UpdatePassword(ctx context.Context, id *xid.ID, input model.UpdatePasswordInput) (*ent.User, error) {
+	id, err := auth.SelfOrAuthenticated(ctx, id, perm.OpUpdate)
+	if err != nil {
+		return nil, err
+	}
+
+	c := ent.FromContext(ctx)
+	u, err := c.User.Get(ctx, *id)
+	if err != nil {
+		return nil, err
+	}
+	ok, err := auth.ComparePasswordAndHash(input.OldPassword, u.Password)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, reqerr.ErrPasswordNotMatch
+	}
+
+	return c.User.UpdateOneID(*id).SetPassword(input.NewPassword).Save(ctx)
 }
 
 // Mutation returns MutationResolver implementation.

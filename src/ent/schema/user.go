@@ -31,7 +31,9 @@ func (User) Fields() []ent.Field {
 		field.String("username").Unique().Optional(),
 		field.String("email").Unique().Optional(),
 		field.String("phone").Unique(),
-		field.String("password").Sensitive(),
+		field.String("password").
+			Sensitive().
+			Annotations(entgql.Skip(entgql.SkipMutationUpdateInput)),
 	}
 }
 

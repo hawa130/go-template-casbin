@@ -77,3 +77,8 @@ type UpdateCPolicy struct {
 	Old *CPolicy `json:"old"`
 	Ok  bool     `json:"ok"`
 }
+
+type UpdatePasswordInput struct {
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
