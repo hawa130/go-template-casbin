@@ -104,6 +104,16 @@ func (r *mutationResolver) UpdatePassword(ctx context.Context, id *xid.ID, input
 	return c.User.UpdateOneID(*id).SetPassword(input.NewPassword).Save(ctx)
 }
 
+// User is the resolver for the user field.
+func (r *queryResolver) User(ctx context.Context, id *xid.ID) (*ent.User, error) {
+	id, err := auth.SelfOrAuthenticated(ctx, id, perm.OpRead)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.client.User.Get(ctx, *id)
+}
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 

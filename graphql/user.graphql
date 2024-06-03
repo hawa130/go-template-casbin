@@ -17,3 +17,7 @@ input UpdatePasswordInput {
 extend type Mutation {
     updatePassword(id: ID, input: UpdatePasswordInput!): User!
 }
+
+extend type Query {
+    user(id: ID): User!
+}
