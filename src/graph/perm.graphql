@@ -67,18 +67,18 @@ extend type Query {
 
 extend type Mutation {
   # Policy
-  addPolicy(input: CRequestInput!): CPolicyResult!
-  addPolicies(input: [CRequestInput!]!): BatchCPolicy!
-  addNamedPolicy(pType: String!, input: CRequestInput!): CPolicyResult!
-  addNamedPolicies(pType: String!, input: [CRequestInput!]!): BatchCPolicy!
-  deletePolicy(input: CRequestInput!): CPolicyResult!
-  updatePolicy(new: CRequestInput!, old: CRequestInput!): UpdateCPolicy!
+  addPolicy(input: CRequestInput!): CPolicyResult! @admin
+  addPolicies(input: [CRequestInput!]!): BatchCPolicy! @admin
+  addNamedPolicy(pType: String!, input: CRequestInput!): CPolicyResult! @admin
+  addNamedPolicies(pType: String!, input: [CRequestInput!]!): BatchCPolicy! @admin
+  deletePolicy(input: CRequestInput!): CPolicyResult! @admin
+  updatePolicy(new: CRequestInput!, old: CRequestInput!): UpdateCPolicy! @admin
 
   # Grouping Policy
-  addGroupingPolicy(input: CGroupInput!): CGroupResult!
-  addGroupingPolicies(input: [CGroupInput!]!): BatchCGroup!
-  addNamedGroupingPolicy(pType: String!, input: CGroupInput!): CGroupResult!
-  addNamedGroupingPolicies(pType: String!, input: [CGroupInput!]!): BatchCGroup!
-  deleteGroupingPolicy(input: CGroupInput!): CGroupResult!
-  updateGroupingPolicy(new: CGroupInput!, old: CGroupInput!): UpdateCGroup!
+  addGroupingPolicy(input: CGroupInput!): CGroupResult! @admin
+  addGroupingPolicies(input: [CGroupInput!]!): BatchCGroup! @admin
+  addNamedGroupingPolicy(pType: String!, input: CGroupInput!): CGroupResult! @admin
+  addNamedGroupingPolicies(pType: String!, input: [CGroupInput!]!): BatchCGroup! @admin
+  deleteGroupingPolicy(input: CGroupInput!): CGroupResult! @admin
+  updateGroupingPolicy(new: CGroupInput!, old: CGroupInput!): UpdateCGroup! @admin
 }

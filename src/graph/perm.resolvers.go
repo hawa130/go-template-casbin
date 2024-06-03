@@ -9,15 +9,11 @@ import (
 
 	"github.com/hawa130/computility-cloud/graph/model"
 	"github.com/hawa130/computility-cloud/graph/utils"
-	"github.com/hawa130/computility-cloud/internal/auth"
 	"github.com/hawa130/computility-cloud/internal/perm"
 )
 
 // AddPolicy is the resolver for the addPolicy field.
 func (r *mutationResolver) AddPolicy(ctx context.Context, input model.CRequestInput) (*model.CPolicyResult, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	ok, err := perm.Enforcer().AddPolicy(utils.PolicyToAnyArr(&input)...)
 	if err != nil {
 		return nil, err
@@ -27,9 +23,6 @@ func (r *mutationResolver) AddPolicy(ctx context.Context, input model.CRequestIn
 
 // AddPolicies is the resolver for the addPolicies field.
 func (r *mutationResolver) AddPolicies(ctx context.Context, input []*model.CRequestInput) (*model.BatchCPolicy, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	ok, err := perm.Enforcer().AddPolicies(utils.PoliciesToStringArr(input))
 	if err != nil {
 		return nil, err
@@ -39,9 +32,6 @@ func (r *mutationResolver) AddPolicies(ctx context.Context, input []*model.CRequ
 
 // AddNamedPolicy is the resolver for the addNamedPolicy field.
 func (r *mutationResolver) AddNamedPolicy(ctx context.Context, pType string, input model.CRequestInput) (*model.CPolicyResult, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	ok, err := perm.Enforcer().AddNamedPolicy(pType, utils.PolicyToAnyArr(&input)...)
 	if err != nil {
 		return nil, err
@@ -51,9 +41,6 @@ func (r *mutationResolver) AddNamedPolicy(ctx context.Context, pType string, inp
 
 // AddNamedPolicies is the resolver for the addNamedPolicies field.
 func (r *mutationResolver) AddNamedPolicies(ctx context.Context, pType string, input []*model.CRequestInput) (*model.BatchCPolicy, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	ok, err := perm.Enforcer().AddNamedPoliciesEx(pType, utils.PoliciesToStringArr(input))
 	if err != nil {
 		return nil, err
@@ -63,9 +50,6 @@ func (r *mutationResolver) AddNamedPolicies(ctx context.Context, pType string, i
 
 // DeletePolicy is the resolver for the deletePolicy field.
 func (r *mutationResolver) DeletePolicy(ctx context.Context, input model.CRequestInput) (*model.CPolicyResult, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	ok, err := perm.Enforcer().RemovePolicy(utils.PolicyToAnyArr(&input)...)
 	if err != nil {
 		return nil, err
@@ -75,9 +59,6 @@ func (r *mutationResolver) DeletePolicy(ctx context.Context, input model.CReques
 
 // UpdatePolicy is the resolver for the updatePolicy field.
 func (r *mutationResolver) UpdatePolicy(ctx context.Context, new model.CRequestInput, old model.CRequestInput) (*model.UpdateCPolicy, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	res, err := perm.Enforcer().UpdatePolicy(utils.PolicyToStringArr(&old), utils.PolicyToStringArr(&new))
 	if err != nil {
 		return nil, err
@@ -87,9 +68,6 @@ func (r *mutationResolver) UpdatePolicy(ctx context.Context, new model.CRequestI
 
 // AddGroupingPolicy is the resolver for the addGroupingPolicy field.
 func (r *mutationResolver) AddGroupingPolicy(ctx context.Context, input model.CGroupInput) (*model.CGroupResult, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	res, err := perm.Enforcer().AddGroupingPolicy(utils.GroupToAnyArr(&input)...)
 	if err != nil {
 		return nil, err
@@ -99,9 +77,6 @@ func (r *mutationResolver) AddGroupingPolicy(ctx context.Context, input model.CG
 
 // AddGroupingPolicies is the resolver for the addGroupingPolicies field.
 func (r *mutationResolver) AddGroupingPolicies(ctx context.Context, input []*model.CGroupInput) (*model.BatchCGroup, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	res, err := perm.Enforcer().AddGroupingPoliciesEx(utils.GroupsToStringArr(input))
 	if err != nil {
 		return nil, err
@@ -111,9 +86,6 @@ func (r *mutationResolver) AddGroupingPolicies(ctx context.Context, input []*mod
 
 // AddNamedGroupingPolicy is the resolver for the addNamedGroupingPolicy field.
 func (r *mutationResolver) AddNamedGroupingPolicy(ctx context.Context, pType string, input model.CGroupInput) (*model.CGroupResult, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	res, err := perm.Enforcer().AddNamedGroupingPolicy(pType, utils.GroupToAnyArr(&input)...)
 	if err != nil {
 		return nil, err
@@ -123,9 +95,6 @@ func (r *mutationResolver) AddNamedGroupingPolicy(ctx context.Context, pType str
 
 // AddNamedGroupingPolicies is the resolver for the addNamedGroupingPolicies field.
 func (r *mutationResolver) AddNamedGroupingPolicies(ctx context.Context, pType string, input []*model.CGroupInput) (*model.BatchCGroup, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	res, err := perm.Enforcer().AddNamedGroupingPolicies(pType, utils.GroupsToStringArr(input))
 	if err != nil {
 		return nil, err
@@ -135,9 +104,6 @@ func (r *mutationResolver) AddNamedGroupingPolicies(ctx context.Context, pType s
 
 // DeleteGroupingPolicy is the resolver for the deleteGroupingPolicy field.
 func (r *mutationResolver) DeleteGroupingPolicy(ctx context.Context, input model.CGroupInput) (*model.CGroupResult, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	res, err := perm.Enforcer().RemoveGroupingPolicy(utils.GroupToAnyArr(&input)...)
 	if err != nil {
 		return nil, err
@@ -147,9 +113,6 @@ func (r *mutationResolver) DeleteGroupingPolicy(ctx context.Context, input model
 
 // UpdateGroupingPolicy is the resolver for the updateGroupingPolicy field.
 func (r *mutationResolver) UpdateGroupingPolicy(ctx context.Context, new model.CGroupInput, old model.CGroupInput) (*model.UpdateCGroup, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	res, err := perm.Enforcer().UpdateGroupingPolicy(utils.GroupToStringArr(&old), utils.GroupToStringArr(&new))
 	if err != nil {
 		return nil, err
