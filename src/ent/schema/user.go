@@ -181,7 +181,8 @@ func (User) Policy() ent.Policy {
 			privacy.AlwaysDenyRule(),
 		},
 		Query: privacy.QueryPolicy{
-			rule.LimitQueryFields(user.Table,
+			rule.AllowPermission(user.Table, perm.OpRead),
+			rule.LimitQueryFields(
 				user.FieldID,
 				user.FieldNickname,
 				user.FieldUsername,
