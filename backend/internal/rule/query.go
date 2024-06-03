@@ -10,14 +10,16 @@ import (
 	"github.com/hawa130/computility-cloud/internal/rule/utils"
 )
 
-type queryAllFields struct{}
+type queryAllFieldsKey struct{}
 
+// WithQueryAllFields 允许查询所有字段上下文。使用此上下文时 LimitQueryFields 会忽略限制。
 func WithQueryAllFields(ctx context.Context) context.Context {
-	return context.WithValue(ctx, queryAllFields{}, true)
+	return context.WithValue(ctx, queryAllFieldsKey{}, true)
 }
 
+// IsQueryAllFields 是否允许查询所有字段
 func IsQueryAllFields(ctx context.Context) bool {
-	if allow, exists := ctx.Value(queryAllFields{}).(bool); exists && allow {
+	if allow, exists := ctx.Value(queryAllFieldsKey{}).(bool); exists && allow {
 		return true
 	}
 	return false

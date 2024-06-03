@@ -9,6 +9,7 @@ import (
 	"github.com/rs/xid"
 )
 
+// EnforceCtx 判断当前用户是否有对某个对象的某个操作的权限
 func EnforceCtx(ctx context.Context, obj string, act string) (bool, error) {
 	user, ok := FromContext(ctx)
 	if !ok {
@@ -17,6 +18,7 @@ func EnforceCtx(ctx context.Context, obj string, act string) (bool, error) {
 	return perm.Enforce(user.ID.String(), obj, act)
 }
 
+// EnforceXCtx 判断当前用户是否有对某个对象的某个操作的权限
 func EnforceXCtx(ctx context.Context, obj fmt.Stringer, act string) (bool, error) {
 	user, ok := FromContext(ctx)
 	if !ok {
@@ -25,6 +27,7 @@ func EnforceXCtx(ctx context.Context, obj fmt.Stringer, act string) (bool, error
 	return perm.EnforceX(user.ID, obj, act)
 }
 
+// EnforceReq 判断当前用户是否有对某个对象的某个操作的权限，如果没有则返回 forbidden 错误
 func EnforceReq(ctx context.Context, obj string, act string) error {
 	allow, err := EnforceCtx(ctx, obj, act)
 	if err != nil {
@@ -36,6 +39,7 @@ func EnforceReq(ctx context.Context, obj string, act string) error {
 	return nil
 }
 
+// EnforceXReq 判断当前用户是否有对某个对象的某个操作的权限，如果没有则返回 forbidden 错误
 func EnforceXReq(ctx context.Context, obj fmt.Stringer, act string) error {
 	allow, err := EnforceXCtx(ctx, obj, act)
 	if err != nil {
@@ -47,6 +51,7 @@ func EnforceXReq(ctx context.Context, obj fmt.Stringer, act string) error {
 	return nil
 }
 
+// IsAdmin 判断当前用户是否是管理员
 func IsAdmin(ctx context.Context) (bool, error) {
 	user, ok := FromContext(ctx)
 	if !ok {
@@ -55,6 +60,7 @@ func IsAdmin(ctx context.Context) (bool, error) {
 	return perm.Enforcer().HasRoleForUser(user.ID.String(), "root")
 }
 
+// AdminRequired 判断当前用户是否是管理员，如果不是则返回 forbidden 错误
 func AdminRequired(ctx context.Context) error {
 	allow, err := IsAdmin(ctx)
 	if err != nil {
@@ -66,6 +72,7 @@ func AdminRequired(ctx context.Context) error {
 	return nil
 }
 
+// GrantObjectPermission 为当前用户授予对某个对象的权限
 func GrantObjectPermission(ctx context.Context, obj string) (bool, error) {
 	user, ok := FromContext(ctx)
 	if !ok {
@@ -74,6 +81,7 @@ func GrantObjectPermission(ctx context.Context, obj string) (bool, error) {
 	return perm.GrantObjectPermission(user.ID.String(), obj)
 }
 
+// GrantObjectPermissionX 为当前用户授予对某个对象的权限
 func GrantObjectPermissionX(ctx context.Context, obj fmt.Stringer) (bool, error) {
 	user, ok := FromContext(ctx)
 	if !ok {

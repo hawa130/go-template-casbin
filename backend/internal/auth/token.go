@@ -20,7 +20,7 @@ type JWTClaims struct {
 	jwt.StandardClaims
 }
 
-// GenerateToken generates a new JWT token
+// GenerateToken generates a new JWT token 为指定 ID 生成一个新的 JWT token
 func GenerateToken(uid xid.ID) (string, error) {
 	key, err := decodePem()
 	if err != nil {
@@ -43,7 +43,7 @@ func GenerateToken(uid xid.ID) (string, error) {
 	return s, nil
 }
 
-// ParseToken parses a JWT token
+// ParseToken parses a JWT token 解析 JWT token
 func ParseToken(token string) (*JWTClaims, error) {
 	key, err := decodePem()
 	if err != nil {

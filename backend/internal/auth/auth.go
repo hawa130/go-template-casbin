@@ -17,13 +17,13 @@ var (
 	ErrIncompatibleVersion = errors.New("incompatible version of argon2")
 )
 
-// HashPassword hashes a password and returns the encoded hash
+// HashPassword hashes a password and returns the encoded hash 返回密码哈希结果
 func HashPassword(password string) (string, error) {
 	cfg := config.Config().Argon2
 	return HashPasswordWithParams(password, &cfg)
 }
 
-// HashPasswordWithParams hashes a password with the given parameters and returns the encoded hash
+// HashPasswordWithParams hashes a password with the given parameters and returns the encoded hash 返回密码哈希结果
 func HashPasswordWithParams(password string, params *config.PasswordHashParams) (string, error) {
 	p := params
 	salt, err := generateRandomBytes(p.SaltLength)
@@ -41,7 +41,7 @@ func HashPasswordWithParams(password string, params *config.PasswordHashParams) 
 	return encodedHash, nil
 }
 
-// ComparePasswordAndHash compares a password with its hash and returns true if they match
+// ComparePasswordAndHash compares a password with its hash and returns true if they match 返回密码哈希比对结果
 func ComparePasswordAndHash(password, encodedHash string) (bool, error) {
 	p, salt, hash, err := decodeHash(encodedHash)
 	if err != nil {
