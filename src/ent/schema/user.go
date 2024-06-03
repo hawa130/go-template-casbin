@@ -11,6 +11,7 @@ import (
 	gen "github.com/hawa130/computility-cloud/ent"
 	"github.com/hawa130/computility-cloud/ent/hook"
 	"github.com/hawa130/computility-cloud/ent/privacy"
+	"github.com/hawa130/computility-cloud/ent/schema/gqlutils"
 	"github.com/hawa130/computility-cloud/ent/schema/mixinx"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/hawa130/computility-cloud/internal/auth"
@@ -62,7 +63,7 @@ func (User) Mixin() []ent.Mixin {
 func (User) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
-		entgql.QueryField().Directives(entgql.NewDirective("admin")),
+		gqlutils.PermissionDirective(user.Table),
 		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }

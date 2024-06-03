@@ -48,7 +48,8 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
-	Admin func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
+	Admin           func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
+	QueryPermission func(ctx context.Context, obj interface{}, next graphql.Resolver, model string) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -1236,6 +1237,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "../../graphql/admin.graphql", Input: `directive @admin on FIELD_DEFINITION
+directive @queryPermission(model: String!) on FIELD_DEFINITION
 
 extend type Mutation {
   resetPassword(id: ID!, password: String!): User! @admin
@@ -1736,7 +1738,7 @@ type Query {
     Filtering options for PublicKeys returned from the connection.
     """
     where: PublicKeyWhereInput
-  ): PublicKeyConnection! @admin
+  ): PublicKeyConnection! @queryPermission(model: "public_keys")
   users(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -1767,7 +1769,7 @@ type Query {
     Filtering options for Users returned from the connection.
     """
     where: UserWhereInput
-  ): UserConnection! @admin
+  ): UserConnection! @queryPermission(model: "users")
 }
 """
 The builtin Time type
@@ -2110,6 +2112,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) dir_queryPermission_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["model"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("model"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["model"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_addGroupingPolicies_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -6885,10 +6902,14 @@ func (ec *executionContext) _Query_publicKeys(ctx context.Context, field graphql
 			return ec.resolvers.Query().PublicKeys(rctx, fc.Args["after"].(*entgql.Cursor[xid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[xid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.PublicKeyOrder), fc.Args["where"].(*ent.PublicKeyWhereInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+			model, err := ec.unmarshalNString2string(ctx, "public_keys")
+			if err != nil {
+				return nil, err
 			}
-			return ec.directives.Admin(ctx, nil, directive0)
+			if ec.directives.QueryPermission == nil {
+				return nil, errors.New("directive queryPermission is not implemented")
+			}
+			return ec.directives.QueryPermission(ctx, nil, directive0, model)
 		}
 
 		tmp, err := directive1(rctx)
@@ -6968,10 +6989,14 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 			return ec.resolvers.Query().Users(rctx, fc.Args["after"].(*entgql.Cursor[xid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[xid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.UserOrder), fc.Args["where"].(*ent.UserWhereInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+			model, err := ec.unmarshalNString2string(ctx, "users")
+			if err != nil {
+				return nil, err
 			}
-			return ec.directives.Admin(ctx, nil, directive0)
+			if ec.directives.QueryPermission == nil {
+				return nil, errors.New("directive queryPermission is not implemented")
+			}
+			return ec.directives.QueryPermission(ctx, nil, directive0, model)
 		}
 
 		tmp, err := directive1(rctx)

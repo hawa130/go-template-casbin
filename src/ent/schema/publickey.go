@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent/schema/index"
 	"github.com/hawa130/computility-cloud/ent/privacy"
 	"github.com/hawa130/computility-cloud/ent/publickey"
+	"github.com/hawa130/computility-cloud/ent/schema/gqlutils"
 	"github.com/hawa130/computility-cloud/ent/schema/mixinx"
 	"github.com/hawa130/computility-cloud/internal/hookx"
 	"github.com/hawa130/computility-cloud/internal/rule"
@@ -54,7 +55,7 @@ func (PublicKey) Indexes() []ent.Index {
 func (PublicKey) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
-		entgql.QueryField().Directives(entgql.NewDirective("admin")),
+		gqlutils.PermissionDirective(publickey.Table),
 		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }

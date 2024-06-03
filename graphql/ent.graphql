@@ -475,7 +475,7 @@ type Query {
     Filtering options for PublicKeys returned from the connection.
     """
     where: PublicKeyWhereInput
-  ): PublicKeyConnection! @admin
+  ): PublicKeyConnection! @queryPermission(model: "public_keys")
   users(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -506,7 +506,7 @@ type Query {
     Filtering options for Users returned from the connection.
     """
     where: UserWhereInput
-  ): UserConnection! @admin
+  ): UserConnection! @queryPermission(model: "users")
 }
 """
 The builtin Time type

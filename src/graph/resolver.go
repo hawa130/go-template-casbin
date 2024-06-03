@@ -6,6 +6,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/hawa130/computility-cloud/ent"
 	"github.com/hawa130/computility-cloud/internal/auth"
+	"github.com/hawa130/computility-cloud/internal/perm"
 )
 
 // This file will not be regenerated automatically.
@@ -21,6 +22,13 @@ func NewSchema(client *ent.Client) graphql.ExecutableSchema {
 
 	c.Directives.Admin = func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
 		if err := auth.IsAdminReq(ctx); err != nil {
+			return nil, err
+		}
+		return next(ctx)
+	}
+
+	c.Directives.QueryPermission = func(ctx context.Context, obj interface{}, next graphql.Resolver, model string) (res interface{}, err error) {
+		if err := auth.EnforceReq(ctx, model, perm.OpRead); err != nil {
 			return nil, err
 		}
 		return next(ctx)
