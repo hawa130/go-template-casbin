@@ -71,12 +71,10 @@ func (PublicKey) Hooks() []ent.Hook {
 func (PublicKey) Privacy() privacy.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
-			rule.AllowAdmin(),
 			rule.AllowAuthorizedMutation(publickey.Table),
 			privacy.AlwaysDenyRule(),
 		},
 		Query: privacy.QueryPolicy{
-			rule.AllowAdmin(),
 			privacy.AlwaysAllowRule(),
 		},
 	}
