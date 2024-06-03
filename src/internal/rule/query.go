@@ -10,6 +10,19 @@ import (
 	"github.com/hawa130/computility-cloud/internal/rule/utils"
 )
 
+type queryAllFields struct{}
+
+func WithQueryAllFields(ctx context.Context) context.Context {
+	return context.WithValue(ctx, queryAllFields{}, true)
+}
+
+func IsQueryAllFields(ctx context.Context) bool {
+	if allow, exists := ctx.Value(queryAllFields{}).(bool); exists && allow {
+		return true
+	}
+	return false
+}
+
 // LimitQueryFields 限制查询字段
 func LimitQueryFields(fields ...string) privacy.QueryRule {
 	type EntQuery interface {
