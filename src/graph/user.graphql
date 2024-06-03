@@ -5,6 +5,6 @@ type Mutation {
 }
 
 extend type Mutation {
-    createChildren(id: ID, children: [CreateUserInput!]): User
-    removeChildren(id: ID, child: ID!): User
+    createChildren(id: ID, children: [CreateUserInput!]): User!
+    removeChildren(id: ID, child: ID!): User!
 }

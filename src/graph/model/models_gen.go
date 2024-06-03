@@ -61,6 +61,11 @@ type LoginPayload struct {
 	User  *ent.User `json:"user,omitempty"`
 }
 
+type RegisterInput struct {
+	Phone    string `json:"phone"`
+	Password string `json:"password"`
+}
+
 type UpdateCGroup struct {
 	New *CGroup `json:"new"`
 	Old *CGroup `json:"old"`

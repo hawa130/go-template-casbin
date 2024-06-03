@@ -47,3 +47,20 @@ func (r *mutationResolver) Login(ctx context.Context, input model.LoginInput) (*
 		User:  record,
 	}, nil
 }
+
+// Register is the resolver for the register field.
+func (r *mutationResolver) Register(ctx context.Context, input model.RegisterInput) (*ent.User, error) {
+	c := ent.FromContext(ctx)
+	exist, err := c.User.Query().Where(user.PhoneEQ(input.Phone)).Exist(database.WrapAllowContext(ctx))
+	if exist {
+		return nil, reqerr.ErrPhoneAlreadyExist
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return c.User.Create().
+		SetPhone(input.Phone).
+		SetPassword(input.Password).
+		Save(database.WrapAllowContext(ctx))
+}

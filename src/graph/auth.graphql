@@ -8,6 +8,12 @@ type LoginPayload {
   user: User
 }
 
+input RegisterInput {
+  phone: String!
+  password: String!
+}
+
 extend type Mutation {
-  login(input: LoginInput!): LoginPayload
+  login(input: LoginInput!): LoginPayload!
+  register(input: RegisterInput!): User!
 }
