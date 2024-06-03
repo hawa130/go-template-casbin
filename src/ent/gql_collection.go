@@ -7,8 +7,106 @@ import (
 
 	"entgo.io/contrib/entgql"
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/hawa130/computility-cloud/ent/casbinrule"
 	"github.com/hawa130/computility-cloud/ent/user"
 )
+
+// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
+func (cr *CasbinRuleQuery) CollectFields(ctx context.Context, satisfies ...string) (*CasbinRuleQuery, error) {
+	fc := graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return cr, nil
+	}
+	if err := cr.collectField(ctx, false, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+		return nil, err
+	}
+	return cr, nil
+}
+
+func (cr *CasbinRuleQuery) collectField(ctx context.Context, oneNode bool, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
+	path = append([]string(nil), path...)
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(casbinrule.Columns))
+		selectedFields = []string{casbinrule.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
+		switch field.Name {
+		case "ptype":
+			if _, ok := fieldSeen[casbinrule.FieldPtype]; !ok {
+				selectedFields = append(selectedFields, casbinrule.FieldPtype)
+				fieldSeen[casbinrule.FieldPtype] = struct{}{}
+			}
+		case "v0":
+			if _, ok := fieldSeen[casbinrule.FieldV0]; !ok {
+				selectedFields = append(selectedFields, casbinrule.FieldV0)
+				fieldSeen[casbinrule.FieldV0] = struct{}{}
+			}
+		case "v1":
+			if _, ok := fieldSeen[casbinrule.FieldV1]; !ok {
+				selectedFields = append(selectedFields, casbinrule.FieldV1)
+				fieldSeen[casbinrule.FieldV1] = struct{}{}
+			}
+		case "v2":
+			if _, ok := fieldSeen[casbinrule.FieldV2]; !ok {
+				selectedFields = append(selectedFields, casbinrule.FieldV2)
+				fieldSeen[casbinrule.FieldV2] = struct{}{}
+			}
+		case "v3":
+			if _, ok := fieldSeen[casbinrule.FieldV3]; !ok {
+				selectedFields = append(selectedFields, casbinrule.FieldV3)
+				fieldSeen[casbinrule.FieldV3] = struct{}{}
+			}
+		case "v4":
+			if _, ok := fieldSeen[casbinrule.FieldV4]; !ok {
+				selectedFields = append(selectedFields, casbinrule.FieldV4)
+				fieldSeen[casbinrule.FieldV4] = struct{}{}
+			}
+		case "v5":
+			if _, ok := fieldSeen[casbinrule.FieldV5]; !ok {
+				selectedFields = append(selectedFields, casbinrule.FieldV5)
+				fieldSeen[casbinrule.FieldV5] = struct{}{}
+			}
+		case "id":
+		case "__typename":
+		default:
+			unknownSeen = true
+		}
+	}
+	if !unknownSeen {
+		cr.Select(selectedFields...)
+	}
+	return nil
+}
+
+type casbinrulePaginateArgs struct {
+	first, last   *int
+	after, before *Cursor
+	opts          []CasbinRulePaginateOption
+}
+
+func newCasbinRulePaginateArgs(rv map[string]any) *casbinrulePaginateArgs {
+	args := &casbinrulePaginateArgs{}
+	if rv == nil {
+		return args
+	}
+	if v := rv[firstField]; v != nil {
+		args.first = v.(*int)
+	}
+	if v := rv[lastField]; v != nil {
+		args.last = v.(*int)
+	}
+	if v := rv[afterField]; v != nil {
+		args.after = v.(*Cursor)
+	}
+	if v := rv[beforeField]; v != nil {
+		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[whereField].(*CasbinRuleWhereInput); ok {
+		args.opts = append(args.opts, WithCasbinRuleFilter(v.Filter))
+	}
+	return args
+}
 
 // CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
 func (u *UserQuery) CollectFields(ctx context.Context, satisfies ...string) (*UserQuery, error) {

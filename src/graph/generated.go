@@ -87,6 +87,17 @@ type ComplexityRoot struct {
 		Sub func(childComplexity int) int
 	}
 
+	CasbinRule struct {
+		ID    func(childComplexity int) int
+		Ptype func(childComplexity int) int
+		V0    func(childComplexity int) int
+		V1    func(childComplexity int) int
+		V2    func(childComplexity int) int
+		V3    func(childComplexity int) int
+		V4    func(childComplexity int) int
+		V5    func(childComplexity int) int
+	}
+
 	LoginPayload struct {
 		Token func(childComplexity int) int
 		User  func(childComplexity int) int
@@ -330,6 +341,62 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CPolicyResult.Sub(childComplexity), true
+
+	case "CasbinRule.id":
+		if e.complexity.CasbinRule.ID == nil {
+			break
+		}
+
+		return e.complexity.CasbinRule.ID(childComplexity), true
+
+	case "CasbinRule.ptype":
+		if e.complexity.CasbinRule.Ptype == nil {
+			break
+		}
+
+		return e.complexity.CasbinRule.Ptype(childComplexity), true
+
+	case "CasbinRule.v0":
+		if e.complexity.CasbinRule.V0 == nil {
+			break
+		}
+
+		return e.complexity.CasbinRule.V0(childComplexity), true
+
+	case "CasbinRule.v1":
+		if e.complexity.CasbinRule.V1 == nil {
+			break
+		}
+
+		return e.complexity.CasbinRule.V1(childComplexity), true
+
+	case "CasbinRule.v2":
+		if e.complexity.CasbinRule.V2 == nil {
+			break
+		}
+
+		return e.complexity.CasbinRule.V2(childComplexity), true
+
+	case "CasbinRule.v3":
+		if e.complexity.CasbinRule.V3 == nil {
+			break
+		}
+
+		return e.complexity.CasbinRule.V3(childComplexity), true
+
+	case "CasbinRule.v4":
+		if e.complexity.CasbinRule.V4 == nil {
+			break
+		}
+
+		return e.complexity.CasbinRule.V4(childComplexity), true
+
+	case "CasbinRule.v5":
+		if e.complexity.CasbinRule.V5 == nil {
+			break
+		}
+
+		return e.complexity.CasbinRule.V5(childComplexity), true
 
 	case "LoginPayload.token":
 		if e.complexity.LoginPayload.Token == nil {
@@ -847,6 +914,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCGroupInput,
 		ec.unmarshalInputCRequestInput,
+		ec.unmarshalInputCasbinRuleWhereInput,
 		ec.unmarshalInputCreateUserInput,
 		ec.unmarshalInputLoginInput,
 		ec.unmarshalInputRegisterInput,
@@ -2284,6 +2352,358 @@ func (ec *executionContext) fieldContext_CPolicyResult_ok(_ context.Context, fie
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CasbinRule_id(ctx context.Context, field graphql.CollectedField, obj *ent.CasbinRule) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CasbinRule_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(xid.ID)
+	fc.Result = res
+	return ec.marshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CasbinRule_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CasbinRule",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CasbinRule_ptype(ctx context.Context, field graphql.CollectedField, obj *ent.CasbinRule) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CasbinRule_ptype(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Ptype, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CasbinRule_ptype(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CasbinRule",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CasbinRule_v0(ctx context.Context, field graphql.CollectedField, obj *ent.CasbinRule) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CasbinRule_v0(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.V0, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CasbinRule_v0(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CasbinRule",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CasbinRule_v1(ctx context.Context, field graphql.CollectedField, obj *ent.CasbinRule) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CasbinRule_v1(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.V1, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CasbinRule_v1(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CasbinRule",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CasbinRule_v2(ctx context.Context, field graphql.CollectedField, obj *ent.CasbinRule) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CasbinRule_v2(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.V2, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CasbinRule_v2(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CasbinRule",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CasbinRule_v3(ctx context.Context, field graphql.CollectedField, obj *ent.CasbinRule) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CasbinRule_v3(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.V3, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CasbinRule_v3(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CasbinRule",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CasbinRule_v4(ctx context.Context, field graphql.CollectedField, obj *ent.CasbinRule) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CasbinRule_v4(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.V4, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CasbinRule_v4(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CasbinRule",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CasbinRule_v5(ctx context.Context, field graphql.CollectedField, obj *ent.CasbinRule) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CasbinRule_v5(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.V5, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CasbinRule_v5(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CasbinRule",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -7509,6 +7929,740 @@ func (ec *executionContext) unmarshalInputCRequestInput(ctx context.Context, obj
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCasbinRuleWhereInput(ctx context.Context, obj interface{}) (ent.CasbinRuleWhereInput, error) {
+	var it ent.CasbinRuleWhereInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "ptype", "ptypeNEQ", "ptypeIn", "ptypeNotIn", "ptypeGT", "ptypeGTE", "ptypeLT", "ptypeLTE", "ptypeContains", "ptypeHasPrefix", "ptypeHasSuffix", "ptypeEqualFold", "ptypeContainsFold", "v0", "v0NEQ", "v0In", "v0NotIn", "v0GT", "v0GTE", "v0LT", "v0LTE", "v0Contains", "v0HasPrefix", "v0HasSuffix", "v0EqualFold", "v0ContainsFold", "v1", "v1NEQ", "v1In", "v1NotIn", "v1GT", "v1GTE", "v1LT", "v1LTE", "v1Contains", "v1HasPrefix", "v1HasSuffix", "v1EqualFold", "v1ContainsFold", "v2", "v2NEQ", "v2In", "v2NotIn", "v2GT", "v2GTE", "v2LT", "v2LTE", "v2Contains", "v2HasPrefix", "v2HasSuffix", "v2EqualFold", "v2ContainsFold", "v3", "v3NEQ", "v3In", "v3NotIn", "v3GT", "v3GTE", "v3LT", "v3LTE", "v3Contains", "v3HasPrefix", "v3HasSuffix", "v3EqualFold", "v3ContainsFold", "v4", "v4NEQ", "v4In", "v4NotIn", "v4GT", "v4GTE", "v4LT", "v4LTE", "v4Contains", "v4HasPrefix", "v4HasSuffix", "v4EqualFold", "v4ContainsFold", "v5", "v5NEQ", "v5In", "v5NotIn", "v5GT", "v5GTE", "v5LT", "v5LTE", "v5Contains", "v5HasPrefix", "v5HasSuffix", "v5EqualFold", "v5ContainsFold"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "not":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
+			data, err := ec.unmarshalOCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Not = data
+		case "and":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
+			data, err := ec.unmarshalOCasbinRuleWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInputᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.And = data
+		case "or":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
+			data, err := ec.unmarshalOCasbinRuleWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInputᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Or = data
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "idNEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNEQ"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.IDNEQ = data
+		case "idIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idIn"))
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋrsᚋxidᚐIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.IDIn = data
+		case "idNotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idNotIn"))
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋrsᚋxidᚐIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.IDNotIn = data
+		case "idGT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGT"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.IDGT = data
+		case "idGTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idGTE"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.IDGTE = data
+		case "idLT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLT"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.IDLT = data
+		case "idLTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("idLTE"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.IDLTE = data
+		case "ptype":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptype"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Ptype = data
+		case "ptypeNEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeNEQ"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeNEQ = data
+		case "ptypeIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeIn"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeIn = data
+		case "ptypeNotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeNotIn"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeNotIn = data
+		case "ptypeGT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeGT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeGT = data
+		case "ptypeGTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeGTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeGTE = data
+		case "ptypeLT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeLT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeLT = data
+		case "ptypeLTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeLTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeLTE = data
+		case "ptypeContains":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeContains = data
+		case "ptypeHasPrefix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeHasPrefix = data
+		case "ptypeHasSuffix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeHasSuffix = data
+		case "ptypeEqualFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeEqualFold = data
+		case "ptypeContainsFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ptypeContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PtypeContainsFold = data
+		case "v0":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0 = data
+		case "v0NEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0NEQ"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0NEQ = data
+		case "v0In":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0In"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0In = data
+		case "v0NotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0NotIn"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0NotIn = data
+		case "v0GT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0GT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0GT = data
+		case "v0GTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0GTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0GTE = data
+		case "v0LT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0LT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0LT = data
+		case "v0LTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0LTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0LTE = data
+		case "v0Contains":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0Contains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0Contains = data
+		case "v0HasPrefix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0HasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0HasPrefix = data
+		case "v0HasSuffix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0HasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0HasSuffix = data
+		case "v0EqualFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0EqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0EqualFold = data
+		case "v0ContainsFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v0ContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V0ContainsFold = data
+		case "v1":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1 = data
+		case "v1NEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1NEQ"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1NEQ = data
+		case "v1In":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1In"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1In = data
+		case "v1NotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1NotIn"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1NotIn = data
+		case "v1GT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1GT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1GT = data
+		case "v1GTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1GTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1GTE = data
+		case "v1LT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1LT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1LT = data
+		case "v1LTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1LTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1LTE = data
+		case "v1Contains":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1Contains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1Contains = data
+		case "v1HasPrefix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1HasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1HasPrefix = data
+		case "v1HasSuffix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1HasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1HasSuffix = data
+		case "v1EqualFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1EqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1EqualFold = data
+		case "v1ContainsFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v1ContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V1ContainsFold = data
+		case "v2":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2 = data
+		case "v2NEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2NEQ"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2NEQ = data
+		case "v2In":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2In"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2In = data
+		case "v2NotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2NotIn"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2NotIn = data
+		case "v2GT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2GT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2GT = data
+		case "v2GTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2GTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2GTE = data
+		case "v2LT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2LT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2LT = data
+		case "v2LTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2LTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2LTE = data
+		case "v2Contains":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2Contains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2Contains = data
+		case "v2HasPrefix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2HasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2HasPrefix = data
+		case "v2HasSuffix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2HasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2HasSuffix = data
+		case "v2EqualFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2EqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2EqualFold = data
+		case "v2ContainsFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v2ContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V2ContainsFold = data
+		case "v3":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3 = data
+		case "v3NEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3NEQ"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3NEQ = data
+		case "v3In":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3In"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3In = data
+		case "v3NotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3NotIn"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3NotIn = data
+		case "v3GT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3GT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3GT = data
+		case "v3GTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3GTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3GTE = data
+		case "v3LT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3LT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3LT = data
+		case "v3LTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3LTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3LTE = data
+		case "v3Contains":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3Contains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3Contains = data
+		case "v3HasPrefix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3HasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3HasPrefix = data
+		case "v3HasSuffix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3HasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3HasSuffix = data
+		case "v3EqualFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3EqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3EqualFold = data
+		case "v3ContainsFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v3ContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V3ContainsFold = data
+		case "v4":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4 = data
+		case "v4NEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4NEQ"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4NEQ = data
+		case "v4In":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4In"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4In = data
+		case "v4NotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4NotIn"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4NotIn = data
+		case "v4GT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4GT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4GT = data
+		case "v4GTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4GTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4GTE = data
+		case "v4LT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4LT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4LT = data
+		case "v4LTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4LTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4LTE = data
+		case "v4Contains":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4Contains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4Contains = data
+		case "v4HasPrefix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4HasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4HasPrefix = data
+		case "v4HasSuffix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4HasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4HasSuffix = data
+		case "v4EqualFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4EqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4EqualFold = data
+		case "v4ContainsFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v4ContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V4ContainsFold = data
+		case "v5":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5 = data
+		case "v5NEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5NEQ"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5NEQ = data
+		case "v5In":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5In"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5In = data
+		case "v5NotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5NotIn"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5NotIn = data
+		case "v5GT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5GT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5GT = data
+		case "v5GTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5GTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5GTE = data
+		case "v5LT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5LT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5LT = data
+		case "v5LTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5LTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5LTE = data
+		case "v5Contains":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5Contains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5Contains = data
+		case "v5HasPrefix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5HasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5HasPrefix = data
+		case "v5HasSuffix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5HasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5HasSuffix = data
+		case "v5EqualFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5EqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5EqualFold = data
+		case "v5ContainsFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("v5ContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.V5ContainsFold = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, obj interface{}) (ent.CreateUserInput, error) {
 	var it ent.CreateUserInput
 	asMap := map[string]interface{}{}
@@ -8431,6 +9585,11 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
+	case *ent.CasbinRule:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._CasbinRule(ctx, sel, obj)
 	case *ent.User:
 		if obj == nil {
 			return graphql.Null
@@ -8697,6 +9856,80 @@ func (ec *executionContext) _CPolicyResult(ctx context.Context, sel ast.Selectio
 			}
 		case "ok":
 			out.Values[i] = ec._CPolicyResult_ok(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var casbinRuleImplementors = []string{"CasbinRule", "Node"}
+
+func (ec *executionContext) _CasbinRule(ctx context.Context, sel ast.SelectionSet, obj *ent.CasbinRule) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, casbinRuleImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CasbinRule")
+		case "id":
+			out.Values[i] = ec._CasbinRule_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "ptype":
+			out.Values[i] = ec._CasbinRule_ptype(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "v0":
+			out.Values[i] = ec._CasbinRule_v0(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "v1":
+			out.Values[i] = ec._CasbinRule_v1(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "v2":
+			out.Values[i] = ec._CasbinRule_v2(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "v3":
+			out.Values[i] = ec._CasbinRule_v3(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "v4":
+			out.Values[i] = ec._CasbinRule_v4(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "v5":
+			out.Values[i] = ec._CasbinRule_v5(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -9953,6 +11186,11 @@ func (ec *executionContext) unmarshalNCRequestInput2ᚖgithubᚗcomᚋhawa130ᚋ
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInput(ctx context.Context, v interface{}) (*ent.CasbinRuleWhereInput, error) {
+	res, err := ec.unmarshalInputCasbinRuleWhereInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInput(ctx context.Context, v interface{}) (ent.CreateUserInput, error) {
 	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -10599,6 +11837,34 @@ func (ec *executionContext) marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋcompu
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalOCasbinRuleWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.CasbinRuleWhereInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*ent.CasbinRuleWhereInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalOCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInput(ctx context.Context, v interface{}) (*ent.CasbinRuleWhereInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputCasbinRuleWhereInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOCreateUserInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInputᚄ(ctx context.Context, v interface{}) ([]*ent.CreateUserInput, error) {

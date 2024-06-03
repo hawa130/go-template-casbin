@@ -9,6 +9,7 @@ import (
 	"entgo.io/contrib/entgql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/hashicorp/go-multierror"
+	"github.com/hawa130/computility-cloud/ent/casbinrule"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/rs/xid"
 )
@@ -17,6 +18,11 @@ import (
 type Noder interface {
 	IsNode()
 }
+
+var casbinruleImplementors = []string{"CasbinRule", "Node"}
+
+// IsNode implements the Node interface check for GQLGen.
+func (*CasbinRule) IsNode() {}
 
 var userImplementors = []string{"User", "Node"}
 
@@ -81,6 +87,15 @@ func (c *Client) Noder(ctx context.Context, id xid.ID, opts ...NodeOption) (_ No
 
 func (c *Client) noder(ctx context.Context, table string, id xid.ID) (Noder, error) {
 	switch table {
+	case casbinrule.Table:
+		query := c.CasbinRule.Query().
+			Where(casbinrule.ID(id))
+		if fc := graphql.GetFieldContext(ctx); fc != nil {
+			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, casbinruleImplementors...); err != nil {
+				return nil, err
+			}
+		}
+		return query.Only(ctx)
 	case user.Table:
 		query := c.User.Query().
 			Where(user.ID(id))
@@ -163,6 +178,22 @@ func (c *Client) noders(ctx context.Context, table string, ids []xid.ID) ([]Node
 		idmap[id] = append(idmap[id], &noders[i])
 	}
 	switch table {
+	case casbinrule.Table:
+		query := c.CasbinRule.Query().
+			Where(casbinrule.IDIn(ids...))
+		query, err := query.CollectFields(ctx, casbinruleImplementors...)
+		if err != nil {
+			return nil, err
+		}
+		nodes, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
 	case user.Table:
 		query := c.User.Query().
 			Where(user.IDIn(ids...))

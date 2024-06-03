@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/casbin/casbin/v2"
-	entadapter "github.com/casbin/ent-adapter"
 	zaplogger "github.com/casbin/zap-logger/v2"
+	entadapter "github.com/hawa130/computility-cloud/internal/adapter"
 	"github.com/hawa130/computility-cloud/internal/logger"
 	"go.uber.org/zap"
 )

@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/errcode"
+	"github.com/hawa130/computility-cloud/ent/casbinrule"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/rs/xid"
 	"github.com/vektah/gqlparser/v2/gqlerror"
@@ -97,6 +98,255 @@ func paginateLimit(first, last *int) int {
 		limit = *last + 1
 	}
 	return limit
+}
+
+// CasbinRuleEdge is the edge representation of CasbinRule.
+type CasbinRuleEdge struct {
+	Node   *CasbinRule `json:"node"`
+	Cursor Cursor      `json:"cursor"`
+}
+
+// CasbinRuleConnection is the connection containing edges to CasbinRule.
+type CasbinRuleConnection struct {
+	Edges      []*CasbinRuleEdge `json:"edges"`
+	PageInfo   PageInfo          `json:"pageInfo"`
+	TotalCount int               `json:"totalCount"`
+}
+
+func (c *CasbinRuleConnection) build(nodes []*CasbinRule, pager *casbinrulePager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
+	if first != nil && *first+1 == len(nodes) {
+		c.PageInfo.HasNextPage = true
+		nodes = nodes[:len(nodes)-1]
+	} else if last != nil && *last+1 == len(nodes) {
+		c.PageInfo.HasPreviousPage = true
+		nodes = nodes[:len(nodes)-1]
+	}
+	var nodeAt func(int) *CasbinRule
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *CasbinRule {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *CasbinRule {
+			return nodes[i]
+		}
+	}
+	c.Edges = make([]*CasbinRuleEdge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		c.Edges[i] = &CasbinRuleEdge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+	if l := len(c.Edges); l > 0 {
+		c.PageInfo.StartCursor = &c.Edges[0].Cursor
+		c.PageInfo.EndCursor = &c.Edges[l-1].Cursor
+	}
+	if c.TotalCount == 0 {
+		c.TotalCount = len(nodes)
+	}
+}
+
+// CasbinRulePaginateOption enables pagination customization.
+type CasbinRulePaginateOption func(*casbinrulePager) error
+
+// WithCasbinRuleOrder configures pagination ordering.
+func WithCasbinRuleOrder(order *CasbinRuleOrder) CasbinRulePaginateOption {
+	if order == nil {
+		order = DefaultCasbinRuleOrder
+	}
+	o := *order
+	return func(pager *casbinrulePager) error {
+		if err := o.Direction.Validate(); err != nil {
+			return err
+		}
+		if o.Field == nil {
+			o.Field = DefaultCasbinRuleOrder.Field
+		}
+		pager.order = &o
+		return nil
+	}
+}
+
+// WithCasbinRuleFilter configures pagination filter.
+func WithCasbinRuleFilter(filter func(*CasbinRuleQuery) (*CasbinRuleQuery, error)) CasbinRulePaginateOption {
+	return func(pager *casbinrulePager) error {
+		if filter == nil {
+			return errors.New("CasbinRuleQuery filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type casbinrulePager struct {
+	reverse bool
+	order   *CasbinRuleOrder
+	filter  func(*CasbinRuleQuery) (*CasbinRuleQuery, error)
+}
+
+func newCasbinRulePager(opts []CasbinRulePaginateOption, reverse bool) (*casbinrulePager, error) {
+	pager := &casbinrulePager{reverse: reverse}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	if pager.order == nil {
+		pager.order = DefaultCasbinRuleOrder
+	}
+	return pager, nil
+}
+
+func (p *casbinrulePager) applyFilter(query *CasbinRuleQuery) (*CasbinRuleQuery, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *casbinrulePager) toCursor(cr *CasbinRule) Cursor {
+	return p.order.Field.toCursor(cr)
+}
+
+func (p *casbinrulePager) applyCursors(query *CasbinRuleQuery, after, before *Cursor) (*CasbinRuleQuery, error) {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	for _, predicate := range entgql.CursorsPredicate(after, before, DefaultCasbinRuleOrder.Field.column, p.order.Field.column, direction) {
+		query = query.Where(predicate)
+	}
+	return query, nil
+}
+
+func (p *casbinrulePager) applyOrder(query *CasbinRuleQuery) *CasbinRuleQuery {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	query = query.Order(p.order.Field.toTerm(direction.OrderTermOption()))
+	if p.order.Field != DefaultCasbinRuleOrder.Field {
+		query = query.Order(DefaultCasbinRuleOrder.Field.toTerm(direction.OrderTermOption()))
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
+	return query
+}
+
+func (p *casbinrulePager) orderExpr(query *CasbinRuleQuery) sql.Querier {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
+	return sql.ExprFunc(func(b *sql.Builder) {
+		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
+		if p.order.Field != DefaultCasbinRuleOrder.Field {
+			b.Comma().Ident(DefaultCasbinRuleOrder.Field.column).Pad().WriteString(string(direction))
+		}
+	})
+}
+
+// Paginate executes the query and returns a relay based cursor connection to CasbinRule.
+func (cr *CasbinRuleQuery) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...CasbinRulePaginateOption,
+) (*CasbinRuleConnection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newCasbinRulePager(opts, last != nil)
+	if err != nil {
+		return nil, err
+	}
+	if cr, err = pager.applyFilter(cr); err != nil {
+		return nil, err
+	}
+	conn := &CasbinRuleConnection{Edges: []*CasbinRuleEdge{}}
+	ignoredEdges := !hasCollectedField(ctx, edgesField)
+	if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
+		hasPagination := after != nil || first != nil || before != nil || last != nil
+		if hasPagination || ignoredEdges {
+			c := cr.Clone()
+			c.ctx.Fields = nil
+			if conn.TotalCount, err = c.Count(ctx); err != nil {
+				return nil, err
+			}
+			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
+			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
+		}
+	}
+	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
+		return conn, nil
+	}
+	if cr, err = pager.applyCursors(cr, after, before); err != nil {
+		return nil, err
+	}
+	limit := paginateLimit(first, last)
+	if limit != 0 {
+		cr.Limit(limit)
+	}
+	if field := collectedField(ctx, edgesField, nodeField); field != nil {
+		if err := cr.collectField(ctx, limit == 1, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
+			return nil, err
+		}
+	}
+	cr = pager.applyOrder(cr)
+	nodes, err := cr.All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	conn.build(nodes, pager, after, first, before, last)
+	return conn, nil
+}
+
+// CasbinRuleOrderField defines the ordering field of CasbinRule.
+type CasbinRuleOrderField struct {
+	// Value extracts the ordering value from the given CasbinRule.
+	Value    func(*CasbinRule) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) casbinrule.OrderOption
+	toCursor func(*CasbinRule) Cursor
+}
+
+// CasbinRuleOrder defines the ordering of CasbinRule.
+type CasbinRuleOrder struct {
+	Direction OrderDirection        `json:"direction"`
+	Field     *CasbinRuleOrderField `json:"field"`
+}
+
+// DefaultCasbinRuleOrder is the default ordering of CasbinRule.
+var DefaultCasbinRuleOrder = &CasbinRuleOrder{
+	Direction: entgql.OrderDirectionAsc,
+	Field: &CasbinRuleOrderField{
+		Value: func(cr *CasbinRule) (ent.Value, error) {
+			return cr.ID, nil
+		},
+		column: casbinrule.FieldID,
+		toTerm: casbinrule.ByID,
+		toCursor: func(cr *CasbinRule) Cursor {
+			return Cursor{ID: cr.ID}
+		},
+	},
+}
+
+// ToEdge converts CasbinRule into CasbinRuleEdge.
+func (cr *CasbinRule) ToEdge(order *CasbinRuleOrder) *CasbinRuleEdge {
+	if order == nil {
+		order = DefaultCasbinRuleOrder
+	}
+	return &CasbinRuleEdge{
+		Node:   cr,
+		Cursor: order.Field.toCursor(cr),
+	}
 }
 
 // UserEdge is the edge representation of User.

@@ -7,10 +7,513 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/hawa130/computility-cloud/ent/casbinrule"
 	"github.com/hawa130/computility-cloud/ent/predicate"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/rs/xid"
 )
+
+// CasbinRuleWhereInput represents a where input for filtering CasbinRule queries.
+type CasbinRuleWhereInput struct {
+	Predicates []predicate.CasbinRule  `json:"-"`
+	Not        *CasbinRuleWhereInput   `json:"not,omitempty"`
+	Or         []*CasbinRuleWhereInput `json:"or,omitempty"`
+	And        []*CasbinRuleWhereInput `json:"and,omitempty"`
+
+	// "id" field predicates.
+	ID      *xid.ID  `json:"id,omitempty"`
+	IDNEQ   *xid.ID  `json:"idNEQ,omitempty"`
+	IDIn    []xid.ID `json:"idIn,omitempty"`
+	IDNotIn []xid.ID `json:"idNotIn,omitempty"`
+	IDGT    *xid.ID  `json:"idGT,omitempty"`
+	IDGTE   *xid.ID  `json:"idGTE,omitempty"`
+	IDLT    *xid.ID  `json:"idLT,omitempty"`
+	IDLTE   *xid.ID  `json:"idLTE,omitempty"`
+
+	// "Ptype" field predicates.
+	Ptype             *string  `json:"ptype,omitempty"`
+	PtypeNEQ          *string  `json:"ptypeNEQ,omitempty"`
+	PtypeIn           []string `json:"ptypeIn,omitempty"`
+	PtypeNotIn        []string `json:"ptypeNotIn,omitempty"`
+	PtypeGT           *string  `json:"ptypeGT,omitempty"`
+	PtypeGTE          *string  `json:"ptypeGTE,omitempty"`
+	PtypeLT           *string  `json:"ptypeLT,omitempty"`
+	PtypeLTE          *string  `json:"ptypeLTE,omitempty"`
+	PtypeContains     *string  `json:"ptypeContains,omitempty"`
+	PtypeHasPrefix    *string  `json:"ptypeHasPrefix,omitempty"`
+	PtypeHasSuffix    *string  `json:"ptypeHasSuffix,omitempty"`
+	PtypeEqualFold    *string  `json:"ptypeEqualFold,omitempty"`
+	PtypeContainsFold *string  `json:"ptypeContainsFold,omitempty"`
+
+	// "V0" field predicates.
+	V0             *string  `json:"v0,omitempty"`
+	V0NEQ          *string  `json:"v0NEQ,omitempty"`
+	V0In           []string `json:"v0In,omitempty"`
+	V0NotIn        []string `json:"v0NotIn,omitempty"`
+	V0GT           *string  `json:"v0GT,omitempty"`
+	V0GTE          *string  `json:"v0GTE,omitempty"`
+	V0LT           *string  `json:"v0LT,omitempty"`
+	V0LTE          *string  `json:"v0LTE,omitempty"`
+	V0Contains     *string  `json:"v0Contains,omitempty"`
+	V0HasPrefix    *string  `json:"v0HasPrefix,omitempty"`
+	V0HasSuffix    *string  `json:"v0HasSuffix,omitempty"`
+	V0EqualFold    *string  `json:"v0EqualFold,omitempty"`
+	V0ContainsFold *string  `json:"v0ContainsFold,omitempty"`
+
+	// "V1" field predicates.
+	V1             *string  `json:"v1,omitempty"`
+	V1NEQ          *string  `json:"v1NEQ,omitempty"`
+	V1In           []string `json:"v1In,omitempty"`
+	V1NotIn        []string `json:"v1NotIn,omitempty"`
+	V1GT           *string  `json:"v1GT,omitempty"`
+	V1GTE          *string  `json:"v1GTE,omitempty"`
+	V1LT           *string  `json:"v1LT,omitempty"`
+	V1LTE          *string  `json:"v1LTE,omitempty"`
+	V1Contains     *string  `json:"v1Contains,omitempty"`
+	V1HasPrefix    *string  `json:"v1HasPrefix,omitempty"`
+	V1HasSuffix    *string  `json:"v1HasSuffix,omitempty"`
+	V1EqualFold    *string  `json:"v1EqualFold,omitempty"`
+	V1ContainsFold *string  `json:"v1ContainsFold,omitempty"`
+
+	// "V2" field predicates.
+	V2             *string  `json:"v2,omitempty"`
+	V2NEQ          *string  `json:"v2NEQ,omitempty"`
+	V2In           []string `json:"v2In,omitempty"`
+	V2NotIn        []string `json:"v2NotIn,omitempty"`
+	V2GT           *string  `json:"v2GT,omitempty"`
+	V2GTE          *string  `json:"v2GTE,omitempty"`
+	V2LT           *string  `json:"v2LT,omitempty"`
+	V2LTE          *string  `json:"v2LTE,omitempty"`
+	V2Contains     *string  `json:"v2Contains,omitempty"`
+	V2HasPrefix    *string  `json:"v2HasPrefix,omitempty"`
+	V2HasSuffix    *string  `json:"v2HasSuffix,omitempty"`
+	V2EqualFold    *string  `json:"v2EqualFold,omitempty"`
+	V2ContainsFold *string  `json:"v2ContainsFold,omitempty"`
+
+	// "V3" field predicates.
+	V3             *string  `json:"v3,omitempty"`
+	V3NEQ          *string  `json:"v3NEQ,omitempty"`
+	V3In           []string `json:"v3In,omitempty"`
+	V3NotIn        []string `json:"v3NotIn,omitempty"`
+	V3GT           *string  `json:"v3GT,omitempty"`
+	V3GTE          *string  `json:"v3GTE,omitempty"`
+	V3LT           *string  `json:"v3LT,omitempty"`
+	V3LTE          *string  `json:"v3LTE,omitempty"`
+	V3Contains     *string  `json:"v3Contains,omitempty"`
+	V3HasPrefix    *string  `json:"v3HasPrefix,omitempty"`
+	V3HasSuffix    *string  `json:"v3HasSuffix,omitempty"`
+	V3EqualFold    *string  `json:"v3EqualFold,omitempty"`
+	V3ContainsFold *string  `json:"v3ContainsFold,omitempty"`
+
+	// "V4" field predicates.
+	V4             *string  `json:"v4,omitempty"`
+	V4NEQ          *string  `json:"v4NEQ,omitempty"`
+	V4In           []string `json:"v4In,omitempty"`
+	V4NotIn        []string `json:"v4NotIn,omitempty"`
+	V4GT           *string  `json:"v4GT,omitempty"`
+	V4GTE          *string  `json:"v4GTE,omitempty"`
+	V4LT           *string  `json:"v4LT,omitempty"`
+	V4LTE          *string  `json:"v4LTE,omitempty"`
+	V4Contains     *string  `json:"v4Contains,omitempty"`
+	V4HasPrefix    *string  `json:"v4HasPrefix,omitempty"`
+	V4HasSuffix    *string  `json:"v4HasSuffix,omitempty"`
+	V4EqualFold    *string  `json:"v4EqualFold,omitempty"`
+	V4ContainsFold *string  `json:"v4ContainsFold,omitempty"`
+
+	// "V5" field predicates.
+	V5             *string  `json:"v5,omitempty"`
+	V5NEQ          *string  `json:"v5NEQ,omitempty"`
+	V5In           []string `json:"v5In,omitempty"`
+	V5NotIn        []string `json:"v5NotIn,omitempty"`
+	V5GT           *string  `json:"v5GT,omitempty"`
+	V5GTE          *string  `json:"v5GTE,omitempty"`
+	V5LT           *string  `json:"v5LT,omitempty"`
+	V5LTE          *string  `json:"v5LTE,omitempty"`
+	V5Contains     *string  `json:"v5Contains,omitempty"`
+	V5HasPrefix    *string  `json:"v5HasPrefix,omitempty"`
+	V5HasSuffix    *string  `json:"v5HasSuffix,omitempty"`
+	V5EqualFold    *string  `json:"v5EqualFold,omitempty"`
+	V5ContainsFold *string  `json:"v5ContainsFold,omitempty"`
+}
+
+// AddPredicates adds custom predicates to the where input to be used during the filtering phase.
+func (i *CasbinRuleWhereInput) AddPredicates(predicates ...predicate.CasbinRule) {
+	i.Predicates = append(i.Predicates, predicates...)
+}
+
+// Filter applies the CasbinRuleWhereInput filter on the CasbinRuleQuery builder.
+func (i *CasbinRuleWhereInput) Filter(q *CasbinRuleQuery) (*CasbinRuleQuery, error) {
+	if i == nil {
+		return q, nil
+	}
+	p, err := i.P()
+	if err != nil {
+		if err == ErrEmptyCasbinRuleWhereInput {
+			return q, nil
+		}
+		return nil, err
+	}
+	return q.Where(p), nil
+}
+
+// ErrEmptyCasbinRuleWhereInput is returned in case the CasbinRuleWhereInput is empty.
+var ErrEmptyCasbinRuleWhereInput = errors.New("ent: empty predicate CasbinRuleWhereInput")
+
+// P returns a predicate for filtering casbinrules.
+// An error is returned if the input is empty or invalid.
+func (i *CasbinRuleWhereInput) P() (predicate.CasbinRule, error) {
+	var predicates []predicate.CasbinRule
+	if i.Not != nil {
+		p, err := i.Not.P()
+		if err != nil {
+			return nil, fmt.Errorf("%w: field 'not'", err)
+		}
+		predicates = append(predicates, casbinrule.Not(p))
+	}
+	switch n := len(i.Or); {
+	case n == 1:
+		p, err := i.Or[0].P()
+		if err != nil {
+			return nil, fmt.Errorf("%w: field 'or'", err)
+		}
+		predicates = append(predicates, p)
+	case n > 1:
+		or := make([]predicate.CasbinRule, 0, n)
+		for _, w := range i.Or {
+			p, err := w.P()
+			if err != nil {
+				return nil, fmt.Errorf("%w: field 'or'", err)
+			}
+			or = append(or, p)
+		}
+		predicates = append(predicates, casbinrule.Or(or...))
+	}
+	switch n := len(i.And); {
+	case n == 1:
+		p, err := i.And[0].P()
+		if err != nil {
+			return nil, fmt.Errorf("%w: field 'and'", err)
+		}
+		predicates = append(predicates, p)
+	case n > 1:
+		and := make([]predicate.CasbinRule, 0, n)
+		for _, w := range i.And {
+			p, err := w.P()
+			if err != nil {
+				return nil, fmt.Errorf("%w: field 'and'", err)
+			}
+			and = append(and, p)
+		}
+		predicates = append(predicates, casbinrule.And(and...))
+	}
+	predicates = append(predicates, i.Predicates...)
+	if i.ID != nil {
+		predicates = append(predicates, casbinrule.IDEQ(*i.ID))
+	}
+	if i.IDNEQ != nil {
+		predicates = append(predicates, casbinrule.IDNEQ(*i.IDNEQ))
+	}
+	if len(i.IDIn) > 0 {
+		predicates = append(predicates, casbinrule.IDIn(i.IDIn...))
+	}
+	if len(i.IDNotIn) > 0 {
+		predicates = append(predicates, casbinrule.IDNotIn(i.IDNotIn...))
+	}
+	if i.IDGT != nil {
+		predicates = append(predicates, casbinrule.IDGT(*i.IDGT))
+	}
+	if i.IDGTE != nil {
+		predicates = append(predicates, casbinrule.IDGTE(*i.IDGTE))
+	}
+	if i.IDLT != nil {
+		predicates = append(predicates, casbinrule.IDLT(*i.IDLT))
+	}
+	if i.IDLTE != nil {
+		predicates = append(predicates, casbinrule.IDLTE(*i.IDLTE))
+	}
+	if i.Ptype != nil {
+		predicates = append(predicates, casbinrule.PtypeEQ(*i.Ptype))
+	}
+	if i.PtypeNEQ != nil {
+		predicates = append(predicates, casbinrule.PtypeNEQ(*i.PtypeNEQ))
+	}
+	if len(i.PtypeIn) > 0 {
+		predicates = append(predicates, casbinrule.PtypeIn(i.PtypeIn...))
+	}
+	if len(i.PtypeNotIn) > 0 {
+		predicates = append(predicates, casbinrule.PtypeNotIn(i.PtypeNotIn...))
+	}
+	if i.PtypeGT != nil {
+		predicates = append(predicates, casbinrule.PtypeGT(*i.PtypeGT))
+	}
+	if i.PtypeGTE != nil {
+		predicates = append(predicates, casbinrule.PtypeGTE(*i.PtypeGTE))
+	}
+	if i.PtypeLT != nil {
+		predicates = append(predicates, casbinrule.PtypeLT(*i.PtypeLT))
+	}
+	if i.PtypeLTE != nil {
+		predicates = append(predicates, casbinrule.PtypeLTE(*i.PtypeLTE))
+	}
+	if i.PtypeContains != nil {
+		predicates = append(predicates, casbinrule.PtypeContains(*i.PtypeContains))
+	}
+	if i.PtypeHasPrefix != nil {
+		predicates = append(predicates, casbinrule.PtypeHasPrefix(*i.PtypeHasPrefix))
+	}
+	if i.PtypeHasSuffix != nil {
+		predicates = append(predicates, casbinrule.PtypeHasSuffix(*i.PtypeHasSuffix))
+	}
+	if i.PtypeEqualFold != nil {
+		predicates = append(predicates, casbinrule.PtypeEqualFold(*i.PtypeEqualFold))
+	}
+	if i.PtypeContainsFold != nil {
+		predicates = append(predicates, casbinrule.PtypeContainsFold(*i.PtypeContainsFold))
+	}
+	if i.V0 != nil {
+		predicates = append(predicates, casbinrule.V0EQ(*i.V0))
+	}
+	if i.V0NEQ != nil {
+		predicates = append(predicates, casbinrule.V0NEQ(*i.V0NEQ))
+	}
+	if len(i.V0In) > 0 {
+		predicates = append(predicates, casbinrule.V0In(i.V0In...))
+	}
+	if len(i.V0NotIn) > 0 {
+		predicates = append(predicates, casbinrule.V0NotIn(i.V0NotIn...))
+	}
+	if i.V0GT != nil {
+		predicates = append(predicates, casbinrule.V0GT(*i.V0GT))
+	}
+	if i.V0GTE != nil {
+		predicates = append(predicates, casbinrule.V0GTE(*i.V0GTE))
+	}
+	if i.V0LT != nil {
+		predicates = append(predicates, casbinrule.V0LT(*i.V0LT))
+	}
+	if i.V0LTE != nil {
+		predicates = append(predicates, casbinrule.V0LTE(*i.V0LTE))
+	}
+	if i.V0Contains != nil {
+		predicates = append(predicates, casbinrule.V0Contains(*i.V0Contains))
+	}
+	if i.V0HasPrefix != nil {
+		predicates = append(predicates, casbinrule.V0HasPrefix(*i.V0HasPrefix))
+	}
+	if i.V0HasSuffix != nil {
+		predicates = append(predicates, casbinrule.V0HasSuffix(*i.V0HasSuffix))
+	}
+	if i.V0EqualFold != nil {
+		predicates = append(predicates, casbinrule.V0EqualFold(*i.V0EqualFold))
+	}
+	if i.V0ContainsFold != nil {
+		predicates = append(predicates, casbinrule.V0ContainsFold(*i.V0ContainsFold))
+	}
+	if i.V1 != nil {
+		predicates = append(predicates, casbinrule.V1EQ(*i.V1))
+	}
+	if i.V1NEQ != nil {
+		predicates = append(predicates, casbinrule.V1NEQ(*i.V1NEQ))
+	}
+	if len(i.V1In) > 0 {
+		predicates = append(predicates, casbinrule.V1In(i.V1In...))
+	}
+	if len(i.V1NotIn) > 0 {
+		predicates = append(predicates, casbinrule.V1NotIn(i.V1NotIn...))
+	}
+	if i.V1GT != nil {
+		predicates = append(predicates, casbinrule.V1GT(*i.V1GT))
+	}
+	if i.V1GTE != nil {
+		predicates = append(predicates, casbinrule.V1GTE(*i.V1GTE))
+	}
+	if i.V1LT != nil {
+		predicates = append(predicates, casbinrule.V1LT(*i.V1LT))
+	}
+	if i.V1LTE != nil {
+		predicates = append(predicates, casbinrule.V1LTE(*i.V1LTE))
+	}
+	if i.V1Contains != nil {
+		predicates = append(predicates, casbinrule.V1Contains(*i.V1Contains))
+	}
+	if i.V1HasPrefix != nil {
+		predicates = append(predicates, casbinrule.V1HasPrefix(*i.V1HasPrefix))
+	}
+	if i.V1HasSuffix != nil {
+		predicates = append(predicates, casbinrule.V1HasSuffix(*i.V1HasSuffix))
+	}
+	if i.V1EqualFold != nil {
+		predicates = append(predicates, casbinrule.V1EqualFold(*i.V1EqualFold))
+	}
+	if i.V1ContainsFold != nil {
+		predicates = append(predicates, casbinrule.V1ContainsFold(*i.V1ContainsFold))
+	}
+	if i.V2 != nil {
+		predicates = append(predicates, casbinrule.V2EQ(*i.V2))
+	}
+	if i.V2NEQ != nil {
+		predicates = append(predicates, casbinrule.V2NEQ(*i.V2NEQ))
+	}
+	if len(i.V2In) > 0 {
+		predicates = append(predicates, casbinrule.V2In(i.V2In...))
+	}
+	if len(i.V2NotIn) > 0 {
+		predicates = append(predicates, casbinrule.V2NotIn(i.V2NotIn...))
+	}
+	if i.V2GT != nil {
+		predicates = append(predicates, casbinrule.V2GT(*i.V2GT))
+	}
+	if i.V2GTE != nil {
+		predicates = append(predicates, casbinrule.V2GTE(*i.V2GTE))
+	}
+	if i.V2LT != nil {
+		predicates = append(predicates, casbinrule.V2LT(*i.V2LT))
+	}
+	if i.V2LTE != nil {
+		predicates = append(predicates, casbinrule.V2LTE(*i.V2LTE))
+	}
+	if i.V2Contains != nil {
+		predicates = append(predicates, casbinrule.V2Contains(*i.V2Contains))
+	}
+	if i.V2HasPrefix != nil {
+		predicates = append(predicates, casbinrule.V2HasPrefix(*i.V2HasPrefix))
+	}
+	if i.V2HasSuffix != nil {
+		predicates = append(predicates, casbinrule.V2HasSuffix(*i.V2HasSuffix))
+	}
+	if i.V2EqualFold != nil {
+		predicates = append(predicates, casbinrule.V2EqualFold(*i.V2EqualFold))
+	}
+	if i.V2ContainsFold != nil {
+		predicates = append(predicates, casbinrule.V2ContainsFold(*i.V2ContainsFold))
+	}
+	if i.V3 != nil {
+		predicates = append(predicates, casbinrule.V3EQ(*i.V3))
+	}
+	if i.V3NEQ != nil {
+		predicates = append(predicates, casbinrule.V3NEQ(*i.V3NEQ))
+	}
+	if len(i.V3In) > 0 {
+		predicates = append(predicates, casbinrule.V3In(i.V3In...))
+	}
+	if len(i.V3NotIn) > 0 {
+		predicates = append(predicates, casbinrule.V3NotIn(i.V3NotIn...))
+	}
+	if i.V3GT != nil {
+		predicates = append(predicates, casbinrule.V3GT(*i.V3GT))
+	}
+	if i.V3GTE != nil {
+		predicates = append(predicates, casbinrule.V3GTE(*i.V3GTE))
+	}
+	if i.V3LT != nil {
+		predicates = append(predicates, casbinrule.V3LT(*i.V3LT))
+	}
+	if i.V3LTE != nil {
+		predicates = append(predicates, casbinrule.V3LTE(*i.V3LTE))
+	}
+	if i.V3Contains != nil {
+		predicates = append(predicates, casbinrule.V3Contains(*i.V3Contains))
+	}
+	if i.V3HasPrefix != nil {
+		predicates = append(predicates, casbinrule.V3HasPrefix(*i.V3HasPrefix))
+	}
+	if i.V3HasSuffix != nil {
+		predicates = append(predicates, casbinrule.V3HasSuffix(*i.V3HasSuffix))
+	}
+	if i.V3EqualFold != nil {
+		predicates = append(predicates, casbinrule.V3EqualFold(*i.V3EqualFold))
+	}
+	if i.V3ContainsFold != nil {
+		predicates = append(predicates, casbinrule.V3ContainsFold(*i.V3ContainsFold))
+	}
+	if i.V4 != nil {
+		predicates = append(predicates, casbinrule.V4EQ(*i.V4))
+	}
+	if i.V4NEQ != nil {
+		predicates = append(predicates, casbinrule.V4NEQ(*i.V4NEQ))
+	}
+	if len(i.V4In) > 0 {
+		predicates = append(predicates, casbinrule.V4In(i.V4In...))
+	}
+	if len(i.V4NotIn) > 0 {
+		predicates = append(predicates, casbinrule.V4NotIn(i.V4NotIn...))
+	}
+	if i.V4GT != nil {
+		predicates = append(predicates, casbinrule.V4GT(*i.V4GT))
+	}
+	if i.V4GTE != nil {
+		predicates = append(predicates, casbinrule.V4GTE(*i.V4GTE))
+	}
+	if i.V4LT != nil {
+		predicates = append(predicates, casbinrule.V4LT(*i.V4LT))
+	}
+	if i.V4LTE != nil {
+		predicates = append(predicates, casbinrule.V4LTE(*i.V4LTE))
+	}
+	if i.V4Contains != nil {
+		predicates = append(predicates, casbinrule.V4Contains(*i.V4Contains))
+	}
+	if i.V4HasPrefix != nil {
+		predicates = append(predicates, casbinrule.V4HasPrefix(*i.V4HasPrefix))
+	}
+	if i.V4HasSuffix != nil {
+		predicates = append(predicates, casbinrule.V4HasSuffix(*i.V4HasSuffix))
+	}
+	if i.V4EqualFold != nil {
+		predicates = append(predicates, casbinrule.V4EqualFold(*i.V4EqualFold))
+	}
+	if i.V4ContainsFold != nil {
+		predicates = append(predicates, casbinrule.V4ContainsFold(*i.V4ContainsFold))
+	}
+	if i.V5 != nil {
+		predicates = append(predicates, casbinrule.V5EQ(*i.V5))
+	}
+	if i.V5NEQ != nil {
+		predicates = append(predicates, casbinrule.V5NEQ(*i.V5NEQ))
+	}
+	if len(i.V5In) > 0 {
+		predicates = append(predicates, casbinrule.V5In(i.V5In...))
+	}
+	if len(i.V5NotIn) > 0 {
+		predicates = append(predicates, casbinrule.V5NotIn(i.V5NotIn...))
+	}
+	if i.V5GT != nil {
+		predicates = append(predicates, casbinrule.V5GT(*i.V5GT))
+	}
+	if i.V5GTE != nil {
+		predicates = append(predicates, casbinrule.V5GTE(*i.V5GTE))
+	}
+	if i.V5LT != nil {
+		predicates = append(predicates, casbinrule.V5LT(*i.V5LT))
+	}
+	if i.V5LTE != nil {
+		predicates = append(predicates, casbinrule.V5LTE(*i.V5LTE))
+	}
+	if i.V5Contains != nil {
+		predicates = append(predicates, casbinrule.V5Contains(*i.V5Contains))
+	}
+	if i.V5HasPrefix != nil {
+		predicates = append(predicates, casbinrule.V5HasPrefix(*i.V5HasPrefix))
+	}
+	if i.V5HasSuffix != nil {
+		predicates = append(predicates, casbinrule.V5HasSuffix(*i.V5HasSuffix))
+	}
+	if i.V5EqualFold != nil {
+		predicates = append(predicates, casbinrule.V5EqualFold(*i.V5EqualFold))
+	}
+	if i.V5ContainsFold != nil {
+		predicates = append(predicates, casbinrule.V5ContainsFold(*i.V5ContainsFold))
+	}
+
+	switch len(predicates) {
+	case 0:
+		return nil, ErrEmptyCasbinRuleWhereInput
+	case 1:
+		return predicates[0], nil
+	default:
+		return casbinrule.And(predicates...), nil
+	}
+}
 
 // UserWhereInput represents a where input for filtering User queries.
 type UserWhereInput struct {
