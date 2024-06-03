@@ -1254,7 +1254,7 @@ var sources = []*ast.Source{
 directive @permission(object: String!, action: String!) on FIELD_DEFINITION
 
 extend type Mutation {
-  resetPassword(id: ID!, password: String!): User! @admin
+  resetPassword(id: ID!, password: String!): User! @permission(object: "user", action: "update")
 }`, BuiltIn: false},
 	{Name: "../../graphql/auth.graphql", Input: `input LoginInput {
   phone: String!
@@ -4311,10 +4311,18 @@ func (ec *executionContext) _Mutation_resetPassword(ctx context.Context, field g
 			return ec.resolvers.Mutation().ResetPassword(rctx, fc.Args["id"].(xid.ID), fc.Args["password"].(string))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+			object, err := ec.unmarshalNString2string(ctx, "user")
+			if err != nil {
+				return nil, err
 			}
-			return ec.directives.Admin(ctx, nil, directive0)
+			action, err := ec.unmarshalNString2string(ctx, "update")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.Permission == nil {
+				return nil, errors.New("directive permission is not implemented")
+			}
+			return ec.directives.Permission(ctx, nil, directive0, object, action)
 		}
 
 		tmp, err := directive1(rctx)
