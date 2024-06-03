@@ -8,6 +8,7 @@ import (
 	"context"
 
 	"github.com/hawa130/computility-cloud/ent"
+	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/hawa130/computility-cloud/graph/model"
 	"github.com/hawa130/computility-cloud/graph/reqerr"
 	"github.com/hawa130/computility-cloud/internal/auth"
@@ -106,12 +107,25 @@ func (r *mutationResolver) UpdatePassword(ctx context.Context, id *xid.ID, input
 
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id *xid.ID) (*ent.User, error) {
-	id, err := auth.SelfOrAuthenticated(ctx, id, perm.OpRead)
+	builder := r.client.User.Query().Where(user.IDEQ(*id))
+
+	u, _ := auth.FromContext(ctx)
+	if u == nil {
+		return builder.Only(ctx)
+	}
+	if id == nil {
+		id = &u.ID
+	}
+
+	allow, err := perm.EnforceX(u.ID, id, perm.OpRead)
 	if err != nil {
 		return nil, err
 	}
 
-	return r.client.User.Get(ctx, *id)
+	if allow {
+		return builder.Only(rule.WithQueryAllFields(ctx))
+	}
+	return builder.Only(ctx)
 }
 
 // Mutation returns MutationResolver implementation.

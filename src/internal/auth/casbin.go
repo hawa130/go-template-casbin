@@ -55,7 +55,7 @@ func IsAdmin(ctx context.Context) (bool, error) {
 	return perm.Enforcer().HasRoleForUser(user.ID.String(), "root")
 }
 
-func IsAdminReq(ctx context.Context) error {
+func AdminRequired(ctx context.Context) error {
 	allow, err := IsAdmin(ctx)
 	if err != nil {
 		return err

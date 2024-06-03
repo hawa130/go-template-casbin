@@ -18,6 +18,7 @@ import (
 	"github.com/hawa130/computility-cloud/internal/hookx"
 	"github.com/hawa130/computility-cloud/internal/perm"
 	"github.com/hawa130/computility-cloud/internal/rule"
+	userrule "github.com/hawa130/computility-cloud/internal/rule/user-rule"
 )
 
 // User holds the schema definition for the User entity.
@@ -183,6 +184,7 @@ func (User) Policy() ent.Policy {
 		},
 		Query: privacy.QueryPolicy{
 			rule.AllowAdmin(),
+			userrule.LimitQueryFields(),
 			privacy.AlwaysAllowRule(),
 		},
 	}

@@ -10,12 +10,13 @@ import (
 	"entgo.io/contrib/entgql"
 	"github.com/hawa130/computility-cloud/ent"
 	"github.com/hawa130/computility-cloud/internal/auth"
+	"github.com/hawa130/computility-cloud/internal/rule"
 	"github.com/rs/xid"
 )
 
 // Node is the resolver for the node field.
 func (r *queryResolver) Node(ctx context.Context, id xid.ID) (ent.Noder, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
+	if err := auth.AdminRequired(ctx); err != nil {
 		return nil, err
 	}
 	return r.client.Noder(ctx, id)
@@ -23,7 +24,7 @@ func (r *queryResolver) Node(ctx context.Context, id xid.ID) (ent.Noder, error) 
 
 // Nodes is the resolver for the nodes field.
 func (r *queryResolver) Nodes(ctx context.Context, ids []xid.ID) ([]ent.Noder, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
+	if err := auth.AdminRequired(ctx); err != nil {
 		return nil, err
 	}
 	return r.client.Noders(ctx, ids)
@@ -41,7 +42,7 @@ func (r *queryResolver) PublicKeys(ctx context.Context, after *entgql.Cursor[xid
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, after *entgql.Cursor[xid.ID], first *int, before *entgql.Cursor[xid.ID], last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) (*ent.UserConnection, error) {
 	return r.client.User.Query().
-		Paginate(ctx, after, first, before, last,
+		Paginate(rule.WithQueryAllFields(ctx), after, first, before, last,
 			ent.WithUserOrder(orderBy),
 			ent.WithUserFilter(where.Filter),
 		)
