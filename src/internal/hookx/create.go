@@ -9,6 +9,7 @@ import (
 	"github.com/hawa130/computility-cloud/internal/auth"
 	"github.com/hawa130/computility-cloud/internal/logger"
 	"github.com/hawa130/computility-cloud/internal/perm"
+	"github.com/rs/xid"
 )
 
 var OnCreate = onCreateType{}
@@ -36,6 +37,13 @@ func (onCreateType) AddObjectGroup(model string) ent.Hook {
 	)
 }
 
+type customOwnerKey struct{}
+
+// WithCustomOwner 返回一个新的上下文，其中包含自定义的创建者
+func WithCustomOwner(parent context.Context, uid xid.ID) context.Context {
+	return context.WithValue(parent, customOwnerKey{}, uid)
+}
+
 // AddObjectOwner 创建对象时添加创建者
 func (onCreateType) AddObjectOwner() ent.Hook {
 	return hook.On(
@@ -47,7 +55,16 @@ func (onCreateType) AddObjectOwner() ent.Hook {
 					return next.Mutate(ctx, m)
 				}
 
-				_, err := auth.GrantObjectPermissionX(ctx, id)
+				uid, ok := ctx.Value(customOwnerKey{}).(xid.ID)
+				if !ok {
+					owner, ok := auth.FromContext(ctx)
+					if !ok {
+						return next.Mutate(ctx, m)
+					}
+					uid = owner.ID
+				}
+
+				_, err := perm.GrantObjectPermissionX(uid, id)
 				if err != nil {
 					return nil, err
 				}

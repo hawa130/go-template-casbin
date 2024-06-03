@@ -1,0 +1,9 @@
+extend type Query {
+  publicKey(uid: ID): [PublicKey!]
+}
+
+extend type Mutation {
+  createPublicKey(uid: ID, input: CreatePublicKeyInput!): PublicKey!
+  updatePublicKey(id: ID!, input: UpdatePublicKeyInput!): PublicKey!
+  deletePublicKey(id: ID!): Boolean!
+}

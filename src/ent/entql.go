@@ -5,6 +5,7 @@ package ent
 import (
 	"github.com/hawa130/computility-cloud/ent/casbinrule"
 	"github.com/hawa130/computility-cloud/ent/predicate"
+	"github.com/hawa130/computility-cloud/ent/publickey"
 	"github.com/hawa130/computility-cloud/ent/user"
 
 	"entgo.io/ent/dialect/sql"
@@ -15,7 +16,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 2)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 3)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   casbinrule.Table,
@@ -38,6 +39,27 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[1] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
+			Table:   publickey.Table,
+			Columns: publickey.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeString,
+				Column: publickey.FieldID,
+			},
+		},
+		Type: "PublicKey",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			publickey.FieldCreatedAt:   {Type: field.TypeTime, Column: publickey.FieldCreatedAt},
+			publickey.FieldUpdatedAt:   {Type: field.TypeTime, Column: publickey.FieldUpdatedAt},
+			publickey.FieldKey:         {Type: field.TypeString, Column: publickey.FieldKey},
+			publickey.FieldName:        {Type: field.TypeString, Column: publickey.FieldName},
+			publickey.FieldDescription: {Type: field.TypeString, Column: publickey.FieldDescription},
+			publickey.FieldType:        {Type: field.TypeString, Column: publickey.FieldType},
+			publickey.FieldStatus:      {Type: field.TypeString, Column: publickey.FieldStatus},
+			publickey.FieldExpiredAt:   {Type: field.TypeTime, Column: publickey.FieldExpiredAt},
+		},
+	}
+	graph.Nodes[2] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
 			Table:   user.Table,
 			Columns: user.Columns,
 			ID: &sqlgraph.FieldSpec{
@@ -56,6 +78,18 @@ var schemaGraph = func() *sqlgraph.Schema {
 			user.FieldPassword:  {Type: field.TypeString, Column: user.FieldPassword},
 		},
 	}
+	graph.MustAddE(
+		"user",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   publickey.UserTable,
+			Columns: []string{publickey.UserColumn},
+			Bidi:    false,
+		},
+		"PublicKey",
+		"User",
+	)
 	graph.MustAddE(
 		"children",
 		&sqlgraph.EdgeSpec{
@@ -165,6 +199,100 @@ func (f *CasbinRuleFilter) WhereV5(p entql.StringP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (pkq *PublicKeyQuery) addPredicate(pred func(s *sql.Selector)) {
+	pkq.predicates = append(pkq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the PublicKeyQuery builder.
+func (pkq *PublicKeyQuery) Filter() *PublicKeyFilter {
+	return &PublicKeyFilter{config: pkq.config, predicateAdder: pkq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *PublicKeyMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the PublicKeyMutation builder.
+func (m *PublicKeyMutation) Filter() *PublicKeyFilter {
+	return &PublicKeyFilter{config: m.config, predicateAdder: m}
+}
+
+// PublicKeyFilter provides a generic filtering capability at runtime for PublicKeyQuery.
+type PublicKeyFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *PublicKeyFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql string predicate on the id field.
+func (f *PublicKeyFilter) WhereID(p entql.StringP) {
+	f.Where(p.Field(publickey.FieldID))
+}
+
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *PublicKeyFilter) WhereCreatedAt(p entql.TimeP) {
+	f.Where(p.Field(publickey.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql time.Time predicate on the updated_at field.
+func (f *PublicKeyFilter) WhereUpdatedAt(p entql.TimeP) {
+	f.Where(p.Field(publickey.FieldUpdatedAt))
+}
+
+// WhereKey applies the entql string predicate on the key field.
+func (f *PublicKeyFilter) WhereKey(p entql.StringP) {
+	f.Where(p.Field(publickey.FieldKey))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *PublicKeyFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(publickey.FieldName))
+}
+
+// WhereDescription applies the entql string predicate on the description field.
+func (f *PublicKeyFilter) WhereDescription(p entql.StringP) {
+	f.Where(p.Field(publickey.FieldDescription))
+}
+
+// WhereType applies the entql string predicate on the type field.
+func (f *PublicKeyFilter) WhereType(p entql.StringP) {
+	f.Where(p.Field(publickey.FieldType))
+}
+
+// WhereStatus applies the entql string predicate on the status field.
+func (f *PublicKeyFilter) WhereStatus(p entql.StringP) {
+	f.Where(p.Field(publickey.FieldStatus))
+}
+
+// WhereExpiredAt applies the entql time.Time predicate on the expired_at field.
+func (f *PublicKeyFilter) WhereExpiredAt(p entql.TimeP) {
+	f.Where(p.Field(publickey.FieldExpiredAt))
+}
+
+// WhereHasUser applies a predicate to check if query has an edge user.
+func (f *PublicKeyFilter) WhereHasUser() {
+	f.Where(entql.HasEdge("user"))
+}
+
+// WhereHasUserWith applies a predicate to check if query has an edge user with a given conditions (other predicates).
+func (f *PublicKeyFilter) WhereHasUserWith(preds ...predicate.User) {
+	f.Where(entql.HasEdgeWith("user", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (uq *UserQuery) addPredicate(pred func(s *sql.Selector)) {
 	uq.predicates = append(uq.predicates, pred)
 }
@@ -193,7 +321,7 @@ type UserFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *UserFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

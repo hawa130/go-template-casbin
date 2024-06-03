@@ -10,6 +10,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/hashicorp/go-multierror"
 	"github.com/hawa130/computility-cloud/ent/casbinrule"
+	"github.com/hawa130/computility-cloud/ent/publickey"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/rs/xid"
 )
@@ -23,6 +24,11 @@ var casbinruleImplementors = []string{"CasbinRule", "Node"}
 
 // IsNode implements the Node interface check for GQLGen.
 func (*CasbinRule) IsNode() {}
+
+var publickeyImplementors = []string{"PublicKey", "Node"}
+
+// IsNode implements the Node interface check for GQLGen.
+func (*PublicKey) IsNode() {}
 
 var userImplementors = []string{"User", "Node"}
 
@@ -92,6 +98,15 @@ func (c *Client) noder(ctx context.Context, table string, id xid.ID) (Noder, err
 			Where(casbinrule.ID(id))
 		if fc := graphql.GetFieldContext(ctx); fc != nil {
 			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, casbinruleImplementors...); err != nil {
+				return nil, err
+			}
+		}
+		return query.Only(ctx)
+	case publickey.Table:
+		query := c.PublicKey.Query().
+			Where(publickey.ID(id))
+		if fc := graphql.GetFieldContext(ctx); fc != nil {
+			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, publickeyImplementors...); err != nil {
 				return nil, err
 			}
 		}
@@ -182,6 +197,22 @@ func (c *Client) noders(ctx context.Context, table string, ids []xid.ID) ([]Node
 		query := c.CasbinRule.Query().
 			Where(casbinrule.IDIn(ids...))
 		query, err := query.CollectFields(ctx, casbinruleImplementors...)
+		if err != nil {
+			return nil, err
+		}
+		nodes, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
+	case publickey.Table:
+		query := c.PublicKey.Query().
+			Where(publickey.IDIn(ids...))
+		query, err := query.CollectFields(ctx, publickeyImplementors...)
 		if err != nil {
 			return nil, err
 		}

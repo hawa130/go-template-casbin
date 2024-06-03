@@ -25,6 +25,50 @@ var (
 		Columns:    CasbinRulesColumns,
 		PrimaryKey: []*schema.Column{CasbinRulesColumns[0]},
 	}
+	// PublicKeysColumns holds the columns for the "public_keys" table.
+	PublicKeysColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "key", Type: field.TypeString, Unique: true},
+		{Name: "name", Type: field.TypeString, Nullable: true},
+		{Name: "description", Type: field.TypeString, Nullable: true},
+		{Name: "type", Type: field.TypeString, Nullable: true},
+		{Name: "status", Type: field.TypeString, Nullable: true},
+		{Name: "expired_at", Type: field.TypeTime, Nullable: true},
+		{Name: "public_key_user", Type: field.TypeString, Nullable: true},
+	}
+	// PublicKeysTable holds the schema information for the "public_keys" table.
+	PublicKeysTable = &schema.Table{
+		Name:       "public_keys",
+		Columns:    PublicKeysColumns,
+		PrimaryKey: []*schema.Column{PublicKeysColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "public_keys_users_user",
+				Columns:    []*schema.Column{PublicKeysColumns[9]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "publickey_created_at",
+				Unique:  false,
+				Columns: []*schema.Column{PublicKeysColumns[1]},
+			},
+			{
+				Name:    "publickey_updated_at",
+				Unique:  false,
+				Columns: []*schema.Column{PublicKeysColumns[2]},
+			},
+			{
+				Name:    "publickey_expired_at",
+				Unique:  false,
+				Columns: []*schema.Column{PublicKeysColumns[8]},
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
@@ -66,10 +110,12 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CasbinRulesTable,
+		PublicKeysTable,
 		UsersTable,
 	}
 )
 
 func init() {
+	PublicKeysTable.ForeignKeys[0].RefTable = UsersTable
 	UsersTable.ForeignKeys[0].RefTable = UsersTable
 }

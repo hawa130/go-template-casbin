@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// CasbinRule is the client for interacting with the CasbinRule builders.
 	CasbinRule *CasbinRuleClient
+	// PublicKey is the client for interacting with the PublicKey builders.
+	PublicKey *PublicKeyClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 
@@ -148,6 +150,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.CasbinRule = NewCasbinRuleClient(tx.config)
+	tx.PublicKey = NewPublicKeyClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }
 

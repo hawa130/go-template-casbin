@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/hawa130/computility-cloud/ent/casbinrule"
+	"github.com/hawa130/computility-cloud/ent/publickey"
 	"github.com/hawa130/computility-cloud/ent/schema"
 	"github.com/hawa130/computility-cloud/ent/user"
 	"github.com/rs/xid"
@@ -56,6 +57,31 @@ func init() {
 	casbinruleDescID := casbinruleMixinFields0[0].Descriptor()
 	// casbinrule.DefaultID holds the default value on creation for the id field.
 	casbinrule.DefaultID = casbinruleDescID.Default.(func() xid.ID)
+	publickeyMixin := schema.PublicKey{}.Mixin()
+	publickeyHooks := schema.PublicKey{}.Hooks()
+	publickey.Hooks[0] = publickeyHooks[0]
+	publickey.Hooks[1] = publickeyHooks[1]
+	publickey.Hooks[2] = publickeyHooks[2]
+	publickeyMixinFields0 := publickeyMixin[0].Fields()
+	_ = publickeyMixinFields0
+	publickeyMixinFields1 := publickeyMixin[1].Fields()
+	_ = publickeyMixinFields1
+	publickeyFields := schema.PublicKey{}.Fields()
+	_ = publickeyFields
+	// publickeyDescCreatedAt is the schema descriptor for created_at field.
+	publickeyDescCreatedAt := publickeyMixinFields1[0].Descriptor()
+	// publickey.DefaultCreatedAt holds the default value on creation for the created_at field.
+	publickey.DefaultCreatedAt = publickeyDescCreatedAt.Default.(func() time.Time)
+	// publickeyDescUpdatedAt is the schema descriptor for updated_at field.
+	publickeyDescUpdatedAt := publickeyMixinFields1[1].Descriptor()
+	// publickey.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	publickey.DefaultUpdatedAt = publickeyDescUpdatedAt.Default.(func() time.Time)
+	// publickey.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	publickey.UpdateDefaultUpdatedAt = publickeyDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// publickeyDescID is the schema descriptor for id field.
+	publickeyDescID := publickeyMixinFields0[0].Descriptor()
+	// publickey.DefaultID holds the default value on creation for the id field.
+	publickey.DefaultID = publickeyDescID.Default.(func() xid.ID)
 	userMixin := schema.User{}.Mixin()
 	user.Policy = privacy.NewPolicies(schema.User{})
 	user.Hooks[0] = func(next ent.Mutator) ent.Mutator {

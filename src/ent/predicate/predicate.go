@@ -9,5 +9,8 @@ import (
 // CasbinRule is the predicate function for casbinrule builders.
 type CasbinRule func(*sql.Selector)
 
+// PublicKey is the predicate function for publickey builders.
+type PublicKey func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)

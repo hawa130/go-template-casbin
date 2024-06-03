@@ -3,8 +3,110 @@
 package ent
 
 import (
+	"time"
+
 	"github.com/rs/xid"
 )
+
+// CreatePublicKeyInput represents a mutation input for creating publickeys.
+type CreatePublicKeyInput struct {
+	Key         string
+	Name        *string
+	Description *string
+	Type        *string
+	Status      *string
+	ExpiredAt   *time.Time
+}
+
+// Mutate applies the CreatePublicKeyInput on the PublicKeyMutation builder.
+func (i *CreatePublicKeyInput) Mutate(m *PublicKeyMutation) {
+	m.SetKey(i.Key)
+	if v := i.Name; v != nil {
+		m.SetName(*v)
+	}
+	if v := i.Description; v != nil {
+		m.SetDescription(*v)
+	}
+	if v := i.Type; v != nil {
+		m.SetType(*v)
+	}
+	if v := i.Status; v != nil {
+		m.SetStatus(*v)
+	}
+	if v := i.ExpiredAt; v != nil {
+		m.SetExpiredAt(*v)
+	}
+}
+
+// SetInput applies the change-set in the CreatePublicKeyInput on the PublicKeyCreate builder.
+func (c *PublicKeyCreate) SetInput(i CreatePublicKeyInput) *PublicKeyCreate {
+	i.Mutate(c.Mutation())
+	return c
+}
+
+// UpdatePublicKeyInput represents a mutation input for updating publickeys.
+type UpdatePublicKeyInput struct {
+	Key              *string
+	ClearName        bool
+	Name             *string
+	ClearDescription bool
+	Description      *string
+	ClearType        bool
+	Type             *string
+	ClearStatus      bool
+	Status           *string
+	ClearExpiredAt   bool
+	ExpiredAt        *time.Time
+}
+
+// Mutate applies the UpdatePublicKeyInput on the PublicKeyMutation builder.
+func (i *UpdatePublicKeyInput) Mutate(m *PublicKeyMutation) {
+	if v := i.Key; v != nil {
+		m.SetKey(*v)
+	}
+	if i.ClearName {
+		m.ClearName()
+	}
+	if v := i.Name; v != nil {
+		m.SetName(*v)
+	}
+	if i.ClearDescription {
+		m.ClearDescription()
+	}
+	if v := i.Description; v != nil {
+		m.SetDescription(*v)
+	}
+	if i.ClearType {
+		m.ClearType()
+	}
+	if v := i.Type; v != nil {
+		m.SetType(*v)
+	}
+	if i.ClearStatus {
+		m.ClearStatus()
+	}
+	if v := i.Status; v != nil {
+		m.SetStatus(*v)
+	}
+	if i.ClearExpiredAt {
+		m.ClearExpiredAt()
+	}
+	if v := i.ExpiredAt; v != nil {
+		m.SetExpiredAt(*v)
+	}
+}
+
+// SetInput applies the change-set in the UpdatePublicKeyInput on the PublicKeyUpdate builder.
+func (c *PublicKeyUpdate) SetInput(i UpdatePublicKeyInput) *PublicKeyUpdate {
+	i.Mutate(c.Mutation())
+	return c
+}
+
+// SetInput applies the change-set in the UpdatePublicKeyInput on the PublicKeyUpdateOne builder.
+func (c *PublicKeyUpdateOne) SetInput(i UpdatePublicKeyInput) *PublicKeyUpdateOne {
+	i.Mutate(c.Mutation())
+	return c
+}
 
 // CreateUserInput represents a mutation input for creating users.
 type CreateUserInput struct {

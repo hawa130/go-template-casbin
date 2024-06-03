@@ -11,8 +11,8 @@ import (
 	"github.com/hawa130/computility-cloud/graph/model"
 	"github.com/hawa130/computility-cloud/graph/reqerr"
 	"github.com/hawa130/computility-cloud/internal/auth"
-	"github.com/hawa130/computility-cloud/internal/database"
 	"github.com/hawa130/computility-cloud/internal/perm"
+	"github.com/hawa130/computility-cloud/internal/rule"
 	"github.com/rs/xid"
 )
 
@@ -32,7 +32,7 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, id *xid.ID, input ent
 
 // DeleteUser is the resolver for the deleteUser field.
 func (r *mutationResolver) DeleteUser(ctx context.Context, id *xid.ID) (bool, error) {
-	id, err := auth.SelfOrAuthenticated(ctx, id, perm.OpUpdate)
+	id, err := auth.SelfOrAuthenticated(ctx, id, perm.OpDelete)
 	if err != nil {
 		return false, err
 	}
@@ -54,7 +54,7 @@ func (r *mutationResolver) CreateChildren(ctx context.Context, id *xid.ID, child
 	for i, d := range children {
 		builders[i] = c.User.Create().SetInput(*d)
 	}
-	subs, err := c.User.CreateBulk(builders...).Save(database.WrapAllowContext(ctx))
+	subs, err := c.User.CreateBulk(builders...).Save(rule.WithAllowContext(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (r *mutationResolver) CreateChildren(ctx context.Context, id *xid.ID, child
 	for i, sub := range subs {
 		ids[i] = sub.ID
 	}
-	return c.User.UpdateOneID(*id).AddChildIDs(ids...).Save(database.WrapAllowContext(ctx))
+	return c.User.UpdateOneID(*id).AddChildIDs(ids...).Save(rule.WithAllowContext(ctx))
 }
 
 // RemoveChildren is the resolver for the removeChildren field.
@@ -74,11 +74,11 @@ func (r *mutationResolver) RemoveChildren(ctx context.Context, id *xid.ID, child
 	}
 
 	c := ent.FromContext(ctx)
-	err = c.User.DeleteOneID(child).Exec(database.WrapAllowContext(ctx))
+	err = c.User.DeleteOneID(child).Exec(rule.WithAllowContext(ctx))
 	if err != nil {
 		return nil, err
 	}
-	return c.User.UpdateOneID(*id).RemoveChildIDs(child).Save(database.WrapAllowContext(ctx))
+	return c.User.UpdateOneID(*id).RemoveChildIDs(child).Save(rule.WithAllowContext(ctx))
 }
 
 // UpdatePassword is the resolver for the updatePassword field.

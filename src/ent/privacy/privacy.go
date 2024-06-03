@@ -135,6 +135,30 @@ func (f CasbinRuleMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Muta
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.CasbinRuleMutation", m)
 }
 
+// The PublicKeyQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type PublicKeyQueryRuleFunc func(context.Context, *ent.PublicKeyQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f PublicKeyQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PublicKeyQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.PublicKeyQuery", q)
+}
+
+// The PublicKeyMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type PublicKeyMutationRuleFunc func(context.Context, *ent.PublicKeyMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f PublicKeyMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.PublicKeyMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PublicKeyMutation", m)
+}
+
 // The UserQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type UserQueryRuleFunc func(context.Context, *ent.UserQuery) error
@@ -196,6 +220,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
 	case *ent.CasbinRuleQuery:
 		return q.Filter(), nil
+	case *ent.PublicKeyQuery:
+		return q.Filter(), nil
 	case *ent.UserQuery:
 		return q.Filter(), nil
 	default:
@@ -206,6 +232,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
 	case *ent.CasbinRuleMutation:
+		return m.Filter(), nil
+	case *ent.PublicKeyMutation:
 		return m.Filter(), nil
 	case *ent.UserMutation:
 		return m.Filter(), nil

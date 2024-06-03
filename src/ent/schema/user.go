@@ -62,7 +62,7 @@ func (User) Mixin() []ent.Mixin {
 func (User) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
-		entgql.QueryField(),
+		entgql.QueryField().Directives(entgql.NewDirective("admin")),
 		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }

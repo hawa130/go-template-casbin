@@ -29,11 +29,17 @@ func (r *queryResolver) Nodes(ctx context.Context, ids []xid.ID) ([]ent.Noder, e
 	return r.client.Noders(ctx, ids)
 }
 
+// PublicKeys is the resolver for the publicKeys field.
+func (r *queryResolver) PublicKeys(ctx context.Context, after *entgql.Cursor[xid.ID], first *int, before *entgql.Cursor[xid.ID], last *int, orderBy *ent.PublicKeyOrder, where *ent.PublicKeyWhereInput) (*ent.PublicKeyConnection, error) {
+	return r.client.PublicKey.Query().
+		Paginate(ctx, after, first, before, last,
+			ent.WithPublicKeyOrder(orderBy),
+			ent.WithPublicKeyFilter(where.Filter),
+		)
+}
+
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, after *entgql.Cursor[xid.ID], first *int, before *entgql.Cursor[xid.ID], last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) (*ent.UserConnection, error) {
-	if err := auth.IsAdminReq(ctx); err != nil {
-		return nil, err
-	}
 	return r.client.User.Query().
 		Paginate(ctx, after, first, before, last,
 			ent.WithUserOrder(orderBy),

@@ -11,11 +11,8 @@ import (
 )
 
 var client *ent.Client
-var AllowContext = privacy.DecisionContext(context.Background(), privacy.Allow)
 
-func WrapAllowContext(ctx context.Context) context.Context {
-	return privacy.DecisionContext(ctx, privacy.Allow)
-}
+var AllowContext = privacy.DecisionContext(context.Background(), privacy.Allow)
 
 func Open(driverName, dataSourceName string) (*ent.Client, error) {
 	var err error

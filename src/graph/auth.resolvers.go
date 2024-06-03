@@ -12,13 +12,13 @@ import (
 	"github.com/hawa130/computility-cloud/graph/model"
 	"github.com/hawa130/computility-cloud/graph/reqerr"
 	"github.com/hawa130/computility-cloud/internal/auth"
-	"github.com/hawa130/computility-cloud/internal/database"
+	"github.com/hawa130/computility-cloud/internal/rule"
 )
 
 // Login is the resolver for the login field.
 func (r *mutationResolver) Login(ctx context.Context, input model.LoginInput) (*model.LoginPayload, error) {
 	c := ent.FromContext(ctx)
-	record, err := c.User.Query().Where(user.PhoneEQ(input.Phone)).Only(database.WrapAllowContext(ctx))
+	record, err := c.User.Query().Where(user.PhoneEQ(input.Phone)).Only(rule.WithAllowContext(ctx))
 	if ent.IsNotFound(err) {
 		if _, err := auth.HashPassword(input.Password); err != nil {
 			return nil, err
@@ -51,7 +51,7 @@ func (r *mutationResolver) Login(ctx context.Context, input model.LoginInput) (*
 // Register is the resolver for the register field.
 func (r *mutationResolver) Register(ctx context.Context, input model.RegisterInput) (*ent.User, error) {
 	c := ent.FromContext(ctx)
-	exist, err := c.User.Query().Where(user.PhoneEQ(input.Phone)).Exist(database.WrapAllowContext(ctx))
+	exist, err := c.User.Query().Where(user.PhoneEQ(input.Phone)).Exist(rule.WithAllowContext(ctx))
 	if exist {
 		return nil, reqerr.ErrPhoneAlreadyExist
 	}
@@ -62,5 +62,5 @@ func (r *mutationResolver) Register(ctx context.Context, input model.RegisterInp
 	return c.User.Create().
 		SetPhone(input.Phone).
 		SetPassword(input.Password).
-		Save(database.WrapAllowContext(ctx))
+		Save(rule.WithAllowContext(ctx))
 }

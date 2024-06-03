@@ -82,19 +82,31 @@ func GrantObjectPermissionX(ctx context.Context, obj fmt.Stringer) (bool, error)
 	return perm.GrantObjectPermissionX(user.ID, obj)
 }
 
-// SelfOrAuthenticated 会判断是否有传入的 ID，如果没有则从上下文中获取用户 ID，如果有则判断是否有权限
-func SelfOrAuthenticated(ctx context.Context, id *xid.ID, act string) (*xid.ID, error) {
-	if id == nil {
-		u, ok := FromContext(ctx)
-		if !ok {
-			return id, reqerr.ErrForbidden
-		}
-		id = &u.ID
-	} else {
-		err := EnforceXReq(ctx, id, act)
+// SelfOrAuthenticated 会判断是否有传入的用户 ID，如果没有则从上下文中获取用户 ID，如果有则判断是否有对用户的权限
+func SelfOrAuthenticated(ctx context.Context, uid *xid.ID, act string) (*xid.ID, error) {
+	if uid == nil {
+		var err error
+		uid, err = SelfOrSpecified(ctx, uid)
 		if err != nil {
-			return id, err
+			return uid, err
+		}
+	} else {
+		err := EnforceXReq(ctx, uid, act)
+		if err != nil {
+			return uid, err
 		}
 	}
-	return id, nil
+	return uid, nil
+}
+
+// SelfOrSpecified 会判断是否有传入的用户 ID，如果没有则从上下文中获取用户 ID，如果有则直接返回
+func SelfOrSpecified(ctx context.Context, uid *xid.ID) (*xid.ID, error) {
+	if uid == nil {
+		u, ok := FromContext(ctx)
+		if !ok {
+			return nil, reqerr.ErrForbidden
+		}
+		uid = &u.ID
+	}
+	return uid, nil
 }
