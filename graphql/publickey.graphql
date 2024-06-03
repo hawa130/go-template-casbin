@@ -1,9 +1,23 @@
 extend type Query {
+  """
+  获取指定用户或自己（uid 留空）的公钥列表
+  """
   publicKey(uid: ID): [PublicKey!]
 }
 
 extend type Mutation {
+  """
+  为指定用户或自己（uid 留空）创建公钥
+  """
   createPublicKey(uid: ID, input: CreatePublicKeyInput!): PublicKey!
+
+  """
+  更新公钥
+  """
   updatePublicKey(id: ID!, input: UpdatePublicKeyInput!): PublicKey!
+
+  """
+  删除公钥
+  """
   deletePublicKey(id: ID!): Boolean!
 }

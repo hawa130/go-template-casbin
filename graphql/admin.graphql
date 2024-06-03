@@ -2,5 +2,8 @@ directive @admin on FIELD_DEFINITION
 directive @permission(object: String!, action: String!) on FIELD_DEFINITION
 
 extend type Mutation {
+  """
+  重置用户密码
+  """
   resetPassword(id: ID!, password: String!): User! @permission(object: "user", action: "update")
 }

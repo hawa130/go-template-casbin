@@ -1,11 +1,29 @@
 type Mutation {
+    """
+    创建用户
+    """
     createUser(input: CreateUserInput!): User!
+
+    """
+    更新指定用户或自己（id 留空）
+    """
     updateUser(id: ID, input: UpdateUserInput!): User!
+
+    """
+    删除指定用户或自己（id 留空）
+    """
     deleteUser(id: ID): Boolean!
 }
 
 extend type Mutation {
+    """
+    为指定用户或自己（id 留空）创建子用户
+    """
     createChildren(id: ID, children: [CreateUserInput!]): User!
+
+    """
+    为指定用户或自己（id 留空）删除子用户
+    """
     removeChildren(id: ID, child: ID!): User!
 }
 
@@ -15,10 +33,20 @@ input UpdatePasswordInput {
 }
 
 extend type Mutation {
+    """
+    更新指定用户或自己（id 留空）的密码
+    """
     updatePassword(id: ID, input: UpdatePasswordInput!): User!
 }
 
 extend type Query {
+    """
+    获取指定用户或自己（id 留空）的信息
+    """
     user(id: ID): User!
+
+    """
+    获取指定用户或自己（id 留空）的子用户列表
+    """
     children(id: ID): [User!]!
 }
