@@ -63,7 +63,7 @@ func (User) Mixin() []ent.Mixin {
 func (User) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
-		gqlutils.PermissionDirective(user.Table),
+		gqlutils.PermissionDirective(user.Table, perm.OpRead),
 		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }
@@ -182,7 +182,7 @@ func (User) Policy() ent.Policy {
 		},
 		Query: privacy.QueryPolicy{
 			rule.AllowPermission(user.Table, perm.OpRead),
-			rule.LimitQueryFields(
+			rule.LimitUserQueryFields(
 				user.FieldID,
 				user.FieldNickname,
 				user.FieldUsername,

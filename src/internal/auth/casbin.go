@@ -90,11 +90,10 @@ func SelfOrAuthenticated(ctx context.Context, uid *xid.ID, act string) (*xid.ID,
 		if err != nil {
 			return uid, err
 		}
-	} else {
-		err := EnforceXReq(ctx, uid, act)
-		if err != nil {
-			return uid, err
-		}
+	}
+	err := EnforceXReq(ctx, uid, act)
+	if err != nil {
+		return uid, err
 	}
 	return uid, nil
 }

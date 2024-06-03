@@ -48,8 +48,8 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
-	Admin           func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
-	QueryPermission func(ctx context.Context, obj interface{}, next graphql.Resolver, model string) (res interface{}, err error)
+	Admin      func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
+	Permission func(ctx context.Context, obj interface{}, next graphql.Resolver, object string, action string) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -1237,7 +1237,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "../../graphql/admin.graphql", Input: `directive @admin on FIELD_DEFINITION
-directive @queryPermission(model: String!) on FIELD_DEFINITION
+directive @permission(object: String!, action: String!) on FIELD_DEFINITION
 
 extend type Mutation {
   resetPassword(id: ID!, password: String!): User! @admin
@@ -1738,7 +1738,7 @@ type Query {
     Filtering options for PublicKeys returned from the connection.
     """
     where: PublicKeyWhereInput
-  ): PublicKeyConnection! @queryPermission(model: "public_keys")
+  ): PublicKeyConnection! @permission(object: "public_keys", action: "read")
   users(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -1769,7 +1769,7 @@ type Query {
     Filtering options for Users returned from the connection.
     """
     where: UserWhereInput
-  ): UserConnection! @queryPermission(model: "users")
+  ): UserConnection! @permission(object: "users", action: "read")
 }
 """
 The builtin Time type
@@ -2113,18 +2113,27 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) dir_queryPermission_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) dir_permission_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["model"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("model"))
+	if tmp, ok := rawArgs["object"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("object"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["model"] = arg0
+	args["object"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["action"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("action"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["action"] = arg1
 	return args, nil
 }
 
@@ -6902,14 +6911,18 @@ func (ec *executionContext) _Query_publicKeys(ctx context.Context, field graphql
 			return ec.resolvers.Query().PublicKeys(rctx, fc.Args["after"].(*entgql.Cursor[xid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[xid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.PublicKeyOrder), fc.Args["where"].(*ent.PublicKeyWhereInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			model, err := ec.unmarshalNString2string(ctx, "public_keys")
+			object, err := ec.unmarshalNString2string(ctx, "public_keys")
 			if err != nil {
 				return nil, err
 			}
-			if ec.directives.QueryPermission == nil {
-				return nil, errors.New("directive queryPermission is not implemented")
+			action, err := ec.unmarshalNString2string(ctx, "read")
+			if err != nil {
+				return nil, err
 			}
-			return ec.directives.QueryPermission(ctx, nil, directive0, model)
+			if ec.directives.Permission == nil {
+				return nil, errors.New("directive permission is not implemented")
+			}
+			return ec.directives.Permission(ctx, nil, directive0, object, action)
 		}
 
 		tmp, err := directive1(rctx)
@@ -6989,14 +7002,18 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 			return ec.resolvers.Query().Users(rctx, fc.Args["after"].(*entgql.Cursor[xid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[xid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.UserOrder), fc.Args["where"].(*ent.UserWhereInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			model, err := ec.unmarshalNString2string(ctx, "users")
+			object, err := ec.unmarshalNString2string(ctx, "users")
 			if err != nil {
 				return nil, err
 			}
-			if ec.directives.QueryPermission == nil {
-				return nil, errors.New("directive queryPermission is not implemented")
+			action, err := ec.unmarshalNString2string(ctx, "read")
+			if err != nil {
+				return nil, err
 			}
-			return ec.directives.QueryPermission(ctx, nil, directive0, model)
+			if ec.directives.Permission == nil {
+				return nil, errors.New("directive permission is not implemented")
+			}
+			return ec.directives.Permission(ctx, nil, directive0, object, action)
 		}
 
 		tmp, err := directive1(rctx)

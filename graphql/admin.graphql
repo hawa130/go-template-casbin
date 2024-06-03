@@ -1,5 +1,5 @@
 directive @admin on FIELD_DEFINITION
-directive @queryPermission(model: String!) on FIELD_DEFINITION
+directive @permission(object: String!, action: String!) on FIELD_DEFINITION
 
 extend type Mutation {
   resetPassword(id: ID!, password: String!): User! @admin

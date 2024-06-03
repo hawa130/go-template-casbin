@@ -30,10 +30,10 @@ func (r *queryResolver) Nodes(ctx context.Context, ids []xid.ID) ([]ent.Noder, e
 	return r.client.Noders(ctx, ids)
 }
 
-// PublicKeys is the resolver for the publicKeys field.
+// PublicKeys is the resolver for the publicKeys field. 此函数及之后的函数均已使用指令（Directive）实现权限校验，无需在代码中手动添加权限校验逻辑
 func (r *queryResolver) PublicKeys(ctx context.Context, after *entgql.Cursor[xid.ID], first *int, before *entgql.Cursor[xid.ID], last *int, orderBy *ent.PublicKeyOrder, where *ent.PublicKeyWhereInput) (*ent.PublicKeyConnection, error) {
 	return r.client.PublicKey.Query().
-		Paginate(ctx, after, first, before, last,
+		Paginate(rule.WithAllowContext(ctx), after, first, before, last,
 			ent.WithPublicKeyOrder(orderBy),
 			ent.WithPublicKeyFilter(where.Filter),
 		)
@@ -42,7 +42,7 @@ func (r *queryResolver) PublicKeys(ctx context.Context, after *entgql.Cursor[xid
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, after *entgql.Cursor[xid.ID], first *int, before *entgql.Cursor[xid.ID], last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) (*ent.UserConnection, error) {
 	return r.client.User.Query().
-		Paginate(rule.WithQueryAllFields(ctx), after, first, before, last,
+		Paginate(rule.WithAllowContext(ctx), after, first, before, last,
 			ent.WithUserOrder(orderBy),
 			ent.WithUserFilter(where.Filter),
 		)

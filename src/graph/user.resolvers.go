@@ -28,7 +28,7 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, id *xid.ID, input ent
 	if err != nil {
 		return nil, err
 	}
-	return ent.FromContext(ctx).User.UpdateOneID(*id).SetInput(input).Save(ctx)
+	return ent.FromContext(ctx).User.UpdateOneID(*id).SetInput(input).Save(rule.WithAllowContext(ctx))
 }
 
 // DeleteUser is the resolver for the deleteUser field.
@@ -37,7 +37,7 @@ func (r *mutationResolver) DeleteUser(ctx context.Context, id *xid.ID) (bool, er
 	if err != nil {
 		return false, err
 	}
-	if err := ent.FromContext(ctx).User.DeleteOneID(*id).Exec(ctx); err != nil {
+	if err := ent.FromContext(ctx).User.DeleteOneID(*id).Exec(rule.WithAllowContext(ctx)); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -107,23 +107,22 @@ func (r *mutationResolver) UpdatePassword(ctx context.Context, id *xid.ID, input
 
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id *xid.ID) (*ent.User, error) {
-	builder := r.client.User.Query().Where(user.IDEQ(*id))
-
 	u, _ := auth.FromContext(ctx)
-	if u == nil {
-		return builder.Only(ctx)
+	if u == nil && id == nil {
+		return nil, reqerr.ErrBadRequest
 	}
 	if id == nil {
 		id = &u.ID
 	}
 
+	builder := r.client.User.Query().Where(user.IDEQ(*id))
 	allow, err := perm.EnforceX(u.ID, id, perm.OpRead)
 	if err != nil {
 		return nil, err
 	}
 
 	if allow {
-		return builder.Only(rule.WithQueryAllFields(ctx))
+		return builder.Only(rule.WithAllowContext(ctx))
 	}
 	return builder.Only(ctx)
 }

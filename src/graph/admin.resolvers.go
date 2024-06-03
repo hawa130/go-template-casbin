@@ -8,10 +8,14 @@ import (
 	"context"
 
 	"github.com/hawa130/computility-cloud/ent"
+	"github.com/hawa130/computility-cloud/internal/rule"
 	"github.com/rs/xid"
 )
 
 // ResetPassword is the resolver for the resetPassword field.
 func (r *mutationResolver) ResetPassword(ctx context.Context, id xid.ID, password string) (*ent.User, error) {
-	return ent.FromContext(ctx).User.UpdateOneID(id).SetPassword(password).Save(ctx)
+	return ent.FromContext(ctx).User.
+		UpdateOneID(id).
+		SetPassword(password).
+		Save(rule.WithAllowContext(ctx))
 }

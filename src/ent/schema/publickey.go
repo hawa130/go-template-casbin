@@ -12,6 +12,7 @@ import (
 	"github.com/hawa130/computility-cloud/ent/schema/gqlutils"
 	"github.com/hawa130/computility-cloud/ent/schema/mixinx"
 	"github.com/hawa130/computility-cloud/internal/hookx"
+	"github.com/hawa130/computility-cloud/internal/perm"
 	"github.com/hawa130/computility-cloud/internal/rule"
 )
 
@@ -55,7 +56,7 @@ func (PublicKey) Indexes() []ent.Index {
 func (PublicKey) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
-		gqlutils.PermissionDirective(publickey.Table),
+		gqlutils.PermissionDirective(publickey.Table, perm.OpRead),
 		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }

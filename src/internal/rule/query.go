@@ -43,9 +43,22 @@ func LimitQueryFields(fields ...string) privacy.QueryRule {
 	})
 }
 
+// LimitUserQueryFields 限制查询用户字段
+func LimitUserQueryFields(fields ...string) privacy.QueryRule {
+	return privacy.UserQueryRuleFunc(func(ctx context.Context, q *ent.UserQuery) error {
+		// 允许查询所有字段
+		if IsQueryAllFields(ctx) {
+			return privacy.Skip
+		}
+		// 限制查询字段
+		q.Select(fields...)
+		return privacy.Skip
+	})
+}
+
 // FilterQuery 过滤查询
 func FilterQuery(fn func(u *ent.User) entql.P) privacy.QueryRule {
-	type UserFilter interface {
+	type Filter interface {
 		Where(p entql.P)
 	}
 	return privacy.FilterFunc(func(ctx context.Context, f privacy.Filter) error {
@@ -54,7 +67,7 @@ func FilterQuery(fn func(u *ent.User) entql.P) privacy.QueryRule {
 			return err
 		}
 
-		filter, ok := f.(UserFilter)
+		filter, ok := f.(Filter)
 		if !ok {
 			return fmt.Errorf("unexpected filter type %T", f)
 		}
