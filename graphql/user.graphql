@@ -20,4 +20,5 @@ extend type Mutation {
 
 extend type Query {
     user(id: ID): User!
+    children(id: ID): [User!]!
 }

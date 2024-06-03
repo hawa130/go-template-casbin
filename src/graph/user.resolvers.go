@@ -127,6 +127,18 @@ func (r *queryResolver) User(ctx context.Context, id *xid.ID) (*ent.User, error)
 	return builder.Only(ctx)
 }
 
+// Children is the resolver for the children field.
+func (r *queryResolver) Children(ctx context.Context, id *xid.ID) ([]*ent.User, error) {
+	id, err := auth.SelfOrAuthenticated(ctx, id, perm.OpRead)
+	if err != nil {
+		return nil, err
+	}
+
+	return r.client.User.Query().
+		Where(user.HasParentWith(user.IDEQ(*id))).
+		All(rule.WithAllowContext(ctx))
+}
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
