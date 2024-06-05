@@ -58,10 +58,22 @@ func init() {
 	// casbinrule.DefaultID holds the default value on creation for the id field.
 	casbinrule.DefaultID = casbinruleDescID.Default.(func() xid.ID)
 	publickeyMixin := schema.PublicKey{}.Mixin()
+	publickey.Policy = privacy.NewPolicies(schema.PublicKey{})
+	publickey.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := publickey.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
 	publickeyHooks := schema.PublicKey{}.Hooks()
-	publickey.Hooks[0] = publickeyHooks[0]
-	publickey.Hooks[1] = publickeyHooks[1]
-	publickey.Hooks[2] = publickeyHooks[2]
+
+	publickey.Hooks[1] = publickeyHooks[0]
+
+	publickey.Hooks[2] = publickeyHooks[1]
+
+	publickey.Hooks[3] = publickeyHooks[2]
 	publickeyMixinFields0 := publickeyMixin[0].Fields()
 	_ = publickeyMixinFields0
 	publickeyMixinFields1 := publickeyMixin[1].Fields()

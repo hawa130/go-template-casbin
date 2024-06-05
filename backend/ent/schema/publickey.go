@@ -69,7 +69,7 @@ func (PublicKey) Hooks() []ent.Hook {
 	}
 }
 
-func (PublicKey) Privacy() privacy.Policy {
+func (PublicKey) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
 			rule.AllowAuthorizedMutation(publickey.Table),

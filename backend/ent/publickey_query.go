@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 
@@ -365,6 +366,12 @@ func (pkq *PublicKeyQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		pkq.sql = prev
+	}
+	if publickey.Policy == nil {
+		return errors.New("ent: uninitialized publickey.Policy (forgotten import ent/runtime?)")
+	}
+	if err := publickey.Policy.EvalQuery(ctx, pkq); err != nil {
+		return err
 	}
 	return nil
 }
