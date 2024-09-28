@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/hawa130/computility-cloud/ent/casbinrule"
-	"github.com/hawa130/computility-cloud/ent/predicate"
+	"github.com/hawa130/serverx/ent/casbinrule"
+	"github.com/hawa130/serverx/ent/predicate"
 	"github.com/rs/xid"
 )
 
@@ -63,7 +64,7 @@ func (crq *CasbinRuleQuery) Order(o ...casbinrule.OrderOption) *CasbinRuleQuery 
 // First returns the first CasbinRule entity from the query.
 // Returns a *NotFoundError when no CasbinRule was found.
 func (crq *CasbinRuleQuery) First(ctx context.Context) (*CasbinRule, error) {
-	nodes, err := crq.Limit(1).All(setContextOp(ctx, crq.ctx, "First"))
+	nodes, err := crq.Limit(1).All(setContextOp(ctx, crq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +87,7 @@ func (crq *CasbinRuleQuery) FirstX(ctx context.Context) *CasbinRule {
 // Returns a *NotFoundError when no CasbinRule ID was found.
 func (crq *CasbinRuleQuery) FirstID(ctx context.Context) (id xid.ID, err error) {
 	var ids []xid.ID
-	if ids, err = crq.Limit(1).IDs(setContextOp(ctx, crq.ctx, "FirstID")); err != nil {
+	if ids, err = crq.Limit(1).IDs(setContextOp(ctx, crq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -109,7 +110,7 @@ func (crq *CasbinRuleQuery) FirstIDX(ctx context.Context) xid.ID {
 // Returns a *NotSingularError when more than one CasbinRule entity is found.
 // Returns a *NotFoundError when no CasbinRule entities are found.
 func (crq *CasbinRuleQuery) Only(ctx context.Context) (*CasbinRule, error) {
-	nodes, err := crq.Limit(2).All(setContextOp(ctx, crq.ctx, "Only"))
+	nodes, err := crq.Limit(2).All(setContextOp(ctx, crq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +138,7 @@ func (crq *CasbinRuleQuery) OnlyX(ctx context.Context) *CasbinRule {
 // Returns a *NotFoundError when no entities are found.
 func (crq *CasbinRuleQuery) OnlyID(ctx context.Context) (id xid.ID, err error) {
 	var ids []xid.ID
-	if ids, err = crq.Limit(2).IDs(setContextOp(ctx, crq.ctx, "OnlyID")); err != nil {
+	if ids, err = crq.Limit(2).IDs(setContextOp(ctx, crq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -162,7 +163,7 @@ func (crq *CasbinRuleQuery) OnlyIDX(ctx context.Context) xid.ID {
 
 // All executes the query and returns a list of CasbinRules.
 func (crq *CasbinRuleQuery) All(ctx context.Context) ([]*CasbinRule, error) {
-	ctx = setContextOp(ctx, crq.ctx, "All")
+	ctx = setContextOp(ctx, crq.ctx, ent.OpQueryAll)
 	if err := crq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -184,7 +185,7 @@ func (crq *CasbinRuleQuery) IDs(ctx context.Context) (ids []xid.ID, err error) {
 	if crq.ctx.Unique == nil && crq.path != nil {
 		crq.Unique(true)
 	}
-	ctx = setContextOp(ctx, crq.ctx, "IDs")
+	ctx = setContextOp(ctx, crq.ctx, ent.OpQueryIDs)
 	if err = crq.Select(casbinrule.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -202,7 +203,7 @@ func (crq *CasbinRuleQuery) IDsX(ctx context.Context) []xid.ID {
 
 // Count returns the count of the given query.
 func (crq *CasbinRuleQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, crq.ctx, "Count")
+	ctx = setContextOp(ctx, crq.ctx, ent.OpQueryCount)
 	if err := crq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -220,7 +221,7 @@ func (crq *CasbinRuleQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (crq *CasbinRuleQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, crq.ctx, "Exist")
+	ctx = setContextOp(ctx, crq.ctx, ent.OpQueryExist)
 	switch _, err := crq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -463,7 +464,7 @@ func (crgb *CasbinRuleGroupBy) Aggregate(fns ...AggregateFunc) *CasbinRuleGroupB
 
 // Scan applies the selector query and scans the result into the given value.
 func (crgb *CasbinRuleGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, crgb.build.ctx, "GroupBy")
+	ctx = setContextOp(ctx, crgb.build.ctx, ent.OpQueryGroupBy)
 	if err := crgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -511,7 +512,7 @@ func (crs *CasbinRuleSelect) Aggregate(fns ...AggregateFunc) *CasbinRuleSelect {
 
 // Scan applies the selector query and scans the result into the given value.
 func (crs *CasbinRuleSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, crs.ctx, "Select")
+	ctx = setContextOp(ctx, crs.ctx, ent.OpQuerySelect)
 	if err := crs.prepareQuery(ctx); err != nil {
 		return err
 	}

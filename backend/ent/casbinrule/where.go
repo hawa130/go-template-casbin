@@ -4,7 +4,7 @@ package casbinrule
 
 import (
 	"entgo.io/ent/dialect/sql"
-	"github.com/hawa130/computility-cloud/ent/predicate"
+	"github.com/hawa130/serverx/ent/predicate"
 	"github.com/rs/xid"
 )
 

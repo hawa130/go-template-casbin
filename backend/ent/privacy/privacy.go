@@ -5,7 +5,7 @@ package privacy
 import (
 	"context"
 
-	"github.com/hawa130/computility-cloud/ent"
+	"github.com/hawa130/serverx/ent"
 
 	"entgo.io/ent/entql"
 	"entgo.io/ent/privacy"

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hawa130/computility-cloud/graph/reqerr"
-	"github.com/hawa130/computility-cloud/internal/perm"
+	"github.com/hawa130/serverx/graph/reqerr"
+	"github.com/hawa130/serverx/internal/perm"
 	"github.com/rs/xid"
 )
 

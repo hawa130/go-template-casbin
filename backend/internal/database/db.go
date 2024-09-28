@@ -4,9 +4,9 @@ import (
 	"context"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/hawa130/computility-cloud/ent"
-	"github.com/hawa130/computility-cloud/ent/migrate"
-	"github.com/hawa130/computility-cloud/ent/privacy"
+	"github.com/hawa130/serverx/ent"
+	"github.com/hawa130/serverx/ent/migrate"
+	"github.com/hawa130/serverx/ent/privacy"
 	_ "github.com/lib/pq"
 )
 

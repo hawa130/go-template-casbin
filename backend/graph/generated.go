@@ -15,9 +15,9 @@ import (
 	"entgo.io/contrib/entgql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/hawa130/computility-cloud/ent"
-	"github.com/hawa130/computility-cloud/graph/model"
-	"github.com/hawa130/computility-cloud/internal/xidgql"
+	"github.com/hawa130/serverx/ent"
+	"github.com/hawa130/serverx/graph/model"
+	"github.com/hawa130/serverx/internal/xidgql"
 	"github.com/rs/xid"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
@@ -1462,7 +1462,7 @@ scalar Cursor
 An object with an ID.
 Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
 """
-interface Node @goModel(model: "github.com/hawa130/computility-cloud/ent.Noder") {
+interface Node @goModel(model: "github.com/hawa130/serverx/ent.Noder") {
   """
   The id of the object.
   """
@@ -2183,787 +2183,1865 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 func (ec *executionContext) dir_permission_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["object"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("object"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.dir_permission_argsObject(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["object"] = arg0
-	var arg1 string
-	if tmp, ok := rawArgs["action"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("action"))
-		arg1, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.dir_permission_argsAction(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["action"] = arg1
 	return args, nil
+}
+func (ec *executionContext) dir_permission_argsObject(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (string, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["object"]
+	if !ok {
+		var zeroVal string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("object"))
+	if tmp, ok := rawArgs["object"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) dir_permission_argsAction(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (string, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["action"]
+	if !ok {
+		var zeroVal string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("action"))
+	if tmp, ok := rawArgs["action"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_addGroupingPolicies_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 []*model.CGroupInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCGroupInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInputᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_addGroupingPolicies_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_addGroupingPolicies_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) ([]*model.CGroupInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal []*model.CGroupInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCGroupInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupInputᚄ(ctx, tmp)
+	}
+
+	var zeroVal []*model.CGroupInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_addGroupingPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.CGroupInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_addGroupingPolicy_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_addGroupingPolicy_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.CGroupInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal model.CGroupInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
+	}
+
+	var zeroVal model.CGroupInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_addNamedGroupingPolicies_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["pType"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_addNamedGroupingPolicies_argsPType(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["pType"] = arg0
-	var arg1 []*model.CGroupInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalNCGroupInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInputᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_addNamedGroupingPolicies_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_addNamedGroupingPolicies_argsPType(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (string, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["pType"]
+	if !ok {
+		var zeroVal string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
+	if tmp, ok := rawArgs["pType"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_addNamedGroupingPolicies_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) ([]*model.CGroupInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal []*model.CGroupInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCGroupInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupInputᚄ(ctx, tmp)
+	}
+
+	var zeroVal []*model.CGroupInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_addNamedGroupingPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["pType"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_addNamedGroupingPolicy_argsPType(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["pType"] = arg0
-	var arg1 model.CGroupInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_addNamedGroupingPolicy_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_addNamedGroupingPolicy_argsPType(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (string, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["pType"]
+	if !ok {
+		var zeroVal string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
+	if tmp, ok := rawArgs["pType"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_addNamedGroupingPolicy_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.CGroupInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal model.CGroupInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
+	}
+
+	var zeroVal model.CGroupInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_addNamedPolicies_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["pType"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_addNamedPolicies_argsPType(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["pType"] = arg0
-	var arg1 []*model.CRequestInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalNCRequestInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInputᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_addNamedPolicies_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_addNamedPolicies_argsPType(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (string, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["pType"]
+	if !ok {
+		var zeroVal string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
+	if tmp, ok := rawArgs["pType"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_addNamedPolicies_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) ([]*model.CRequestInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal []*model.CRequestInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCRequestInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInputᚄ(ctx, tmp)
+	}
+
+	var zeroVal []*model.CRequestInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_addNamedPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["pType"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_addNamedPolicy_argsPType(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["pType"] = arg0
-	var arg1 model.CRequestInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_addNamedPolicy_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_addNamedPolicy_argsPType(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (string, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["pType"]
+	if !ok {
+		var zeroVal string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("pType"))
+	if tmp, ok := rawArgs["pType"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_addNamedPolicy_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.CRequestInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal model.CRequestInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
+	}
+
+	var zeroVal model.CRequestInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_addPolicies_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 []*model.CRequestInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCRequestInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInputᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_addPolicies_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_addPolicies_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) ([]*model.CRequestInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal []*model.CRequestInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCRequestInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInputᚄ(ctx, tmp)
+	}
+
+	var zeroVal []*model.CRequestInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_addPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.CRequestInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_addPolicy_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_addPolicy_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.CRequestInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal model.CRequestInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
+	}
+
+	var zeroVal model.CRequestInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_createChildren_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *xid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_createChildren_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["id"] = arg0
-	var arg1 []*ent.CreateUserInput
-	if tmp, ok := rawArgs["children"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("children"))
-		arg1, err = ec.unmarshalOCreateUserInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInputᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_createChildren_argsChildren(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["children"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_createChildren_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal *xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal *xid.ID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_createChildren_argsChildren(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) ([]*ent.CreateUserInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["children"]
+	if !ok {
+		var zeroVal []*ent.CreateUserInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("children"))
+	if tmp, ok := rawArgs["children"]; ok {
+		return ec.unmarshalOCreateUserInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐCreateUserInputᚄ(ctx, tmp)
+	}
+
+	var zeroVal []*ent.CreateUserInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_createPublicKey_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *xid.ID
-	if tmp, ok := rawArgs["uid"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("uid"))
-		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_createPublicKey_argsUID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["uid"] = arg0
-	var arg1 ent.CreatePublicKeyInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalNCreatePublicKeyInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreatePublicKeyInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_createPublicKey_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_createPublicKey_argsUID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["uid"]
+	if !ok {
+		var zeroVal *xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("uid"))
+	if tmp, ok := rawArgs["uid"]; ok {
+		return ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal *xid.ID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_createPublicKey_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (ent.CreatePublicKeyInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal ent.CreatePublicKeyInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCreatePublicKeyInput2githubᚗcomᚋhawa130ᚋserverxᚋentᚐCreatePublicKeyInput(ctx, tmp)
+	}
+
+	var zeroVal ent.CreatePublicKeyInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 ent.CreateUserInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateUserInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_createUser_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_createUser_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (ent.CreateUserInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal ent.CreateUserInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCreateUserInput2githubᚗcomᚋhawa130ᚋserverxᚋentᚐCreateUserInput(ctx, tmp)
+	}
+
+	var zeroVal ent.CreateUserInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_deleteGroupingPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.CGroupInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_deleteGroupingPolicy_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_deleteGroupingPolicy_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.CGroupInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal model.CGroupInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
+	}
+
+	var zeroVal model.CGroupInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_deletePolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.CRequestInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_deletePolicy_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_deletePolicy_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.CRequestInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal model.CRequestInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
+	}
+
+	var zeroVal model.CRequestInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_deletePublicKey_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 xid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_deletePublicKey_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["id"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_deletePublicKey_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal xid.ID
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_deleteUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *xid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_deleteUser_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["id"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_deleteUser_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal *xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal *xid.ID
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_login_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.LoginInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNLoginInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐLoginInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_login_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_login_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.LoginInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal model.LoginInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNLoginInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐLoginInput(ctx, tmp)
+	}
+
+	var zeroVal model.LoginInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_register_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.RegisterInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNRegisterInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐRegisterInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_register_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_register_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.RegisterInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal model.RegisterInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNRegisterInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐRegisterInput(ctx, tmp)
+	}
+
+	var zeroVal model.RegisterInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_removeChildren_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *xid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_removeChildren_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["id"] = arg0
-	var arg1 xid.ID
-	if tmp, ok := rawArgs["child"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("child"))
-		arg1, err = ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_removeChildren_argsChild(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["child"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_removeChildren_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal *xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal *xid.ID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_removeChildren_argsChild(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["child"]
+	if !ok {
+		var zeroVal xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("child"))
+	if tmp, ok := rawArgs["child"]; ok {
+		return ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal xid.ID
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_resetPassword_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 xid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_resetPassword_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["id"] = arg0
-	var arg1 string
-	if tmp, ok := rawArgs["password"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
-		arg1, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_resetPassword_argsPassword(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["password"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_resetPassword_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal xid.ID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_resetPassword_argsPassword(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (string, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["password"]
+	if !ok {
+		var zeroVal string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
+	if tmp, ok := rawArgs["password"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_updateGroupingPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.CGroupInput
-	if tmp, ok := rawArgs["new"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("new"))
-		arg0, err = ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_updateGroupingPolicy_argsNew(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["new"] = arg0
-	var arg1 model.CGroupInput
-	if tmp, ok := rawArgs["old"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("old"))
-		arg1, err = ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_updateGroupingPolicy_argsOld(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["old"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_updateGroupingPolicy_argsNew(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.CGroupInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["new"]
+	if !ok {
+		var zeroVal model.CGroupInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("new"))
+	if tmp, ok := rawArgs["new"]; ok {
+		return ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
+	}
+
+	var zeroVal model.CGroupInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateGroupingPolicy_argsOld(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.CGroupInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["old"]
+	if !ok {
+		var zeroVal model.CGroupInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("old"))
+	if tmp, ok := rawArgs["old"]; ok {
+		return ec.unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupInput(ctx, tmp)
+	}
+
+	var zeroVal model.CGroupInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_updatePassword_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *xid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_updatePassword_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["id"] = arg0
-	var arg1 model.UpdatePasswordInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalNUpdatePasswordInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdatePasswordInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_updatePassword_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_updatePassword_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal *xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal *xid.ID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePassword_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.UpdatePasswordInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal model.UpdatePasswordInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNUpdatePasswordInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐUpdatePasswordInput(ctx, tmp)
+	}
+
+	var zeroVal model.UpdatePasswordInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_updatePolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.CRequestInput
-	if tmp, ok := rawArgs["new"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("new"))
-		arg0, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_updatePolicy_argsNew(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["new"] = arg0
-	var arg1 model.CRequestInput
-	if tmp, ok := rawArgs["old"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("old"))
-		arg1, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_updatePolicy_argsOld(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["old"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_updatePolicy_argsNew(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.CRequestInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["new"]
+	if !ok {
+		var zeroVal model.CRequestInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("new"))
+	if tmp, ok := rawArgs["new"]; ok {
+		return ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
+	}
+
+	var zeroVal model.CRequestInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePolicy_argsOld(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.CRequestInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["old"]
+	if !ok {
+		var zeroVal model.CRequestInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("old"))
+	if tmp, ok := rawArgs["old"]; ok {
+		return ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
+	}
+
+	var zeroVal model.CRequestInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_updatePublicKey_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 xid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_updatePublicKey_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["id"] = arg0
-	var arg1 ent.UpdatePublicKeyInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalNUpdatePublicKeyInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUpdatePublicKeyInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_updatePublicKey_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_updatePublicKey_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal xid.ID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePublicKey_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (ent.UpdatePublicKeyInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal ent.UpdatePublicKeyInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNUpdatePublicKeyInput2githubᚗcomᚋhawa130ᚋserverxᚋentᚐUpdatePublicKeyInput(ctx, tmp)
+	}
+
+	var zeroVal ent.UpdatePublicKeyInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *xid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Mutation_updateUser_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["id"] = arg0
-	var arg1 ent.UpdateUserInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalNUpdateUserInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUpdateUserInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Mutation_updateUser_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg1
 	return args, nil
+}
+func (ec *executionContext) field_Mutation_updateUser_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal *xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal *xid.ID
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_updateUser_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (ent.UpdateUserInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal ent.UpdateUserInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNUpdateUserInput2githubᚗcomᚋhawa130ᚋserverxᚋentᚐUpdateUserInput(ctx, tmp)
+	}
+
+	var zeroVal ent.UpdateUserInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Query___type_argsName(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["name"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Query___type_argsName(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (string, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["name"]
+	if !ok {
+		var zeroVal string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+	if tmp, ok := rawArgs["name"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_children_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *xid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Query_children_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["id"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Query_children_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal *xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal *xid.ID
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_enforce_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.CRequestInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Query_enforce_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Query_enforce_argsInput(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (model.CRequestInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["input"]
+	if !ok {
+		var zeroVal model.CRequestInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInput(ctx, tmp)
+	}
+
+	var zeroVal model.CRequestInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_groupingPolicy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Query_groupingPolicy_argsName(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["name"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Query_groupingPolicy_argsName(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*string, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["name"]
+	if !ok {
+		var zeroVal *string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+	if tmp, ok := rawArgs["name"]; ok {
+		return ec.unmarshalOString2ᚖstring(ctx, tmp)
+	}
+
+	var zeroVal *string
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_node_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 xid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Query_node_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["id"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Query_node_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2githubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal xid.ID
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_nodes_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 []xid.ID
-	if tmp, ok := rawArgs["ids"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ids"))
-		arg0, err = ec.unmarshalNID2ᚕgithubᚗcomᚋrsᚋxidᚐIDᚄ(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Query_nodes_argsIds(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["ids"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Query_nodes_argsIds(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) ([]xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["ids"]
+	if !ok {
+		var zeroVal []xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("ids"))
+	if tmp, ok := rawArgs["ids"]; ok {
+		return ec.unmarshalNID2ᚕgithubᚗcomᚋrsᚋxidᚐIDᚄ(ctx, tmp)
+	}
+
+	var zeroVal []xid.ID
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_policy_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Query_policy_argsName(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["name"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Query_policy_argsName(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*string, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["name"]
+	if !ok {
+		var zeroVal *string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+	if tmp, ok := rawArgs["name"]; ok {
+		return ec.unmarshalOString2ᚖstring(ctx, tmp)
+	}
+
+	var zeroVal *string
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_publicKey_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *xid.ID
-	if tmp, ok := rawArgs["uid"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("uid"))
-		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Query_publicKey_argsUID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["uid"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Query_publicKey_argsUID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["uid"]
+	if !ok {
+		var zeroVal *xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("uid"))
+	if tmp, ok := rawArgs["uid"]; ok {
+		return ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal *xid.ID
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_publicKeys_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *entgql.Cursor[xid.ID]
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Query_publicKeys_argsAfter(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["after"] = arg0
-	var arg1 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Query_publicKeys_argsFirst(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["first"] = arg1
-	var arg2 *entgql.Cursor[xid.ID]
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg2, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg2, err := ec.field_Query_publicKeys_argsBefore(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["before"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg3, err := ec.field_Query_publicKeys_argsLast(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["last"] = arg3
-	var arg4 *ent.PublicKeyOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOPublicKeyOrder2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyOrder(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg4, err := ec.field_Query_publicKeys_argsOrderBy(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["orderBy"] = arg4
-	var arg5 *ent.PublicKeyWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOPublicKeyWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyWhereInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg5, err := ec.field_Query_publicKeys_argsWhere(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["where"] = arg5
 	return args, nil
+}
+func (ec *executionContext) field_Query_publicKeys_argsAfter(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*entgql.Cursor[xid.ID], error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["after"]
+	if !ok {
+		var zeroVal *entgql.Cursor[xid.ID]
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+	if tmp, ok := rawArgs["after"]; ok {
+		return ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
+	}
+
+	var zeroVal *entgql.Cursor[xid.ID]
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_publicKeys_argsFirst(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*int, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["first"]
+	if !ok {
+		var zeroVal *int
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+	if tmp, ok := rawArgs["first"]; ok {
+		return ec.unmarshalOInt2ᚖint(ctx, tmp)
+	}
+
+	var zeroVal *int
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_publicKeys_argsBefore(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*entgql.Cursor[xid.ID], error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["before"]
+	if !ok {
+		var zeroVal *entgql.Cursor[xid.ID]
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+	if tmp, ok := rawArgs["before"]; ok {
+		return ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
+	}
+
+	var zeroVal *entgql.Cursor[xid.ID]
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_publicKeys_argsLast(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*int, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["last"]
+	if !ok {
+		var zeroVal *int
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+	if tmp, ok := rawArgs["last"]; ok {
+		return ec.unmarshalOInt2ᚖint(ctx, tmp)
+	}
+
+	var zeroVal *int
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_publicKeys_argsOrderBy(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*ent.PublicKeyOrder, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["orderBy"]
+	if !ok {
+		var zeroVal *ent.PublicKeyOrder
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		return ec.unmarshalOPublicKeyOrder2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyOrder(ctx, tmp)
+	}
+
+	var zeroVal *ent.PublicKeyOrder
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_publicKeys_argsWhere(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*ent.PublicKeyWhereInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["where"]
+	if !ok {
+		var zeroVal *ent.PublicKeyWhereInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+	if tmp, ok := rawArgs["where"]; ok {
+		return ec.unmarshalOPublicKeyWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyWhereInput(ctx, tmp)
+	}
+
+	var zeroVal *ent.PublicKeyWhereInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_user_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *xid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Query_user_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["id"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field_Query_user_argsID(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*xid.ID, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["id"]
+	if !ok {
+		var zeroVal *xid.ID
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalOID2ᚖgithubᚗcomᚋrsᚋxidᚐID(ctx, tmp)
+	}
+
+	var zeroVal *xid.ID
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field_Query_users_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *entgql.Cursor[xid.ID]
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field_Query_users_argsAfter(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["after"] = arg0
-	var arg1 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg1, err := ec.field_Query_users_argsFirst(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["first"] = arg1
-	var arg2 *entgql.Cursor[xid.ID]
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg2, err = ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg2, err := ec.field_Query_users_argsBefore(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["before"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg3, err := ec.field_Query_users_argsLast(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["last"] = arg3
-	var arg4 *ent.UserOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOUserOrder2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserOrder(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg4, err := ec.field_Query_users_argsOrderBy(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["orderBy"] = arg4
-	var arg5 *ent.UserWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserWhereInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg5, err := ec.field_Query_users_argsWhere(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["where"] = arg5
 	return args, nil
+}
+func (ec *executionContext) field_Query_users_argsAfter(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*entgql.Cursor[xid.ID], error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["after"]
+	if !ok {
+		var zeroVal *entgql.Cursor[xid.ID]
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+	if tmp, ok := rawArgs["after"]; ok {
+		return ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
+	}
+
+	var zeroVal *entgql.Cursor[xid.ID]
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_users_argsFirst(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*int, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["first"]
+	if !ok {
+		var zeroVal *int
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+	if tmp, ok := rawArgs["first"]; ok {
+		return ec.unmarshalOInt2ᚖint(ctx, tmp)
+	}
+
+	var zeroVal *int
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_users_argsBefore(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*entgql.Cursor[xid.ID], error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["before"]
+	if !ok {
+		var zeroVal *entgql.Cursor[xid.ID]
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+	if tmp, ok := rawArgs["before"]; ok {
+		return ec.unmarshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCursor(ctx, tmp)
+	}
+
+	var zeroVal *entgql.Cursor[xid.ID]
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_users_argsLast(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*int, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["last"]
+	if !ok {
+		var zeroVal *int
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+	if tmp, ok := rawArgs["last"]; ok {
+		return ec.unmarshalOInt2ᚖint(ctx, tmp)
+	}
+
+	var zeroVal *int
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_users_argsOrderBy(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*ent.UserOrder, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["orderBy"]
+	if !ok {
+		var zeroVal *ent.UserOrder
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		return ec.unmarshalOUserOrder2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserOrder(ctx, tmp)
+	}
+
+	var zeroVal *ent.UserOrder
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_users_argsWhere(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (*ent.UserWhereInput, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["where"]
+	if !ok {
+		var zeroVal *ent.UserWhereInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+	if tmp, ok := rawArgs["where"]; ok {
+		return ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserWhereInput(ctx, tmp)
+	}
+
+	var zeroVal *ent.UserWhereInput
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field___Type_enumValues_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 bool
-	if tmp, ok := rawArgs["includeDeprecated"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("includeDeprecated"))
-		arg0, err = ec.unmarshalOBoolean2bool(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field___Type_enumValues_argsIncludeDeprecated(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["includeDeprecated"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field___Type_enumValues_argsIncludeDeprecated(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (bool, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["includeDeprecated"]
+	if !ok {
+		var zeroVal bool
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("includeDeprecated"))
+	if tmp, ok := rawArgs["includeDeprecated"]; ok {
+		return ec.unmarshalOBoolean2bool(ctx, tmp)
+	}
+
+	var zeroVal bool
+	return zeroVal, nil
 }
 
 func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 bool
-	if tmp, ok := rawArgs["includeDeprecated"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("includeDeprecated"))
-		arg0, err = ec.unmarshalOBoolean2bool(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
+	arg0, err := ec.field___Type_fields_argsIncludeDeprecated(ctx, rawArgs)
+	if err != nil {
+		return nil, err
 	}
 	args["includeDeprecated"] = arg0
 	return args, nil
+}
+func (ec *executionContext) field___Type_fields_argsIncludeDeprecated(
+	ctx context.Context,
+	rawArgs map[string]interface{},
+) (bool, error) {
+	// We won't call the directive if the argument is null.
+	// Set call_argument_directives_with_null to true to call directives
+	// even if the argument is null.
+	_, ok := rawArgs["includeDeprecated"]
+	if !ok {
+		var zeroVal bool
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("includeDeprecated"))
+	if tmp, ok := rawArgs["includeDeprecated"]; ok {
+		return ec.unmarshalOBoolean2bool(ctx, tmp)
+	}
+
+	var zeroVal bool
+	return zeroVal, nil
 }
 
 // endregion ***************************** args.gotpl *****************************
@@ -2999,7 +4077,7 @@ func (ec *executionContext) _BatchCGroup_data(ctx context.Context, field graphql
 	}
 	res := resTmp.([]*model.CGroup)
 	fc.Result = res
-	return ec.marshalOCGroup2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupᚄ(ctx, field.Selections, res)
+	return ec.marshalOCGroup2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_BatchCGroup_data(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3090,7 +4168,7 @@ func (ec *executionContext) _BatchCPolicy_data(ctx context.Context, field graphq
 	}
 	res := resTmp.([]*model.CPolicy)
 	fc.Result = res
-	return ec.marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyᚄ(ctx, field.Selections, res)
+	return ec.marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicyᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_BatchCPolicy_data(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4104,7 +5182,7 @@ func (ec *executionContext) _LoginPayload_user(ctx context.Context, field graphq
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_LoginPayload_user(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4168,7 +5246,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4243,7 +5321,7 @@ func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field grap
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updateUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4362,17 +5440,21 @@ func (ec *executionContext) _Mutation_resetPassword(ctx context.Context, field g
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().ResetPassword(rctx, fc.Args["id"].(xid.ID), fc.Args["password"].(string))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			object, err := ec.unmarshalNString2string(ctx, "user")
 			if err != nil {
-				return nil, err
+				var zeroVal *ent.User
+				return zeroVal, err
 			}
 			action, err := ec.unmarshalNString2string(ctx, "update")
 			if err != nil {
-				return nil, err
+				var zeroVal *ent.User
+				return zeroVal, err
 			}
 			if ec.directives.Permission == nil {
-				return nil, errors.New("directive permission is not implemented")
+				var zeroVal *ent.User
+				return zeroVal, errors.New("directive permission is not implemented")
 			}
 			return ec.directives.Permission(ctx, nil, directive0, object, action)
 		}
@@ -4387,7 +5469,7 @@ func (ec *executionContext) _Mutation_resetPassword(ctx context.Context, field g
 		if data, ok := tmp.(*ent.User); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/ent.User`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/ent.User`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4401,7 +5483,7 @@ func (ec *executionContext) _Mutation_resetPassword(ctx context.Context, field g
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_resetPassword(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4476,7 +5558,7 @@ func (ec *executionContext) _Mutation_login(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.LoginPayload)
 	fc.Result = res
-	return ec.marshalNLoginPayload2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐLoginPayload(ctx, field.Selections, res)
+	return ec.marshalNLoginPayload2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐLoginPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_login(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4537,7 +5619,7 @@ func (ec *executionContext) _Mutation_register(ctx context.Context, field graphq
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_register(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4601,9 +5683,11 @@ func (ec *executionContext) _Mutation_addPolicy(ctx context.Context, field graph
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().AddPolicy(rctx, fc.Args["input"].(model.CRequestInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.CPolicyResult
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -4618,7 +5702,7 @@ func (ec *executionContext) _Mutation_addPolicy(ctx context.Context, field graph
 		if data, ok := tmp.(*model.CPolicyResult); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.CPolicyResult`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.CPolicyResult`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4632,7 +5716,7 @@ func (ec *executionContext) _Mutation_addPolicy(ctx context.Context, field graph
 	}
 	res := resTmp.(*model.CPolicyResult)
 	fc.Result = res
-	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
+	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_addPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4686,9 +5770,11 @@ func (ec *executionContext) _Mutation_addPolicies(ctx context.Context, field gra
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().AddPolicies(rctx, fc.Args["input"].([]*model.CRequestInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.BatchCPolicy
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -4703,7 +5789,7 @@ func (ec *executionContext) _Mutation_addPolicies(ctx context.Context, field gra
 		if data, ok := tmp.(*model.BatchCPolicy); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.BatchCPolicy`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.BatchCPolicy`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4717,7 +5803,7 @@ func (ec *executionContext) _Mutation_addPolicies(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.BatchCPolicy)
 	fc.Result = res
-	return ec.marshalNBatchCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCPolicy(ctx, field.Selections, res)
+	return ec.marshalNBatchCPolicy2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐBatchCPolicy(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_addPolicies(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4767,9 +5853,11 @@ func (ec *executionContext) _Mutation_addNamedPolicy(ctx context.Context, field 
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().AddNamedPolicy(rctx, fc.Args["pType"].(string), fc.Args["input"].(model.CRequestInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.CPolicyResult
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -4784,7 +5872,7 @@ func (ec *executionContext) _Mutation_addNamedPolicy(ctx context.Context, field 
 		if data, ok := tmp.(*model.CPolicyResult); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.CPolicyResult`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.CPolicyResult`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4798,7 +5886,7 @@ func (ec *executionContext) _Mutation_addNamedPolicy(ctx context.Context, field 
 	}
 	res := resTmp.(*model.CPolicyResult)
 	fc.Result = res
-	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
+	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_addNamedPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4852,9 +5940,11 @@ func (ec *executionContext) _Mutation_addNamedPolicies(ctx context.Context, fiel
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().AddNamedPolicies(rctx, fc.Args["pType"].(string), fc.Args["input"].([]*model.CRequestInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.BatchCPolicy
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -4869,7 +5959,7 @@ func (ec *executionContext) _Mutation_addNamedPolicies(ctx context.Context, fiel
 		if data, ok := tmp.(*model.BatchCPolicy); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.BatchCPolicy`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.BatchCPolicy`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4883,7 +5973,7 @@ func (ec *executionContext) _Mutation_addNamedPolicies(ctx context.Context, fiel
 	}
 	res := resTmp.(*model.BatchCPolicy)
 	fc.Result = res
-	return ec.marshalNBatchCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCPolicy(ctx, field.Selections, res)
+	return ec.marshalNBatchCPolicy2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐBatchCPolicy(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_addNamedPolicies(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4933,9 +6023,11 @@ func (ec *executionContext) _Mutation_deletePolicy(ctx context.Context, field gr
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().DeletePolicy(rctx, fc.Args["input"].(model.CRequestInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.CPolicyResult
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -4950,7 +6042,7 @@ func (ec *executionContext) _Mutation_deletePolicy(ctx context.Context, field gr
 		if data, ok := tmp.(*model.CPolicyResult); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.CPolicyResult`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.CPolicyResult`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4964,7 +6056,7 @@ func (ec *executionContext) _Mutation_deletePolicy(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.CPolicyResult)
 	fc.Result = res
-	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
+	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_deletePolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5018,9 +6110,11 @@ func (ec *executionContext) _Mutation_updatePolicy(ctx context.Context, field gr
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().UpdatePolicy(rctx, fc.Args["new"].(model.CRequestInput), fc.Args["old"].(model.CRequestInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.UpdateCPolicy
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -5035,7 +6129,7 @@ func (ec *executionContext) _Mutation_updatePolicy(ctx context.Context, field gr
 		if data, ok := tmp.(*model.UpdateCPolicy); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.UpdateCPolicy`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.UpdateCPolicy`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5049,7 +6143,7 @@ func (ec *executionContext) _Mutation_updatePolicy(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.UpdateCPolicy)
 	fc.Result = res
-	return ec.marshalNUpdateCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCPolicy(ctx, field.Selections, res)
+	return ec.marshalNUpdateCPolicy2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐUpdateCPolicy(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updatePolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5101,9 +6195,11 @@ func (ec *executionContext) _Mutation_addGroupingPolicy(ctx context.Context, fie
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().AddGroupingPolicy(rctx, fc.Args["input"].(model.CGroupInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.CGroupResult
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -5118,7 +6214,7 @@ func (ec *executionContext) _Mutation_addGroupingPolicy(ctx context.Context, fie
 		if data, ok := tmp.(*model.CGroupResult); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.CGroupResult`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.CGroupResult`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5132,7 +6228,7 @@ func (ec *executionContext) _Mutation_addGroupingPolicy(ctx context.Context, fie
 	}
 	res := resTmp.(*model.CGroupResult)
 	fc.Result = res
-	return ec.marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupResult(ctx, field.Selections, res)
+	return ec.marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_addGroupingPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5184,9 +6280,11 @@ func (ec *executionContext) _Mutation_addGroupingPolicies(ctx context.Context, f
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().AddGroupingPolicies(rctx, fc.Args["input"].([]*model.CGroupInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.BatchCGroup
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -5201,7 +6299,7 @@ func (ec *executionContext) _Mutation_addGroupingPolicies(ctx context.Context, f
 		if data, ok := tmp.(*model.BatchCGroup); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.BatchCGroup`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.BatchCGroup`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5215,7 +6313,7 @@ func (ec *executionContext) _Mutation_addGroupingPolicies(ctx context.Context, f
 	}
 	res := resTmp.(*model.BatchCGroup)
 	fc.Result = res
-	return ec.marshalNBatchCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCGroup(ctx, field.Selections, res)
+	return ec.marshalNBatchCGroup2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐBatchCGroup(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_addGroupingPolicies(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5265,9 +6363,11 @@ func (ec *executionContext) _Mutation_addNamedGroupingPolicy(ctx context.Context
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().AddNamedGroupingPolicy(rctx, fc.Args["pType"].(string), fc.Args["input"].(model.CGroupInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.CGroupResult
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -5282,7 +6382,7 @@ func (ec *executionContext) _Mutation_addNamedGroupingPolicy(ctx context.Context
 		if data, ok := tmp.(*model.CGroupResult); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.CGroupResult`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.CGroupResult`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5296,7 +6396,7 @@ func (ec *executionContext) _Mutation_addNamedGroupingPolicy(ctx context.Context
 	}
 	res := resTmp.(*model.CGroupResult)
 	fc.Result = res
-	return ec.marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupResult(ctx, field.Selections, res)
+	return ec.marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_addNamedGroupingPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5348,9 +6448,11 @@ func (ec *executionContext) _Mutation_addNamedGroupingPolicies(ctx context.Conte
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().AddNamedGroupingPolicies(rctx, fc.Args["pType"].(string), fc.Args["input"].([]*model.CGroupInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.BatchCGroup
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -5365,7 +6467,7 @@ func (ec *executionContext) _Mutation_addNamedGroupingPolicies(ctx context.Conte
 		if data, ok := tmp.(*model.BatchCGroup); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.BatchCGroup`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.BatchCGroup`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5379,7 +6481,7 @@ func (ec *executionContext) _Mutation_addNamedGroupingPolicies(ctx context.Conte
 	}
 	res := resTmp.(*model.BatchCGroup)
 	fc.Result = res
-	return ec.marshalNBatchCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCGroup(ctx, field.Selections, res)
+	return ec.marshalNBatchCGroup2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐBatchCGroup(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_addNamedGroupingPolicies(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5429,9 +6531,11 @@ func (ec *executionContext) _Mutation_deleteGroupingPolicy(ctx context.Context, 
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().DeleteGroupingPolicy(rctx, fc.Args["input"].(model.CGroupInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.CGroupResult
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -5446,7 +6550,7 @@ func (ec *executionContext) _Mutation_deleteGroupingPolicy(ctx context.Context, 
 		if data, ok := tmp.(*model.CGroupResult); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.CGroupResult`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.CGroupResult`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5460,7 +6564,7 @@ func (ec *executionContext) _Mutation_deleteGroupingPolicy(ctx context.Context, 
 	}
 	res := resTmp.(*model.CGroupResult)
 	fc.Result = res
-	return ec.marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupResult(ctx, field.Selections, res)
+	return ec.marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_deleteGroupingPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5512,9 +6616,11 @@ func (ec *executionContext) _Mutation_updateGroupingPolicy(ctx context.Context, 
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().UpdateGroupingPolicy(rctx, fc.Args["new"].(model.CGroupInput), fc.Args["old"].(model.CGroupInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Admin == nil {
-				return nil, errors.New("directive admin is not implemented")
+				var zeroVal *model.UpdateCGroup
+				return zeroVal, errors.New("directive admin is not implemented")
 			}
 			return ec.directives.Admin(ctx, nil, directive0)
 		}
@@ -5529,7 +6635,7 @@ func (ec *executionContext) _Mutation_updateGroupingPolicy(ctx context.Context, 
 		if data, ok := tmp.(*model.UpdateCGroup); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/graph/model.UpdateCGroup`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/graph/model.UpdateCGroup`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5543,7 +6649,7 @@ func (ec *executionContext) _Mutation_updateGroupingPolicy(ctx context.Context, 
 	}
 	res := resTmp.(*model.UpdateCGroup)
 	fc.Result = res
-	return ec.marshalNUpdateCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCGroup(ctx, field.Selections, res)
+	return ec.marshalNUpdateCGroup2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐUpdateCGroup(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updateGroupingPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5606,7 +6712,7 @@ func (ec *executionContext) _Mutation_createPublicKey(ctx context.Context, field
 	}
 	res := resTmp.(*ent.PublicKey)
 	fc.Result = res
-	return ec.marshalNPublicKey2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKey(ctx, field.Selections, res)
+	return ec.marshalNPublicKey2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKey(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createPublicKey(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5683,7 +6789,7 @@ func (ec *executionContext) _Mutation_updatePublicKey(ctx context.Context, field
 	}
 	res := resTmp.(*ent.PublicKey)
 	fc.Result = res
-	return ec.marshalNPublicKey2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKey(ctx, field.Selections, res)
+	return ec.marshalNPublicKey2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKey(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updatePublicKey(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5815,7 +6921,7 @@ func (ec *executionContext) _Mutation_createChildren(ctx context.Context, field 
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createChildren(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5890,7 +6996,7 @@ func (ec *executionContext) _Mutation_removeChildren(ctx context.Context, field 
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_removeChildren(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5965,7 +7071,7 @@ func (ec *executionContext) _Mutation_updatePassword(ctx context.Context, field 
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updatePassword(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6588,7 +7694,7 @@ func (ec *executionContext) _PublicKey_user(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_PublicKey_user(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6649,7 +7755,7 @@ func (ec *executionContext) _PublicKeyConnection_edges(ctx context.Context, fiel
 	}
 	res := resTmp.([]*ent.PublicKeyEdge)
 	fc.Result = res
-	return ec.marshalOPublicKeyEdge2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyEdge(ctx, field.Selections, res)
+	return ec.marshalOPublicKeyEdge2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_PublicKeyConnection_edges(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6794,7 +7900,7 @@ func (ec *executionContext) _PublicKeyEdge_node(ctx context.Context, field graph
 	}
 	res := resTmp.(*ent.PublicKey)
 	fc.Result = res
-	return ec.marshalOPublicKey2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKey(ctx, field.Selections, res)
+	return ec.marshalOPublicKey2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKey(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_PublicKeyEdge_node(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6901,7 +8007,7 @@ func (ec *executionContext) _Query_node(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(ent.Noder)
 	fc.Result = res
-	return ec.marshalONode2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐNoder(ctx, field.Selections, res)
+	return ec.marshalONode2githubᚗcomᚋhawa130ᚋserverxᚋentᚐNoder(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6956,7 +8062,7 @@ func (ec *executionContext) _Query_nodes(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.([]ent.Noder)
 	fc.Result = res
-	return ec.marshalNNode2ᚕgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐNoder(ctx, field.Selections, res)
+	return ec.marshalNNode2ᚕgithubᚗcomᚋhawa130ᚋserverxᚋentᚐNoder(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_nodes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7000,17 +8106,21 @@ func (ec *executionContext) _Query_publicKeys(ctx context.Context, field graphql
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Query().PublicKeys(rctx, fc.Args["after"].(*entgql.Cursor[xid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[xid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.PublicKeyOrder), fc.Args["where"].(*ent.PublicKeyWhereInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			object, err := ec.unmarshalNString2string(ctx, "public_keys")
 			if err != nil {
-				return nil, err
+				var zeroVal *ent.PublicKeyConnection
+				return zeroVal, err
 			}
 			action, err := ec.unmarshalNString2string(ctx, "read")
 			if err != nil {
-				return nil, err
+				var zeroVal *ent.PublicKeyConnection
+				return zeroVal, err
 			}
 			if ec.directives.Permission == nil {
-				return nil, errors.New("directive permission is not implemented")
+				var zeroVal *ent.PublicKeyConnection
+				return zeroVal, errors.New("directive permission is not implemented")
 			}
 			return ec.directives.Permission(ctx, nil, directive0, object, action)
 		}
@@ -7025,7 +8135,7 @@ func (ec *executionContext) _Query_publicKeys(ctx context.Context, field graphql
 		if data, ok := tmp.(*ent.PublicKeyConnection); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/ent.PublicKeyConnection`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/ent.PublicKeyConnection`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7039,7 +8149,7 @@ func (ec *executionContext) _Query_publicKeys(ctx context.Context, field graphql
 	}
 	res := resTmp.(*ent.PublicKeyConnection)
 	fc.Result = res
-	return ec.marshalNPublicKeyConnection2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyConnection(ctx, field.Selections, res)
+	return ec.marshalNPublicKeyConnection2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_publicKeys(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7091,17 +8201,21 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Query().Users(rctx, fc.Args["after"].(*entgql.Cursor[xid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[xid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.UserOrder), fc.Args["where"].(*ent.UserWhereInput))
 		}
+
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			object, err := ec.unmarshalNString2string(ctx, "users")
 			if err != nil {
-				return nil, err
+				var zeroVal *ent.UserConnection
+				return zeroVal, err
 			}
 			action, err := ec.unmarshalNString2string(ctx, "read")
 			if err != nil {
-				return nil, err
+				var zeroVal *ent.UserConnection
+				return zeroVal, err
 			}
 			if ec.directives.Permission == nil {
-				return nil, errors.New("directive permission is not implemented")
+				var zeroVal *ent.UserConnection
+				return zeroVal, errors.New("directive permission is not implemented")
 			}
 			return ec.directives.Permission(ctx, nil, directive0, object, action)
 		}
@@ -7116,7 +8230,7 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 		if data, ok := tmp.(*ent.UserConnection); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/computility-cloud/ent.UserConnection`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/hawa130/serverx/ent.UserConnection`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7130,7 +8244,7 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*ent.UserConnection)
 	fc.Result = res
-	return ec.marshalNUserConnection2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserConnection(ctx, field.Selections, res)
+	return ec.marshalNUserConnection2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_users(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7193,7 +8307,7 @@ func (ec *executionContext) _Query_enforce(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*model.CPolicyResult)
 	fc.Result = res
-	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
+	return ec.marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicyResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_enforce(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7255,7 +8369,7 @@ func (ec *executionContext) _Query_policy(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.([]*model.CPolicy)
 	fc.Result = res
-	return ec.marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyᚄ(ctx, field.Selections, res)
+	return ec.marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicyᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_policy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7315,7 +8429,7 @@ func (ec *executionContext) _Query_groupingPolicy(ctx context.Context, field gra
 	}
 	res := resTmp.([]*model.CGroup)
 	fc.Result = res
-	return ec.marshalOCGroup2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupᚄ(ctx, field.Selections, res)
+	return ec.marshalOCGroup2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_groupingPolicy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7373,7 +8487,7 @@ func (ec *executionContext) _Query_publicKey(ctx context.Context, field graphql.
 	}
 	res := resTmp.([]*ent.PublicKey)
 	fc.Result = res
-	return ec.marshalOPublicKey2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyᚄ(ctx, field.Selections, res)
+	return ec.marshalOPublicKey2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_publicKey(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7450,7 +8564,7 @@ func (ec *executionContext) _Query_user(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7525,7 +8639,7 @@ func (ec *executionContext) _Query_children(ctx context.Context, field graphql.C
 	}
 	res := resTmp.([]*ent.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_children(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7729,7 +8843,7 @@ func (ec *executionContext) _UpdateCGroup_new(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.CGroup)
 	fc.Result = res
-	return ec.marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroup(ctx, field.Selections, res)
+	return ec.marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroup(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UpdateCGroup_new(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7779,7 +8893,7 @@ func (ec *executionContext) _UpdateCGroup_old(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.CGroup)
 	fc.Result = res
-	return ec.marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroup(ctx, field.Selections, res)
+	return ec.marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroup(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UpdateCGroup_old(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7873,7 +8987,7 @@ func (ec *executionContext) _UpdateCPolicy_new(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.CPolicy)
 	fc.Result = res
-	return ec.marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicy(ctx, field.Selections, res)
+	return ec.marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicy(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UpdateCPolicy_new(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7925,7 +9039,7 @@ func (ec *executionContext) _UpdateCPolicy_old(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.CPolicy)
 	fc.Result = res
-	return ec.marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicy(ctx, field.Selections, res)
+	return ec.marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicy(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UpdateCPolicy_old(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8317,7 +9431,7 @@ func (ec *executionContext) _User_children(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.([]*ent.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_children(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8378,7 +9492,7 @@ func (ec *executionContext) _User_parent(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_parent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8439,7 +9553,7 @@ func (ec *executionContext) _UserConnection_edges(ctx context.Context, field gra
 	}
 	res := resTmp.([]*ent.UserEdge)
 	fc.Result = res
-	return ec.marshalOUserEdge2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserEdge(ctx, field.Selections, res)
+	return ec.marshalOUserEdge2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserConnection_edges(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8584,7 +9698,7 @@ func (ec *executionContext) _UserEdge_node(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserEdge_node(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10528,21 +11642,21 @@ func (ec *executionContext) unmarshalInputCasbinRuleWhereInput(ctx context.Conte
 		switch k {
 		case "not":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
-			data, err := ec.unmarshalOCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInput(ctx, v)
+			data, err := ec.unmarshalOCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐCasbinRuleWhereInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Not = data
 		case "and":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
-			data, err := ec.unmarshalOCasbinRuleWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInputᚄ(ctx, v)
+			data, err := ec.unmarshalOCasbinRuleWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐCasbinRuleWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.And = data
 		case "or":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
-			data, err := ec.unmarshalOCasbinRuleWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInputᚄ(ctx, v)
+			data, err := ec.unmarshalOCasbinRuleWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐCasbinRuleWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11431,7 +12545,7 @@ func (ec *executionContext) unmarshalInputPublicKeyOrder(ctx context.Context, ob
 			it.Direction = data
 		case "field":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			data, err := ec.unmarshalNPublicKeyOrderField2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyOrderField(ctx, v)
+			data, err := ec.unmarshalNPublicKeyOrderField2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11458,21 +12572,21 @@ func (ec *executionContext) unmarshalInputPublicKeyWhereInput(ctx context.Contex
 		switch k {
 		case "not":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
-			data, err := ec.unmarshalOPublicKeyWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyWhereInput(ctx, v)
+			data, err := ec.unmarshalOPublicKeyWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyWhereInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Not = data
 		case "and":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
-			data, err := ec.unmarshalOPublicKeyWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyWhereInputᚄ(ctx, v)
+			data, err := ec.unmarshalOPublicKeyWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.And = data
 		case "or":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
-			data, err := ec.unmarshalOPublicKeyWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyWhereInputᚄ(ctx, v)
+			data, err := ec.unmarshalOPublicKeyWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -12235,7 +13349,7 @@ func (ec *executionContext) unmarshalInputPublicKeyWhereInput(ctx context.Contex
 			it.HasUser = data
 		case "hasUserWith":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasUserWith"))
-			data, err := ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserWhereInputᚄ(ctx, v)
+			data, err := ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -12507,7 +13621,7 @@ func (ec *executionContext) unmarshalInputUserOrder(ctx context.Context, obj int
 			it.Direction = data
 		case "field":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			data, err := ec.unmarshalNUserOrderField2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserOrderField(ctx, v)
+			data, err := ec.unmarshalNUserOrderField2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -12534,21 +13648,21 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 		switch k {
 		case "not":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
-			data, err := ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserWhereInput(ctx, v)
+			data, err := ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserWhereInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Not = data
 		case "and":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
-			data, err := ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserWhereInputᚄ(ctx, v)
+			data, err := ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.And = data
 		case "or":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
-			data, err := ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserWhereInputᚄ(ctx, v)
+			data, err := ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13136,7 +14250,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			it.HasChildren = data
 		case "hasChildrenWith":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasChildrenWith"))
-			data, err := ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserWhereInputᚄ(ctx, v)
+			data, err := ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13150,7 +14264,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			it.HasParent = data
 		case "hasParentWith":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasParentWith"))
-			data, err := ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserWhereInputᚄ(ctx, v)
+			data, err := ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14920,11 +16034,11 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNBatchCGroup2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCGroup(ctx context.Context, sel ast.SelectionSet, v model.BatchCGroup) graphql.Marshaler {
+func (ec *executionContext) marshalNBatchCGroup2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐBatchCGroup(ctx context.Context, sel ast.SelectionSet, v model.BatchCGroup) graphql.Marshaler {
 	return ec._BatchCGroup(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNBatchCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCGroup(ctx context.Context, sel ast.SelectionSet, v *model.BatchCGroup) graphql.Marshaler {
+func (ec *executionContext) marshalNBatchCGroup2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐBatchCGroup(ctx context.Context, sel ast.SelectionSet, v *model.BatchCGroup) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -14934,11 +16048,11 @@ func (ec *executionContext) marshalNBatchCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomp
 	return ec._BatchCGroup(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNBatchCPolicy2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCPolicy(ctx context.Context, sel ast.SelectionSet, v model.BatchCPolicy) graphql.Marshaler {
+func (ec *executionContext) marshalNBatchCPolicy2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐBatchCPolicy(ctx context.Context, sel ast.SelectionSet, v model.BatchCPolicy) graphql.Marshaler {
 	return ec._BatchCPolicy(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNBatchCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐBatchCPolicy(ctx context.Context, sel ast.SelectionSet, v *model.BatchCPolicy) graphql.Marshaler {
+func (ec *executionContext) marshalNBatchCPolicy2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐBatchCPolicy(ctx context.Context, sel ast.SelectionSet, v *model.BatchCPolicy) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -14963,7 +16077,7 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroup(ctx context.Context, sel ast.SelectionSet, v *model.CGroup) graphql.Marshaler {
+func (ec *executionContext) marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroup(ctx context.Context, sel ast.SelectionSet, v *model.CGroup) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -14973,12 +16087,12 @@ func (ec *executionContext) marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputili
 	return ec._CGroup(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx context.Context, v interface{}) (model.CGroupInput, error) {
+func (ec *executionContext) unmarshalNCGroupInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupInput(ctx context.Context, v interface{}) (model.CGroupInput, error) {
 	res, err := ec.unmarshalInputCGroupInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCGroupInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInputᚄ(ctx context.Context, v interface{}) ([]*model.CGroupInput, error) {
+func (ec *executionContext) unmarshalNCGroupInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupInputᚄ(ctx context.Context, v interface{}) ([]*model.CGroupInput, error) {
 	var vSlice []interface{}
 	if v != nil {
 		vSlice = graphql.CoerceList(v)
@@ -14987,7 +16101,7 @@ func (ec *executionContext) unmarshalNCGroupInput2ᚕᚖgithubᚗcomᚋhawa130�
 	res := make([]*model.CGroupInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNCGroupInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNCGroupInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -14995,16 +16109,16 @@ func (ec *executionContext) unmarshalNCGroupInput2ᚕᚖgithubᚗcomᚋhawa130�
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalNCGroupInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupInput(ctx context.Context, v interface{}) (*model.CGroupInput, error) {
+func (ec *executionContext) unmarshalNCGroupInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupInput(ctx context.Context, v interface{}) (*model.CGroupInput, error) {
 	res, err := ec.unmarshalInputCGroupInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNCGroupResult2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupResult(ctx context.Context, sel ast.SelectionSet, v model.CGroupResult) graphql.Marshaler {
+func (ec *executionContext) marshalNCGroupResult2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupResult(ctx context.Context, sel ast.SelectionSet, v model.CGroupResult) graphql.Marshaler {
 	return ec._CGroupResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupResult(ctx context.Context, sel ast.SelectionSet, v *model.CGroupResult) graphql.Marshaler {
+func (ec *executionContext) marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupResult(ctx context.Context, sel ast.SelectionSet, v *model.CGroupResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15014,7 +16128,7 @@ func (ec *executionContext) marshalNCGroupResult2ᚖgithubᚗcomᚋhawa130ᚋcom
 	return ec._CGroupResult(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicy(ctx context.Context, sel ast.SelectionSet, v *model.CPolicy) graphql.Marshaler {
+func (ec *executionContext) marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicy(ctx context.Context, sel ast.SelectionSet, v *model.CPolicy) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15024,11 +16138,11 @@ func (ec *executionContext) marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputil
 	return ec._CPolicy(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCPolicyResult2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx context.Context, sel ast.SelectionSet, v model.CPolicyResult) graphql.Marshaler {
+func (ec *executionContext) marshalNCPolicyResult2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicyResult(ctx context.Context, sel ast.SelectionSet, v model.CPolicyResult) graphql.Marshaler {
 	return ec._CPolicyResult(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyResult(ctx context.Context, sel ast.SelectionSet, v *model.CPolicyResult) graphql.Marshaler {
+func (ec *executionContext) marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicyResult(ctx context.Context, sel ast.SelectionSet, v *model.CPolicyResult) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15038,12 +16152,12 @@ func (ec *executionContext) marshalNCPolicyResult2ᚖgithubᚗcomᚋhawa130ᚋco
 	return ec._CPolicyResult(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx context.Context, v interface{}) (model.CRequestInput, error) {
+func (ec *executionContext) unmarshalNCRequestInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInput(ctx context.Context, v interface{}) (model.CRequestInput, error) {
 	res, err := ec.unmarshalInputCRequestInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCRequestInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInputᚄ(ctx context.Context, v interface{}) ([]*model.CRequestInput, error) {
+func (ec *executionContext) unmarshalNCRequestInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInputᚄ(ctx context.Context, v interface{}) ([]*model.CRequestInput, error) {
 	var vSlice []interface{}
 	if v != nil {
 		vSlice = graphql.CoerceList(v)
@@ -15052,7 +16166,7 @@ func (ec *executionContext) unmarshalNCRequestInput2ᚕᚖgithubᚗcomᚋhawa130
 	res := make([]*model.CRequestInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNCRequestInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNCRequestInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -15060,27 +16174,27 @@ func (ec *executionContext) unmarshalNCRequestInput2ᚕᚖgithubᚗcomᚋhawa130
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalNCRequestInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCRequestInput(ctx context.Context, v interface{}) (*model.CRequestInput, error) {
+func (ec *executionContext) unmarshalNCRequestInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCRequestInput(ctx context.Context, v interface{}) (*model.CRequestInput, error) {
 	res, err := ec.unmarshalInputCRequestInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInput(ctx context.Context, v interface{}) (*ent.CasbinRuleWhereInput, error) {
+func (ec *executionContext) unmarshalNCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐCasbinRuleWhereInput(ctx context.Context, v interface{}) (*ent.CasbinRuleWhereInput, error) {
 	res, err := ec.unmarshalInputCasbinRuleWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreatePublicKeyInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreatePublicKeyInput(ctx context.Context, v interface{}) (ent.CreatePublicKeyInput, error) {
+func (ec *executionContext) unmarshalNCreatePublicKeyInput2githubᚗcomᚋhawa130ᚋserverxᚋentᚐCreatePublicKeyInput(ctx context.Context, v interface{}) (ent.CreatePublicKeyInput, error) {
 	res, err := ec.unmarshalInputCreatePublicKeyInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInput(ctx context.Context, v interface{}) (ent.CreateUserInput, error) {
+func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋhawa130ᚋserverxᚋentᚐCreateUserInput(ctx context.Context, v interface{}) (ent.CreateUserInput, error) {
 	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateUserInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInput(ctx context.Context, v interface{}) (*ent.CreateUserInput, error) {
+func (ec *executionContext) unmarshalNCreateUserInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐCreateUserInput(ctx context.Context, v interface{}) (*ent.CreateUserInput, error) {
 	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
@@ -15157,16 +16271,16 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) unmarshalNLoginInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐLoginInput(ctx context.Context, v interface{}) (model.LoginInput, error) {
+func (ec *executionContext) unmarshalNLoginInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐLoginInput(ctx context.Context, v interface{}) (model.LoginInput, error) {
 	res, err := ec.unmarshalInputLoginInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNLoginPayload2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐLoginPayload(ctx context.Context, sel ast.SelectionSet, v model.LoginPayload) graphql.Marshaler {
+func (ec *executionContext) marshalNLoginPayload2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐLoginPayload(ctx context.Context, sel ast.SelectionSet, v model.LoginPayload) graphql.Marshaler {
 	return ec._LoginPayload(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNLoginPayload2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐLoginPayload(ctx context.Context, sel ast.SelectionSet, v *model.LoginPayload) graphql.Marshaler {
+func (ec *executionContext) marshalNLoginPayload2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐLoginPayload(ctx context.Context, sel ast.SelectionSet, v *model.LoginPayload) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15176,7 +16290,7 @@ func (ec *executionContext) marshalNLoginPayload2ᚖgithubᚗcomᚋhawa130ᚋcom
 	return ec._LoginPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNNode2ᚕgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v []ent.Noder) graphql.Marshaler {
+func (ec *executionContext) marshalNNode2ᚕgithubᚗcomᚋhawa130ᚋserverxᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v []ent.Noder) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -15200,7 +16314,7 @@ func (ec *executionContext) marshalNNode2ᚕgithubᚗcomᚋhawa130ᚋcomputility
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalONode2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐNoder(ctx, sel, v[i])
+			ret[i] = ec.marshalONode2githubᚗcomᚋhawa130ᚋserverxᚋentᚐNoder(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -15228,11 +16342,11 @@ func (ec *executionContext) marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPag
 	return ec._PageInfo(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPublicKey2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKey(ctx context.Context, sel ast.SelectionSet, v ent.PublicKey) graphql.Marshaler {
+func (ec *executionContext) marshalNPublicKey2githubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKey(ctx context.Context, sel ast.SelectionSet, v ent.PublicKey) graphql.Marshaler {
 	return ec._PublicKey(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPublicKey2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKey(ctx context.Context, sel ast.SelectionSet, v *ent.PublicKey) graphql.Marshaler {
+func (ec *executionContext) marshalNPublicKey2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKey(ctx context.Context, sel ast.SelectionSet, v *ent.PublicKey) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15242,11 +16356,11 @@ func (ec *executionContext) marshalNPublicKey2ᚖgithubᚗcomᚋhawa130ᚋcomput
 	return ec._PublicKey(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNPublicKeyConnection2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyConnection(ctx context.Context, sel ast.SelectionSet, v ent.PublicKeyConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNPublicKeyConnection2githubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyConnection(ctx context.Context, sel ast.SelectionSet, v ent.PublicKeyConnection) graphql.Marshaler {
 	return ec._PublicKeyConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPublicKeyConnection2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyConnection(ctx context.Context, sel ast.SelectionSet, v *ent.PublicKeyConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNPublicKeyConnection2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyConnection(ctx context.Context, sel ast.SelectionSet, v *ent.PublicKeyConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15256,13 +16370,13 @@ func (ec *executionContext) marshalNPublicKeyConnection2ᚖgithubᚗcomᚋhawa13
 	return ec._PublicKeyConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNPublicKeyOrderField2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyOrderField(ctx context.Context, v interface{}) (*ent.PublicKeyOrderField, error) {
+func (ec *executionContext) unmarshalNPublicKeyOrderField2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyOrderField(ctx context.Context, v interface{}) (*ent.PublicKeyOrderField, error) {
 	var res = new(ent.PublicKeyOrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNPublicKeyOrderField2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.PublicKeyOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNPublicKeyOrderField2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.PublicKeyOrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15272,12 +16386,12 @@ func (ec *executionContext) marshalNPublicKeyOrderField2ᚖgithubᚗcomᚋhawa13
 	return v
 }
 
-func (ec *executionContext) unmarshalNPublicKeyWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyWhereInput(ctx context.Context, v interface{}) (*ent.PublicKeyWhereInput, error) {
+func (ec *executionContext) unmarshalNPublicKeyWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyWhereInput(ctx context.Context, v interface{}) (*ent.PublicKeyWhereInput, error) {
 	res, err := ec.unmarshalInputPublicKeyWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNRegisterInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐRegisterInput(ctx context.Context, v interface{}) (model.RegisterInput, error) {
+func (ec *executionContext) unmarshalNRegisterInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐRegisterInput(ctx context.Context, v interface{}) (model.RegisterInput, error) {
 	res, err := ec.unmarshalInputRegisterInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -15312,11 +16426,11 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalNUpdateCGroup2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCGroup(ctx context.Context, sel ast.SelectionSet, v model.UpdateCGroup) graphql.Marshaler {
+func (ec *executionContext) marshalNUpdateCGroup2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐUpdateCGroup(ctx context.Context, sel ast.SelectionSet, v model.UpdateCGroup) graphql.Marshaler {
 	return ec._UpdateCGroup(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUpdateCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCGroup(ctx context.Context, sel ast.SelectionSet, v *model.UpdateCGroup) graphql.Marshaler {
+func (ec *executionContext) marshalNUpdateCGroup2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐUpdateCGroup(ctx context.Context, sel ast.SelectionSet, v *model.UpdateCGroup) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15326,11 +16440,11 @@ func (ec *executionContext) marshalNUpdateCGroup2ᚖgithubᚗcomᚋhawa130ᚋcom
 	return ec._UpdateCGroup(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNUpdateCPolicy2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCPolicy(ctx context.Context, sel ast.SelectionSet, v model.UpdateCPolicy) graphql.Marshaler {
+func (ec *executionContext) marshalNUpdateCPolicy2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐUpdateCPolicy(ctx context.Context, sel ast.SelectionSet, v model.UpdateCPolicy) graphql.Marshaler {
 	return ec._UpdateCPolicy(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUpdateCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdateCPolicy(ctx context.Context, sel ast.SelectionSet, v *model.UpdateCPolicy) graphql.Marshaler {
+func (ec *executionContext) marshalNUpdateCPolicy2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐUpdateCPolicy(ctx context.Context, sel ast.SelectionSet, v *model.UpdateCPolicy) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15340,26 +16454,26 @@ func (ec *executionContext) marshalNUpdateCPolicy2ᚖgithubᚗcomᚋhawa130ᚋco
 	return ec._UpdateCPolicy(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNUpdatePasswordInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐUpdatePasswordInput(ctx context.Context, v interface{}) (model.UpdatePasswordInput, error) {
+func (ec *executionContext) unmarshalNUpdatePasswordInput2githubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐUpdatePasswordInput(ctx context.Context, v interface{}) (model.UpdatePasswordInput, error) {
 	res, err := ec.unmarshalInputUpdatePasswordInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdatePublicKeyInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUpdatePublicKeyInput(ctx context.Context, v interface{}) (ent.UpdatePublicKeyInput, error) {
+func (ec *executionContext) unmarshalNUpdatePublicKeyInput2githubᚗcomᚋhawa130ᚋserverxᚋentᚐUpdatePublicKeyInput(ctx context.Context, v interface{}) (ent.UpdatePublicKeyInput, error) {
 	res, err := ec.unmarshalInputUpdatePublicKeyInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateUserInput2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUpdateUserInput(ctx context.Context, v interface{}) (ent.UpdateUserInput, error) {
+func (ec *executionContext) unmarshalNUpdateUserInput2githubᚗcomᚋhawa130ᚋserverxᚋentᚐUpdateUserInput(ctx context.Context, v interface{}) (ent.UpdateUserInput, error) {
 	res, err := ec.unmarshalInputUpdateUserInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUser2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx context.Context, sel ast.SelectionSet, v ent.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2githubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx context.Context, sel ast.SelectionSet, v ent.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.User) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -15383,7 +16497,7 @@ func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputil
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, sel, v[i])
+			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -15403,7 +16517,7 @@ func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputil
 	return ret
 }
 
-func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx context.Context, sel ast.SelectionSet, v *ent.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx context.Context, sel ast.SelectionSet, v *ent.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15413,11 +16527,11 @@ func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputility
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNUserConnection2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserConnection(ctx context.Context, sel ast.SelectionSet, v ent.UserConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNUserConnection2githubᚗcomᚋhawa130ᚋserverxᚋentᚐUserConnection(ctx context.Context, sel ast.SelectionSet, v ent.UserConnection) graphql.Marshaler {
 	return ec._UserConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUserConnection2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserConnection(ctx context.Context, sel ast.SelectionSet, v *ent.UserConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNUserConnection2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserConnection(ctx context.Context, sel ast.SelectionSet, v *ent.UserConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15427,13 +16541,13 @@ func (ec *executionContext) marshalNUserConnection2ᚖgithubᚗcomᚋhawa130ᚋc
 	return ec._UserConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNUserOrderField2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserOrderField(ctx context.Context, v interface{}) (*ent.UserOrderField, error) {
+func (ec *executionContext) unmarshalNUserOrderField2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserOrderField(ctx context.Context, v interface{}) (*ent.UserOrderField, error) {
 	var res = new(ent.UserOrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUserOrderField2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.UserOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNUserOrderField2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.UserOrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15443,7 +16557,7 @@ func (ec *executionContext) marshalNUserOrderField2ᚖgithubᚗcomᚋhawa130ᚋc
 	return v
 }
 
-func (ec *executionContext) unmarshalNUserWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserWhereInput(ctx context.Context, v interface{}) (*ent.UserWhereInput, error) {
+func (ec *executionContext) unmarshalNUserWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserWhereInput(ctx context.Context, v interface{}) (*ent.UserWhereInput, error) {
 	res, err := ec.unmarshalInputUserWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
@@ -15727,7 +16841,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalOCGroup2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroupᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CGroup) graphql.Marshaler {
+func (ec *executionContext) marshalOCGroup2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroupᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CGroup) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -15754,7 +16868,7 @@ func (ec *executionContext) marshalOCGroup2ᚕᚖgithubᚗcomᚋhawa130ᚋcomput
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCGroup(ctx, sel, v[i])
+			ret[i] = ec.marshalNCGroup2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCGroup(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -15774,7 +16888,7 @@ func (ec *executionContext) marshalOCGroup2ᚕᚖgithubᚗcomᚋhawa130ᚋcomput
 	return ret
 }
 
-func (ec *executionContext) marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicyᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CPolicy) graphql.Marshaler {
+func (ec *executionContext) marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicyᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CPolicy) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -15801,7 +16915,7 @@ func (ec *executionContext) marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋcompu
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋgraphᚋmodelᚐCPolicy(ctx, sel, v[i])
+			ret[i] = ec.marshalNCPolicy2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋgraphᚋmodelᚐCPolicy(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -15821,7 +16935,7 @@ func (ec *executionContext) marshalOCPolicy2ᚕᚖgithubᚗcomᚋhawa130ᚋcompu
 	return ret
 }
 
-func (ec *executionContext) unmarshalOCasbinRuleWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.CasbinRuleWhereInput, error) {
+func (ec *executionContext) unmarshalOCasbinRuleWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐCasbinRuleWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.CasbinRuleWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -15833,7 +16947,7 @@ func (ec *executionContext) unmarshalOCasbinRuleWhereInput2ᚕᚖgithubᚗcomᚋ
 	res := make([]*ent.CasbinRuleWhereInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐCasbinRuleWhereInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -15841,7 +16955,7 @@ func (ec *executionContext) unmarshalOCasbinRuleWhereInput2ᚕᚖgithubᚗcomᚋ
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCasbinRuleWhereInput(ctx context.Context, v interface{}) (*ent.CasbinRuleWhereInput, error) {
+func (ec *executionContext) unmarshalOCasbinRuleWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐCasbinRuleWhereInput(ctx context.Context, v interface{}) (*ent.CasbinRuleWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -15849,7 +16963,7 @@ func (ec *executionContext) unmarshalOCasbinRuleWhereInput2ᚖgithubᚗcomᚋhaw
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOCreateUserInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInputᚄ(ctx context.Context, v interface{}) ([]*ent.CreateUserInput, error) {
+func (ec *executionContext) unmarshalOCreateUserInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐCreateUserInputᚄ(ctx context.Context, v interface{}) ([]*ent.CreateUserInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -15861,7 +16975,7 @@ func (ec *executionContext) unmarshalOCreateUserInput2ᚕᚖgithubᚗcomᚋhawa1
 	res := make([]*ent.CreateUserInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNCreateUserInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐCreateUserInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNCreateUserInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐCreateUserInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -15955,14 +17069,14 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return res
 }
 
-func (ec *executionContext) marshalONode2githubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v ent.Noder) graphql.Marshaler {
+func (ec *executionContext) marshalONode2githubᚗcomᚋhawa130ᚋserverxᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v ent.Noder) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Node(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOPublicKey2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.PublicKey) graphql.Marshaler {
+func (ec *executionContext) marshalOPublicKey2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.PublicKey) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -15989,7 +17103,7 @@ func (ec *executionContext) marshalOPublicKey2ᚕᚖgithubᚗcomᚋhawa130ᚋcom
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPublicKey2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKey(ctx, sel, v[i])
+			ret[i] = ec.marshalNPublicKey2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKey(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -16009,14 +17123,14 @@ func (ec *executionContext) marshalOPublicKey2ᚕᚖgithubᚗcomᚋhawa130ᚋcom
 	return ret
 }
 
-func (ec *executionContext) marshalOPublicKey2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKey(ctx context.Context, sel ast.SelectionSet, v *ent.PublicKey) graphql.Marshaler {
+func (ec *executionContext) marshalOPublicKey2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKey(ctx context.Context, sel ast.SelectionSet, v *ent.PublicKey) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._PublicKey(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOPublicKeyEdge2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.PublicKeyEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOPublicKeyEdge2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.PublicKeyEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -16043,7 +17157,7 @@ func (ec *executionContext) marshalOPublicKeyEdge2ᚕᚖgithubᚗcomᚋhawa130�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOPublicKeyEdge2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOPublicKeyEdge2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -16057,14 +17171,14 @@ func (ec *executionContext) marshalOPublicKeyEdge2ᚕᚖgithubᚗcomᚋhawa130�
 	return ret
 }
 
-func (ec *executionContext) marshalOPublicKeyEdge2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyEdge(ctx context.Context, sel ast.SelectionSet, v *ent.PublicKeyEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOPublicKeyEdge2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyEdge(ctx context.Context, sel ast.SelectionSet, v *ent.PublicKeyEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._PublicKeyEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOPublicKeyOrder2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyOrder(ctx context.Context, v interface{}) (*ent.PublicKeyOrder, error) {
+func (ec *executionContext) unmarshalOPublicKeyOrder2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyOrder(ctx context.Context, v interface{}) (*ent.PublicKeyOrder, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -16072,7 +17186,7 @@ func (ec *executionContext) unmarshalOPublicKeyOrder2ᚖgithubᚗcomᚋhawa130�
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOPublicKeyWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.PublicKeyWhereInput, error) {
+func (ec *executionContext) unmarshalOPublicKeyWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.PublicKeyWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -16084,7 +17198,7 @@ func (ec *executionContext) unmarshalOPublicKeyWhereInput2ᚕᚖgithubᚗcomᚋh
 	res := make([]*ent.PublicKeyWhereInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNPublicKeyWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyWhereInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNPublicKeyWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyWhereInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -16092,7 +17206,7 @@ func (ec *executionContext) unmarshalOPublicKeyWhereInput2ᚕᚖgithubᚗcomᚋh
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOPublicKeyWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐPublicKeyWhereInput(ctx context.Context, v interface{}) (*ent.PublicKeyWhereInput, error) {
+func (ec *executionContext) unmarshalOPublicKeyWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐPublicKeyWhereInput(ctx context.Context, v interface{}) (*ent.PublicKeyWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -16228,7 +17342,7 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	return res
 }
 
-func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*ent.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -16255,7 +17369,7 @@ func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputil
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx, sel, v[i])
+			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -16275,14 +17389,14 @@ func (ec *executionContext) marshalOUser2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputil
 	return ret
 }
 
-func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUser(ctx context.Context, sel ast.SelectionSet, v *ent.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUser(ctx context.Context, sel ast.SelectionSet, v *ent.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUserEdge2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.UserEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOUserEdge2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.UserEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -16309,7 +17423,7 @@ func (ec *executionContext) marshalOUserEdge2ᚕᚖgithubᚗcomᚋhawa130ᚋcomp
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOUserEdge2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOUserEdge2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -16323,14 +17437,14 @@ func (ec *executionContext) marshalOUserEdge2ᚕᚖgithubᚗcomᚋhawa130ᚋcomp
 	return ret
 }
 
-func (ec *executionContext) marshalOUserEdge2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserEdge(ctx context.Context, sel ast.SelectionSet, v *ent.UserEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOUserEdge2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserEdge(ctx context.Context, sel ast.SelectionSet, v *ent.UserEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._UserEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOUserOrder2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserOrder(ctx context.Context, v interface{}) (*ent.UserOrder, error) {
+func (ec *executionContext) unmarshalOUserOrder2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserOrder(ctx context.Context, v interface{}) (*ent.UserOrder, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -16338,7 +17452,7 @@ func (ec *executionContext) unmarshalOUserOrder2ᚖgithubᚗcomᚋhawa130ᚋcomp
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.UserWhereInput, error) {
+func (ec *executionContext) unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.UserWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -16350,7 +17464,7 @@ func (ec *executionContext) unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa13
 	res := make([]*ent.UserWhereInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNUserWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserWhereInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNUserWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserWhereInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -16358,7 +17472,7 @@ func (ec *executionContext) unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋhawa13
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOUserWhereInput2ᚖgithubᚗcomᚋhawa130ᚋcomputilityᚑcloudᚋentᚐUserWhereInput(ctx context.Context, v interface{}) (*ent.UserWhereInput, error) {
+func (ec *executionContext) unmarshalOUserWhereInput2ᚖgithubᚗcomᚋhawa130ᚋserverxᚋentᚐUserWhereInput(ctx context.Context, v interface{}) (*ent.UserWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}

@@ -3,7 +3,7 @@ package database
 import (
 	"context"
 
-	"github.com/hawa130/computility-cloud/internal/perm"
+	"github.com/hawa130/serverx/internal/perm"
 )
 
 func seedData(ctx context.Context) error {

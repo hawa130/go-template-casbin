@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hawa130/computility-cloud/ent"
+	"github.com/hawa130/serverx/ent"
 )
 
 // The CasbinRuleFunc type is an adapter to allow the use of ordinary

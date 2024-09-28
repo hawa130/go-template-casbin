@@ -5,7 +5,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/hawa130/computility-cloud/config"
+	"github.com/hawa130/serverx/config"
 )
 
 func main() {

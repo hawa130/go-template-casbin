@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"entgo.io/ent/entql"
-	"github.com/hawa130/computility-cloud/ent"
-	"github.com/hawa130/computility-cloud/ent/privacy"
-	"github.com/hawa130/computility-cloud/internal/rule/utils"
+	"github.com/hawa130/serverx/ent"
+	"github.com/hawa130/serverx/ent/privacy"
+	"github.com/hawa130/serverx/internal/rule/utils"
 )
 
 type queryAllFieldsKey struct{}

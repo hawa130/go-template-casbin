@@ -9,16 +9,16 @@ import (
 	"log"
 	"reflect"
 
-	"github.com/hawa130/computility-cloud/ent/migrate"
+	"github.com/hawa130/serverx/ent/migrate"
 	"github.com/rs/xid"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/hawa130/computility-cloud/ent/casbinrule"
-	"github.com/hawa130/computility-cloud/ent/publickey"
-	"github.com/hawa130/computility-cloud/ent/user"
+	"github.com/hawa130/serverx/ent/casbinrule"
+	"github.com/hawa130/serverx/ent/publickey"
+	"github.com/hawa130/serverx/ent/user"
 )
 
 // Client is the client that holds all ent builders.

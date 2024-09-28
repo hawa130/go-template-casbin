@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"entgo.io/ent"
-	gen "github.com/hawa130/computility-cloud/ent"
+	gen "github.com/hawa130/serverx/ent"
 	"github.com/rs/xid"
 )
 

@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/hawa130/computility-cloud/ent"
-	"github.com/hawa130/computility-cloud/internal/auth"
+	"github.com/hawa130/serverx/ent"
+	"github.com/hawa130/serverx/internal/auth"
 )
 
 // This file will not be regenerated automatically.

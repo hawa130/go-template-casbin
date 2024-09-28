@@ -5,12 +5,12 @@ package enttest
 import (
 	"context"
 
-	"github.com/hawa130/computility-cloud/ent"
+	"github.com/hawa130/serverx/ent"
 	// required by schema hooks.
-	_ "github.com/hawa130/computility-cloud/ent/runtime"
+	_ "github.com/hawa130/serverx/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/hawa130/computility-cloud/ent/migrate"
+	"github.com/hawa130/serverx/ent/migrate"
 )
 
 type (

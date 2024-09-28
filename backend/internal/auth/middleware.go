@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler/transport"
-	"github.com/hawa130/computility-cloud/config"
-	"github.com/hawa130/computility-cloud/ent"
-	"github.com/hawa130/computility-cloud/ent/user"
-	"github.com/hawa130/computility-cloud/internal/database"
+	"github.com/hawa130/serverx/config"
+	"github.com/hawa130/serverx/ent"
+	"github.com/hawa130/serverx/ent/user"
+	"github.com/hawa130/serverx/internal/database"
 	"github.com/labstack/echo/v4"
 )
 

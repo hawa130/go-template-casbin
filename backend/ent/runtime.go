@@ -2,4 +2,4 @@
 
 package ent
 
-// The schema-stitching logic is generated in github.com/hawa130/computility-cloud/ent/runtime/runtime.go
+// The schema-stitching logic is generated in github.com/hawa130/serverx/ent/runtime/runtime.go

@@ -3,7 +3,7 @@
 package model
 
 import (
-	"github.com/hawa130/computility-cloud/ent"
+	"github.com/hawa130/serverx/ent"
 )
 
 type BatchCGroup struct {

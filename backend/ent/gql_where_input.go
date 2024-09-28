@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hawa130/computility-cloud/ent/casbinrule"
-	"github.com/hawa130/computility-cloud/ent/predicate"
-	"github.com/hawa130/computility-cloud/ent/publickey"
-	"github.com/hawa130/computility-cloud/ent/user"
+	"github.com/hawa130/serverx/ent/casbinrule"
+	"github.com/hawa130/serverx/ent/predicate"
+	"github.com/hawa130/serverx/ent/publickey"
+	"github.com/hawa130/serverx/ent/user"
 	"github.com/rs/xid"
 )
 

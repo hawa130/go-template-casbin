@@ -24,9 +24,9 @@ import (
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/casbin/casbin/v2/persist"
-	"github.com/hawa130/computility-cloud/ent"
-	"github.com/hawa130/computility-cloud/ent/casbinrule"
-	"github.com/hawa130/computility-cloud/ent/predicate"
+	"github.com/hawa130/serverx/ent"
+	"github.com/hawa130/serverx/ent/casbinrule"
+	"github.com/hawa130/serverx/ent/predicate"
 	"github.com/pkg/errors"
 	"github.com/rs/xid"
 

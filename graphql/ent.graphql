@@ -175,7 +175,7 @@ scalar Cursor
 An object with an ID.
 Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
 """
-interface Node @goModel(model: "github.com/hawa130/computility-cloud/ent.Noder") {
+interface Node @goModel(model: "github.com/hawa130/serverx/ent.Noder") {
   """
   The id of the object.
   """

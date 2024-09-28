@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/hawa130/computility-cloud/config"
+	"github.com/hawa130/serverx/config"
 	"github.com/rs/xid"
 )
 

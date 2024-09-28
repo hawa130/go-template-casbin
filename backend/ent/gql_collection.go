@@ -7,9 +7,9 @@ import (
 
 	"entgo.io/contrib/entgql"
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/hawa130/computility-cloud/ent/casbinrule"
-	"github.com/hawa130/computility-cloud/ent/publickey"
-	"github.com/hawa130/computility-cloud/ent/user"
+	"github.com/hawa130/serverx/ent/casbinrule"
+	"github.com/hawa130/serverx/ent/publickey"
+	"github.com/hawa130/serverx/ent/user"
 )
 
 // CollectFields tells the query-builder to eagerly load connected nodes by resolver context.

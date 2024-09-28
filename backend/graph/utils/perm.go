@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/hawa130/computility-cloud/graph/model"
+import "github.com/hawa130/serverx/graph/model"
 
 func StringArrToPolicy(arr []string) *model.CPolicy {
 	return &model.CPolicy{

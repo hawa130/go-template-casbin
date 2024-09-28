@@ -6,8 +6,8 @@ import (
 
 	"github.com/casbin/casbin/v2"
 	zaplogger "github.com/casbin/zap-logger/v2"
-	entadapter "github.com/hawa130/computility-cloud/internal/adapter"
-	"github.com/hawa130/computility-cloud/internal/logger"
+	entadapter "github.com/hawa130/serverx/internal/adapter"
+	"github.com/hawa130/serverx/internal/logger"
 	"go.uber.org/zap"
 )
 

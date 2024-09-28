@@ -7,7 +7,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/hawa130/computility-cloud/ent/predicate"
+	"github.com/hawa130/serverx/ent/predicate"
 	"github.com/rs/xid"
 )
 

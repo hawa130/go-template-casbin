@@ -4,7 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"github.com/hawa130/computility-cloud/ent/schema/mixinx"
+	"github.com/hawa130/serverx/ent/schema/mixinx"
 )
 
 // CasbinRule holds the schema definition for the CasbinRule entity.

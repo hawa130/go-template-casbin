@@ -14,9 +14,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/errcode"
-	"github.com/hawa130/computility-cloud/ent/casbinrule"
-	"github.com/hawa130/computility-cloud/ent/publickey"
-	"github.com/hawa130/computility-cloud/ent/user"
+	"github.com/hawa130/serverx/ent/casbinrule"
+	"github.com/hawa130/serverx/ent/publickey"
+	"github.com/hawa130/serverx/ent/user"
 	"github.com/rs/xid"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )

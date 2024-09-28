@@ -11,8 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/hawa130/computility-cloud/ent/predicate"
-	"github.com/hawa130/computility-cloud/ent/user"
+	"github.com/hawa130/serverx/ent/predicate"
+	"github.com/hawa130/serverx/ent/user"
 	"github.com/rs/xid"
 )
 

@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"github.com/hawa130/computility-cloud/ent"
-	"github.com/hawa130/computility-cloud/internal/perm"
+	"github.com/hawa130/serverx/ent"
+	"github.com/hawa130/serverx/internal/perm"
 )
 
 func ToPermOp(op ent.Op) string {

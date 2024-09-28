@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hawa130/computility-cloud/ent"
-	"github.com/hawa130/computility-cloud/ent/privacy"
-	"github.com/hawa130/computility-cloud/internal/logger"
-	"github.com/hawa130/computility-cloud/internal/perm"
-	"github.com/hawa130/computility-cloud/internal/rule/utils"
+	"github.com/hawa130/serverx/ent"
+	"github.com/hawa130/serverx/ent/privacy"
+	"github.com/hawa130/serverx/internal/logger"
+	"github.com/hawa130/serverx/internal/perm"
+	"github.com/hawa130/serverx/internal/rule/utils"
 	"github.com/rs/xid"
 )
 

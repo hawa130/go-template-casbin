@@ -6,10 +6,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/hawa130/computility-cloud/ent/casbinrule"
-	"github.com/hawa130/computility-cloud/ent/publickey"
-	"github.com/hawa130/computility-cloud/ent/schema"
-	"github.com/hawa130/computility-cloud/ent/user"
+	"github.com/hawa130/serverx/ent/casbinrule"
+	"github.com/hawa130/serverx/ent/publickey"
+	"github.com/hawa130/serverx/ent/schema"
+	"github.com/hawa130/serverx/ent/user"
 	"github.com/rs/xid"
 
 	"entgo.io/ent"
@@ -140,6 +140,6 @@ func init() {
 }
 
 const (
-	Version = "v0.13.1"                                         // Version of ent codegen.
-	Sum     = "h1:uD8QwN1h6SNphdCCzmkMN3feSUzNnVvV/WIkHKMbzOE=" // Sum of ent codegen.
+	Version = "v0.14.1"                                         // Version of ent codegen.
+	Sum     = "h1:fUERL506Pqr92EPHJqr8EYxbPioflJo6PudkrEA8a/s=" // Sum of ent codegen.
 )

@@ -3,8 +3,8 @@ package rule
 import (
 	"context"
 
-	"github.com/hawa130/computility-cloud/ent/privacy"
-	"github.com/hawa130/computility-cloud/internal/auth"
+	"github.com/hawa130/serverx/ent/privacy"
+	"github.com/hawa130/serverx/internal/auth"
 )
 
 // DenyAuthenticated 拒绝未登录用户访问

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hawa130/computility-cloud/config"
+	"github.com/hawa130/serverx/config"
 	"golang.org/x/crypto/argon2"
 )
 

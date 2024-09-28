@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"entgo.io/ent"
-	gen "github.com/hawa130/computility-cloud/ent"
-	"github.com/hawa130/computility-cloud/ent/hook"
-	"github.com/hawa130/computility-cloud/internal/auth"
-	"github.com/hawa130/computility-cloud/internal/logger"
-	"github.com/hawa130/computility-cloud/internal/perm"
+	gen "github.com/hawa130/serverx/ent"
+	"github.com/hawa130/serverx/ent/hook"
+	"github.com/hawa130/serverx/internal/auth"
+	"github.com/hawa130/serverx/internal/logger"
+	"github.com/hawa130/serverx/internal/perm"
 	"github.com/rs/xid"
 )
 

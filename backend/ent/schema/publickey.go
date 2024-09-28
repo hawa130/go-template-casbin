@@ -7,13 +7,13 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"github.com/hawa130/computility-cloud/ent/privacy"
-	"github.com/hawa130/computility-cloud/ent/publickey"
-	"github.com/hawa130/computility-cloud/ent/schema/gqlutils"
-	"github.com/hawa130/computility-cloud/ent/schema/mixinx"
-	"github.com/hawa130/computility-cloud/internal/hookx"
-	"github.com/hawa130/computility-cloud/internal/perm"
-	"github.com/hawa130/computility-cloud/internal/rule"
+	"github.com/hawa130/serverx/ent/privacy"
+	"github.com/hawa130/serverx/ent/publickey"
+	"github.com/hawa130/serverx/ent/schema/gqlutils"
+	"github.com/hawa130/serverx/ent/schema/mixinx"
+	"github.com/hawa130/serverx/internal/hookx"
+	"github.com/hawa130/serverx/internal/perm"
+	"github.com/hawa130/serverx/internal/rule"
 )
 
 type PublicKey struct {

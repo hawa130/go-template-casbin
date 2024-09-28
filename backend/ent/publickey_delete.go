@@ -8,8 +8,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/hawa130/computility-cloud/ent/predicate"
-	"github.com/hawa130/computility-cloud/ent/publickey"
+	"github.com/hawa130/serverx/ent/predicate"
+	"github.com/hawa130/serverx/ent/publickey"
 )
 
 // PublicKeyDelete is the builder for deleting a PublicKey entity.

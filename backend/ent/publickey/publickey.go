@@ -83,7 +83,7 @@ func ValidColumn(column string) bool {
 // package on the initialization of the application. Therefore,
 // it should be imported in the main as follows:
 //
-//	import _ "github.com/hawa130/computility-cloud/ent/runtime"
+//	import _ "github.com/hawa130/serverx/ent/runtime"
 var (
 	Hooks  [4]ent.Hook
 	Policy ent.Policy

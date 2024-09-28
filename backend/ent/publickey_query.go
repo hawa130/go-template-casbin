@@ -8,12 +8,13 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/hawa130/computility-cloud/ent/predicate"
-	"github.com/hawa130/computility-cloud/ent/publickey"
-	"github.com/hawa130/computility-cloud/ent/user"
+	"github.com/hawa130/serverx/ent/predicate"
+	"github.com/hawa130/serverx/ent/publickey"
+	"github.com/hawa130/serverx/ent/user"
 	"github.com/rs/xid"
 )
 
@@ -89,7 +90,7 @@ func (pkq *PublicKeyQuery) QueryUser() *UserQuery {
 // First returns the first PublicKey entity from the query.
 // Returns a *NotFoundError when no PublicKey was found.
 func (pkq *PublicKeyQuery) First(ctx context.Context) (*PublicKey, error) {
-	nodes, err := pkq.Limit(1).All(setContextOp(ctx, pkq.ctx, "First"))
+	nodes, err := pkq.Limit(1).All(setContextOp(ctx, pkq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +113,7 @@ func (pkq *PublicKeyQuery) FirstX(ctx context.Context) *PublicKey {
 // Returns a *NotFoundError when no PublicKey ID was found.
 func (pkq *PublicKeyQuery) FirstID(ctx context.Context) (id xid.ID, err error) {
 	var ids []xid.ID
-	if ids, err = pkq.Limit(1).IDs(setContextOp(ctx, pkq.ctx, "FirstID")); err != nil {
+	if ids, err = pkq.Limit(1).IDs(setContextOp(ctx, pkq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -135,7 +136,7 @@ func (pkq *PublicKeyQuery) FirstIDX(ctx context.Context) xid.ID {
 // Returns a *NotSingularError when more than one PublicKey entity is found.
 // Returns a *NotFoundError when no PublicKey entities are found.
 func (pkq *PublicKeyQuery) Only(ctx context.Context) (*PublicKey, error) {
-	nodes, err := pkq.Limit(2).All(setContextOp(ctx, pkq.ctx, "Only"))
+	nodes, err := pkq.Limit(2).All(setContextOp(ctx, pkq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +164,7 @@ func (pkq *PublicKeyQuery) OnlyX(ctx context.Context) *PublicKey {
 // Returns a *NotFoundError when no entities are found.
 func (pkq *PublicKeyQuery) OnlyID(ctx context.Context) (id xid.ID, err error) {
 	var ids []xid.ID
-	if ids, err = pkq.Limit(2).IDs(setContextOp(ctx, pkq.ctx, "OnlyID")); err != nil {
+	if ids, err = pkq.Limit(2).IDs(setContextOp(ctx, pkq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -188,7 +189,7 @@ func (pkq *PublicKeyQuery) OnlyIDX(ctx context.Context) xid.ID {
 
 // All executes the query and returns a list of PublicKeys.
 func (pkq *PublicKeyQuery) All(ctx context.Context) ([]*PublicKey, error) {
-	ctx = setContextOp(ctx, pkq.ctx, "All")
+	ctx = setContextOp(ctx, pkq.ctx, ent.OpQueryAll)
 	if err := pkq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -210,7 +211,7 @@ func (pkq *PublicKeyQuery) IDs(ctx context.Context) (ids []xid.ID, err error) {
 	if pkq.ctx.Unique == nil && pkq.path != nil {
 		pkq.Unique(true)
 	}
-	ctx = setContextOp(ctx, pkq.ctx, "IDs")
+	ctx = setContextOp(ctx, pkq.ctx, ent.OpQueryIDs)
 	if err = pkq.Select(publickey.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -228,7 +229,7 @@ func (pkq *PublicKeyQuery) IDsX(ctx context.Context) []xid.ID {
 
 // Count returns the count of the given query.
 func (pkq *PublicKeyQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, pkq.ctx, "Count")
+	ctx = setContextOp(ctx, pkq.ctx, ent.OpQueryCount)
 	if err := pkq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -246,7 +247,7 @@ func (pkq *PublicKeyQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (pkq *PublicKeyQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, pkq.ctx, "Exist")
+	ctx = setContextOp(ctx, pkq.ctx, ent.OpQueryExist)
 	switch _, err := pkq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -557,7 +558,7 @@ func (pkgb *PublicKeyGroupBy) Aggregate(fns ...AggregateFunc) *PublicKeyGroupBy 
 
 // Scan applies the selector query and scans the result into the given value.
 func (pkgb *PublicKeyGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, pkgb.build.ctx, "GroupBy")
+	ctx = setContextOp(ctx, pkgb.build.ctx, ent.OpQueryGroupBy)
 	if err := pkgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -605,7 +606,7 @@ func (pks *PublicKeySelect) Aggregate(fns ...AggregateFunc) *PublicKeySelect {
 
 // Scan applies the selector query and scans the result into the given value.
 func (pks *PublicKeySelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, pks.ctx, "Select")
+	ctx = setContextOp(ctx, pks.ctx, ent.OpQuerySelect)
 	if err := pks.prepareQuery(ctx); err != nil {
 		return err
 	}

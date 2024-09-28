@@ -9,7 +9,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/hawa130/computility-cloud/ent/casbinrule"
+	"github.com/hawa130/serverx/ent/casbinrule"
 	"github.com/rs/xid"
 )
 
