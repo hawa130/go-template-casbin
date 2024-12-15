@@ -5,8 +5,8 @@
 ```yaml
 .
 ├── grphql
-│   ├── ent.graphql # 自动生成
-│   └── schema.graphql # 自定义 GraphQL 接口
+│   ├── ent.graphql # 基于 entgql 配置自动生成的 GraphQL 接口
+│   └── *.graphql # 自定义 GraphQL 接口
 └── backend
     ├── config # 基于 viper 的配置定义与加载
     ├── ent
@@ -14,11 +14,11 @@
     │   ├── schema # ent 数据模型定义
     │   └── ... # 其他由代码生成器生成的文件
     ├── graph # graphql 接口 resolver
-    │   ├── generated.go # 自动生成的适配 ent 数据模型的 resolver
+    │   ├── generated.go # 自动生成
     │   ├── model # 自动生成的 GraphQL 数据模型
     │   ├── reqerr # 请求错误定义
     │   ├── resolver.go # 提供 GraphQL directive 实现以及服务初始化
-    │   └── *.resolvers.go # 自定义 resolver，由 gqlgen 代码生成器生成的未实现接口（或者自己已经实现）
+    │   └── *.resolvers.go # 由 gqlgen 代码生成器生成未实现的新接口/已实现的原有接口，其名称与 graphql 文件名称对应
     ├── internal # 内部服务
     │   ├── adapter # casbin ent 适配器
     │   ├── auth # 认证服务，提供 JWT 生成、验证，用户密码加密、验证，用户权限验证等工具
@@ -40,13 +40,13 @@
 以下操作均在 `backend` 目录下进行。
 
 1. 安装依赖
-   
+
     ```shell
     go mod tidy
     ```
 
 2. 初始化配置
-   
+
     ```shell
     cp config.default.toml config.toml
     ```
@@ -62,7 +62,7 @@
     ```
 
 3. 代码生成
-   
+
     如果添加了新的 ent 数据模型 或者 GraphQL 接口定义，需要重新生成代码。
     ```shell
     go generate .
@@ -73,7 +73,7 @@
     相关文档：[ent](https://entgo.io/zh/docs/code-gen)，[gqlgen](https://gqlgen.com/)。
     
 4. 运行
-   
+
     ```shell
     go run .
     ```
@@ -84,19 +84,15 @@
 
     ```graphql
     mutation Login {
-       login(input: {
-          phone: "12345678910",
-          password: "root",
-       }) {
-          token
-          user {
-             id
-             username
-          }
-       }
+      login(input: { phone: "12345678910", password: "root" }) {
+        token
+        user {
+          id
+        }
+      }
     }
     ```
-   
+
     接口返回的 `token` 即为 JWT，可以在请求头中添加 `Authorization` 字段进行身份验证（格式为 `Bearer <token>`）。
 
 ## 细节
