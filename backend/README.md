@@ -52,6 +52,8 @@
     ```
     
     并根据实际情况修改 `config.toml`。
+
+    开发过程中建议开启 `graphql.introspection` 和 `graphql.playground` 以便于使用 GraphQL Playground 进行调试，默认地址为 http://localhost:8080/playground 。
     
     生成 JWT 所需的密钥对：
     
