@@ -2,24 +2,28 @@ package database
 
 import (
 	"context"
+	"database/sql"
 
-	_ "github.com/go-sql-driver/mysql"
+	"entgo.io/ent/dialect"
+	entsql "entgo.io/ent/dialect/sql"
 	"github.com/hawa130/serverx/ent"
 	"github.com/hawa130/serverx/ent/migrate"
 	"github.com/hawa130/serverx/ent/privacy"
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 var client *ent.Client
 
 var AllowContext = privacy.DecisionContext(context.Background(), privacy.Allow)
 
-func Open(driverName, dataSourceName string) (*ent.Client, error) {
-	var err error
-	client, err = ent.Open(driverName, dataSourceName)
+func Open(dataSourceName string) (*ent.Client, error) {
+	db, err := sql.Open("pgx", dataSourceName)
 	if err != nil {
 		return nil, err
 	}
+	drv := entsql.OpenDB(dialect.Postgres, db)
+	client = ent.NewClient(ent.Driver(drv))
+
 	if err := client.Schema.Create(
 		context.Background(),
 		migrate.WithGlobalUniqueID(true),

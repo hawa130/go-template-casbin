@@ -16,8 +16,7 @@ type ServerConfig struct {
 }
 
 type DatabaseConfig struct {
-	Driver string `mapstructure:"driver"`
-	Url    string `mapstructure:"url"`
+	Url string `mapstructure:"url"`
 }
 
 type JWTConfig struct {

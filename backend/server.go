@@ -81,12 +81,12 @@ func (r *Server) Start() {
 		log.Fatal("logger initialization error: ", err)
 	}
 
-	err = perm.Init(cfg.Database.Driver, cfg.Database.Url)
+	err = perm.Init(cfg.Database.Url)
 	if err != nil {
 		log.Fatal("casbin initialization error: ", err)
 	}
 
-	_, err = database.Open(cfg.Database.Driver, cfg.Database.Url)
+	_, err = database.Open(cfg.Database.Url)
 	if err != nil {
 		log.Fatal("database initialization error: ", err)
 	}

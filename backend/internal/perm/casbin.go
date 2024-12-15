@@ -16,8 +16,8 @@ var (
 	enforcer *casbin.Enforcer
 )
 
-func Init(driverName, dataSourceName string) error {
-	if err := initAdapter(driverName, dataSourceName); err != nil {
+func Init(dataSourceName string) error {
+	if err := initAdapter(dataSourceName); err != nil {
 		return err
 	}
 
@@ -32,8 +32,8 @@ func Init(driverName, dataSourceName string) error {
 	return nil
 }
 
-func initAdapter(driverName, dataSourceName string) error {
-	a, err := entadapter.NewAdapter(driverName, dataSourceName)
+func initAdapter(dataSourceName string) error {
+	a, err := entadapter.NewAdapter(dataSourceName)
 	if err != nil {
 		return err
 	}

@@ -31,8 +31,7 @@ import (
 	"github.com/rs/xid"
 
 	"github.com/casbin/casbin/v2/model"
-	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 const (
@@ -59,23 +58,18 @@ type Filter struct {
 
 type Option func(a *Adapter) error
 
-func open(driverName, dataSourceName string) (*ent.Client, error) {
-	db, err := sql.Open(driverName, dataSourceName)
+func open(dataSourceName string) (*ent.Client, error) {
+	db, err := sql.Open("pgx", dataSourceName)
 	if err != nil {
 		return nil, err
 	}
-	var drv dialect.Driver
-	if driverName == "pgx" {
-		drv = entsql.OpenDB(dialect.Postgres, db)
-	} else {
-		drv = entsql.OpenDB(driverName, db)
-	}
+	drv := entsql.OpenDB(dialect.Postgres, db)
 	return ent.NewClient(ent.Driver(drv)), nil
 }
 
 // NewAdapter returns an adapter by driver name and data source string.
-func NewAdapter(driverName, dataSourceName string, options ...Option) (*Adapter, error) {
-	client, err := open(driverName, dataSourceName)
+func NewAdapter(dataSourceName string, options ...Option) (*Adapter, error) {
+	client, err := open(dataSourceName)
 	if err != nil {
 		return nil, err
 	}
