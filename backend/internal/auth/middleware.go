@@ -20,7 +20,7 @@ func getUserFromToken(token string) (*ent.User, *JWTClaims, error) {
 	}
 
 	requestUser, err := database.Client().User.Query().
-		Where(user.IDEQ(claims.Uid)).
+		Where(user.IDEQ(claims.Subject)).
 		Only(database.AllowContext)
 	if err != nil {
 		return nil, nil, err

@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/hawa130/serverx/config"
 	"github.com/rs/xid"
 )
@@ -16,8 +16,10 @@ var (
 )
 
 type JWTClaims struct {
-	Uid xid.ID `json:"id"`
-	jwt.StandardClaims
+	Id        string `json:"jti"`
+	IssuedAt  int64  `json:"iat"`
+	ExpiresAt int64  `json:"exp"`
+	Subject   xid.ID `json:"sub"`
 }
 
 // GenerateToken generates a new JWT token 为指定 ID 生成一个新的 JWT token
@@ -26,13 +28,11 @@ func GenerateToken(uid xid.ID) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	t := jwt.NewWithClaims(jwt.SigningMethodES256, JWTClaims{
-		Uid: uid,
-		StandardClaims: jwt.StandardClaims{
-			Id:        xid.New().String(),
-			IssuedAt:  jwt.TimeFunc().Unix(),
-			ExpiresAt: jwt.TimeFunc().Add(config.Config().JWT.Duration * time.Hour).Unix(),
-		},
+	t := jwt.NewWithClaims(jwt.SigningMethodES256, jwt.MapClaims{
+		"jti": xid.New().String(),
+		"exp": time.Now().Add(config.Config().JWT.Duration * time.Hour).Unix(),
+		"iat": time.Now().Unix(),
+		"sub": uid.String(),
 	})
 
 	s, err := t.SignedString(key)
@@ -50,7 +50,7 @@ func ParseToken(token string) (*JWTClaims, error) {
 		return nil, err
 	}
 
-	t, err := jwt.ParseWithClaims(token, &JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+	t, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		return key.Public(), nil
 	})
 	if !t.Valid {
@@ -60,12 +60,22 @@ func ParseToken(token string) (*JWTClaims, error) {
 		return nil, err
 	}
 
-	claims, ok := t.Claims.(*JWTClaims)
+	claims, ok := t.Claims.(jwt.MapClaims)
 	if !ok {
 		return nil, ErrInvalidToken
 	}
 
-	return claims, nil
+	sub, err := xid.FromString(claims["sub"].(string))
+	if err != nil {
+		return nil, ErrInvalidToken
+	}
+
+	return &JWTClaims{
+		Id:        claims["jti"].(string),
+		IssuedAt:  int64(claims["iat"].(float64)),
+		ExpiresAt: int64(claims["exp"].(float64)),
+		Subject:   sub,
+	}, nil
 
 }
 
