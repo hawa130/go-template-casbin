@@ -90,7 +90,12 @@ func GrantObjectPermissionX(ctx context.Context, obj fmt.Stringer) (bool, error)
 	return perm.GrantObjectPermissionX(user.ID, obj)
 }
 
-// SelfOrAuthenticated 会判断是否有传入的用户 ID，如果没有则从上下文中获取用户 ID，如果有则判断是否有对用户的权限
+// SelfOrAuthenticated 会判断是否有传入的用户 ID，如果没有则从上下文中获取用户 ID。
+// 如果指定了 ID 则判断是否有对该用户的权限。
+//
+// 适用于修改用户自己信息或管理员修改用户信息的场景。
+//
+// 返回最终的用户 ID，如果没有权限则返回 forbidden 错误。
 func SelfOrAuthenticated(ctx context.Context, uid *xid.ID, act string) (*xid.ID, error) {
 	if uid == nil {
 		var err error
