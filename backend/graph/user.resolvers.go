@@ -105,9 +105,9 @@ func (r *mutationResolver) UpdatePassword(ctx context.Context, id *xid.ID, input
 	return c.User.UpdateOneID(*id).SetPassword(input.NewPassword).Save(ctx)
 }
 
-// User is the resolver for the user field.
+// User 获取指定用户信息。当 ID 为空时获取自己的用户信息。
 func (r *queryResolver) User(ctx context.Context, id *xid.ID) (*ent.User, error) {
-	u, _ := auth.FromContext(ctx)
+	u, exists := auth.FromContext(ctx)
 	if u == nil && id == nil {
 		return nil, reqerr.ErrBadRequest
 	}
@@ -116,14 +116,19 @@ func (r *queryResolver) User(ctx context.Context, id *xid.ID) (*ent.User, error)
 	}
 
 	builder := r.client.User.Query().Where(user.IDEQ(*id))
-	allow, err := perm.EnforceX(u.ID, id, perm.OpRead)
-	if err != nil {
-		return nil, err
+
+	if exists {
+		// 判断是否有对应读取权限
+		allow, err := perm.EnforceX(u.ID, id, perm.OpRead)
+		if err != nil {
+			return nil, err
+		}
+		if allow {
+			// 如果拥有权限则忽略字段过滤规则
+			return builder.Only(rule.WithAllowContext(ctx))
+		}
 	}
 
-	if allow {
-		return builder.Only(rule.WithAllowContext(ctx))
-	}
 	return builder.Only(ctx)
 }
 
