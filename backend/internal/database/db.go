@@ -27,6 +27,8 @@ func Open(dataSourceName string) (*ent.Client, error) {
 	if err := client.Schema.Create(
 		context.Background(),
 		migrate.WithGlobalUniqueID(true),
+		migrate.WithDropIndex(true),  // 迁移时删除不使用的索引，早期开发建议启用
+		migrate.WithDropColumn(true), // 迁移时删除不使用的列，早期开发建议启用
 	); err != nil {
 		return nil, err
 	}

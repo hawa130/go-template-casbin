@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
@@ -35,7 +36,8 @@ func (PublicKey) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("user", User.Type).Unique().Immutable().
 			Annotations(
-				entgql.Skip(entgql.SkipMutationUpdateInput | entgql.SkipMutationCreateInput),
+				entgql.Skip(entgql.SkipMutationUpdateInput|entgql.SkipMutationCreateInput),
+				entsql.OnDelete(entsql.Cascade),
 			),
 	}
 }

@@ -10,7 +10,7 @@ import (
 var (
 	// CasbinRulesColumns holds the columns for the "casbin_rules" table.
 	CasbinRulesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString},
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "varchar(20)"}},
 		{Name: "ptype", Type: field.TypeString, Default: ""},
 		{Name: "v0", Type: field.TypeString, Default: ""},
 		{Name: "v1", Type: field.TypeString, Default: ""},
@@ -27,7 +27,7 @@ var (
 	}
 	// PublicKeysColumns holds the columns for the "public_keys" table.
 	PublicKeysColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString},
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "varchar(20)"}},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "key", Type: field.TypeString, Unique: true},
@@ -36,7 +36,7 @@ var (
 		{Name: "type", Type: field.TypeString, Nullable: true},
 		{Name: "status", Type: field.TypeString, Nullable: true},
 		{Name: "expired_at", Type: field.TypeTime, Nullable: true},
-		{Name: "public_key_user", Type: field.TypeString, Nullable: true},
+		{Name: "public_key_user", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "varchar(20)"}},
 	}
 	// PublicKeysTable holds the schema information for the "public_keys" table.
 	PublicKeysTable = &schema.Table{
@@ -48,7 +48,7 @@ var (
 				Symbol:     "public_keys_users_user",
 				Columns:    []*schema.Column{PublicKeysColumns[9]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.Cascade,
 			},
 		},
 		Indexes: []*schema.Index{
@@ -71,7 +71,7 @@ var (
 	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString},
+		{Name: "id", Type: field.TypeString, SchemaType: map[string]string{"postgres": "varchar(20)"}},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "nickname", Type: field.TypeString, Nullable: true},
@@ -79,7 +79,7 @@ var (
 		{Name: "email", Type: field.TypeString, Unique: true, Nullable: true},
 		{Name: "phone", Type: field.TypeString, Unique: true},
 		{Name: "password", Type: field.TypeString},
-		{Name: "user_parent", Type: field.TypeString, Nullable: true},
+		{Name: "user_parent", Type: field.TypeString, Nullable: true, SchemaType: map[string]string{"postgres": "varchar(20)"}},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

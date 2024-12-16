@@ -5,6 +5,7 @@ import (
 
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
@@ -46,7 +47,8 @@ func (User) Edges() []ent.Edge {
 			Immutable().
 			From("children").
 			Annotations(
-				entgql.Skip(entgql.SkipMutationUpdateInput | entgql.SkipMutationCreateInput),
+				entgql.Skip(entgql.SkipMutationUpdateInput|entgql.SkipMutationCreateInput),
+				entsql.OnDelete(entsql.Cascade),
 			),
 	}
 }
