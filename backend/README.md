@@ -109,7 +109,7 @@
 
 ## 指南——创建 CRUD API
 
-为了开发便利，请将 `graphql.introspection` 和 `graphql.playground` 设置为 `true`。
+为了开发便利，请将配置文件中 `graphql.introspection` 和 `graphql.playground` 设置为 `true`。
 
 以 PublicKey 为例。（以下命令均在 `backend` 目录下执行）
 
@@ -211,7 +211,7 @@ func (PublicKey) Annotations() []schema.Annotation {
 }
 ```
 
-其中，`RelayConnection()` 表明需要生成 Relay 风格的分页（可选）。`QueryField()` 表明数据模式的字段需要暴露给 GraphQL 的 `query` 以便查询使用，`Mutations(...)` 表明为数据模式生成 GraphQL 的 `input` 以便创建和更新使用。
+其中，`RelayConnection()` 表明需要生成 Relay 风格的分页（[参考](https://entgo.io/docs/tutorial-todo-gql-paginate)）。`QueryField()` 表明数据模式的字段需要暴露给 GraphQL 的 `query` 以便查询使用，`Mutations(...)` 表明为数据模式生成 GraphQL 的 `input` 以便创建和更新使用。
 
 更新边的定义。
 
@@ -231,7 +231,7 @@ func (PublicKey) Edges() []ent.Edge {
 
 完成后运行生成器 `go generate .`，生成器会更新 `graphql/ent.graphql` 文件，生成新的接口和类型。
 
-并且由于执行了 gqlgen，因此 `backend/graph/ent.resolvers.go` 也会创建一个未实现的接口。（如果没有使用 Relay Connection 接口会不一样）
+并且由于执行了 gqlgen，因此 `backend/graph/ent.resolvers.go` 也会创建一个未实现的接口。
 
 ```go
 // PublicKeys is the resolver for the publicKeys field.
@@ -240,7 +240,7 @@ func (r *queryResolver) PublicKeys(ctx context.Context, after *entgql.Cursor[xid
 }
 ```
 
-实现这个接口吧，结合 ent 实现起来非常简单。（[参考](https://entgo.io/docs/tutorial-todo-gql-filter-input#configure-gql)）
+实现这个接口，结合 ent 实现起来非常容易。（[参考](https://entgo.io/docs/tutorial-todo-gql-filter-input#configure-gql)）
 
 ```go
 func (r *queryResolver) PublicKeys(ctx context.Context, after *entgql.Cursor[xid.ID], first *int, before *entgql.Cursor[xid.ID], last *int, orderBy *ent.PublicKeyOrder, where *ent.PublicKeyWhereInput) (*ent.PublicKeyConnection, error) {
@@ -252,7 +252,9 @@ func (r *queryResolver) PublicKeys(ctx context.Context, after *entgql.Cursor[xid
 }
 ```
 
-现在可以在 GraphQL playground（默认在 http://localhost:8080/playground）中使用 `publicKeys` 来查询了，可以试试下面的查询。
+如果不使用 Relay Connection，直接返回 `r.client.Todo.Query().All(ctx)` 即可。
+
+现在可以在 GraphQL playground（默认在 http://localhost:8080/playground ）中使用 `publicKeys` 来查询了，可以试试下面的查询。
 
 ```graphql
 query ListPublicKeys {
@@ -272,7 +274,7 @@ query ListPublicKeys {
 }
 ```
 
-如果不使用 Relay 风格分页的话，查询写起来会更简洁，但是就没有分页了，适合数据量小的情况。
+如果不使用 Relay 风格分页的话，查询写起来会更简洁，会返回全部数据，适合数据量小的情况。
 
 #### 创建、更新与删除
 
@@ -323,6 +325,16 @@ func (r *mutationResolver) DeletePublicKey(ctx context.Context, id xid.ID) (bool
 
 现在可以打开 playground 来使用这些接口了。
 
-#### 说明
+### 说明
 
 上面只是一个简单的创建 CRUD 接口的示例。在实际的业务中，由于权限的复杂性，代码会有所不同。仓库中的 PublicKey 是完全版，考虑了 CRUD 的鉴权，可以参考。
+
+### 总结
+
+实现 CRUD 接口的步骤如下：
+
+1. 定义数据模型，包括字段、边、索引等。
+2. 运行生成器，生成数据模型相关操作 API 的代码。
+3. 定义 GraphQL 接口，包括查询、创建、更新、删除等。
+4. 运行生成器，生成 GraphQL 接口相关的代码。
+5. 实现生成的 GraphQL 接口。
