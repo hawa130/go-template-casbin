@@ -1,8 +1,6 @@
 module github.com/hawa130/serverx
 
-go 1.23.0
-
-toolchain go1.23.1
+go 1.23.4
 
 require (
 	entgo.io/contrib v0.6.0
